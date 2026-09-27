@@ -60,6 +60,15 @@ export function mountSequence(spec: SequenceSpec): () => void {
   const bitmaps = new Map<number, ImageBitmap>()
   const bitmapWip = new Set<number>()
   let decodedCount = 0
+  let loadedCount = 0
+
+  // loader pərdəsi üçün real progress: yükləmə 35% + ilk dekod pəncərəsi 65%
+  let bootTimer: ReturnType<typeof setInterval> | null = null
+  const bootN = () => Math.max(1, Math.min(n, PERF.decodeAhead + 2))
+  const reportProgress = () => {
+    if (!spec.trackProgress || !n) return
+    setLoaderFrames(0.35 * (loadedCount / n) + 0.65 * Math.min(1, decodedCount / bootN()))
+  }
 
   const grain: HTMLCanvasElement[] = []
   let n = 0
@@ -150,7 +159,7 @@ export function mountSequence(spec: SequenceSpec): () => void {
           bitmaps.set(i, bm)
           bitmapWip.delete(i)
           decodedCount++
-          if (spec.trackProgress) setLoaderFrames(decodedCount / n)
+          reportProgress()
           if (i === idx) draw()
         })
         .catch(() => {
@@ -176,10 +185,14 @@ export function mountSequence(spec: SequenceSpec): () => void {
       img.decoding = 'async'
       img.onload = () => {
         imgs[i] = img
+        loadedCount++
+        reportProgress()
         bumpContig()
         if (--pending === 0 && Math.min(n, from + PARALLEL) < n) loadChunk(from + PARALLEL)
       }
       img.onerror = () => {
+        loadedCount++
+        reportProgress()
 
         if (--pending === 0 && Math.min(n, from + PARALLEL) < n) loadChunk(from + PARALLEL)
       }
@@ -200,6 +213,19 @@ export function mountSequence(spec: SequenceSpec): () => void {
         n = m.n
         imgs.length = n
         loadChunk(0)
+
+        // loader açılmamışdan əvvəl scroll blokludur → scroll pompası işləmir.
+        // İlk dekod pəncərəsini müstəqil pompala — progress real yüksəlir.
+        if (spec.trackProgress && !prefersReducedMotion) {
+          bootTimer = setInterval(() => {
+            pumpBitmaps(0)
+            reportProgress()
+            if (decodedCount >= bootN() && bootTimer) {
+              clearInterval(bootTimer)
+              bootTimer = null
+            }
+          }, 90)
+        }
       })
       .catch(() => {
 
@@ -247,6 +273,7 @@ export function mountSequence(spec: SequenceSpec): () => void {
 
   const cleanup = () => {
     if (tick) gsap.ticker.remove(tick)
+    if (bootTimer) clearInterval(bootTimer)
     window.removeEventListener('resize', resize)
     dlIo.disconnect()
     io.disconnect()

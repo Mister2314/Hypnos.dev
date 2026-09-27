@@ -23,6 +23,7 @@ export default function TheLeap() {
         lowDir: 'leap/frames-1280',
         poster: 'leap/poster-1920.webp',
         ease: 0.07,
+        trackProgress: true,
       }),
     [],
   )

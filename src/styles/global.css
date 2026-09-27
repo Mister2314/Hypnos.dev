@@ -518,6 +518,7 @@ a {
   background: var(--accent);
   transform-origin: 0 50%;
   transform: scaleX(0);
+  will-change: transform;
 }
 
 .preloader__pct {
@@ -530,6 +531,7 @@ a {
 
 .preloader__pct b {
   font-weight: 400;
+  font-variant-numeric: tabular-nums;
 }
 
 html.is-loading {

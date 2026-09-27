@@ -30,14 +30,31 @@ export default function Preloader() {
       }, wait)
     }
 
-    const off = onLoaderProgress((pct) => {
+    let target = 0
+    let shown = 0
+    let raf = 0
+
+    // rAF lerp — sayaç sıçramır, real yükləməni yumşaq izləyir
+    const render = () => {
+      shown += (target - shown) * 0.09
+      if (target >= 1 && shown > 0.992) shown = 1
       const el = ref.current
       const bar = el?.querySelector<HTMLElement>('.preloader__bar i')
       const num = el?.querySelector<HTMLElement>('.preloader__pct b')
-      if (bar) bar.style.transform = `scaleX(${pct})`
-      if (num) num.textContent = `${Math.round(pct * 100)}%`
-      if (pct >= 1) finish()
+      if (bar) bar.style.transform = `scaleX(${shown})`
+      if (num) num.textContent = `${Math.round(shown * 100)}%`
+      if (target >= 1 && shown >= 1) {
+        finish()
+        return
+      }
+      raf = requestAnimationFrame(render)
+    }
+
+    const off = onLoaderProgress((pct) => {
+      target = pct
     })
+
+    raf = requestAnimationFrame(render)
 
     if (document.fonts?.ready) {
       document.fonts.ready.then(() => setLoaderFontsReady())
@@ -54,6 +71,7 @@ export default function Preloader() {
     return () => {
       finished = true
       off()
+      cancelAnimationFrame(raf)
       clearTimeout(failsafe)
       root.classList.remove('is-loading')
     }
