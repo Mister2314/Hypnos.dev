@@ -1,5 +1,5 @@
 
-
+import { Analytics } from '@vercel/analytics/react'
 
 import Backdrop from './components/Backdrop'
 import ChapterNav from './components/ChapterNav'
@@ -51,6 +51,7 @@ export default function App() {
       </main>
 
       <Backdrop />
+      <Analytics />
     </>
   )
 }
