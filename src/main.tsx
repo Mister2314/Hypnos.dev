@@ -2,9 +2,13 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { gsap, ScrollTrigger } from './lib/scroll'
 import { lenis } from './lib/lenis'
+import { injectSpeedInsights } from '@vercel/speed-insights'
 import App from './App'
 import './styles/fonts.css'
 import './styles/global.css'
+
+// Initialize Vercel Speed Insights
+injectSpeedInsights()
 
 const smooth = lenis
 if (smooth) {
