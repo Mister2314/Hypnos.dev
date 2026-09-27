@@ -41,6 +41,8 @@ export function mountSequence(spec: SequenceSpec): () => void {
 
   const dir = isNarrow() ? lowDir : highDir
   const progressRef = { v: 0 }
+  // mobil: daha kiçik dekod pəncərəsi — giriş burstlarını endirir
+  const AHEAD = isNarrow() ? 10 : PERF.decodeAhead
 
   const poster = new Image()
   poster.decoding = 'async'
@@ -64,7 +66,7 @@ export function mountSequence(spec: SequenceSpec): () => void {
 
   // loader pərdəsi üçün real progress: yükləmə 35% + ilk dekod pəncərəsi 65%
   let bootTimer: ReturnType<typeof setInterval> | null = null
-  const bootN = () => Math.max(1, Math.min(n, PERF.decodeAhead + 2))
+  const bootN = () => Math.max(1, Math.min(n, AHEAD + 2))
   const reportProgress = () => {
     if (!spec.trackProgress || !n) return
     setLoaderFrames(0.35 * (loadedCount / n) + 0.65 * Math.min(1, decodedCount / bootN()))
@@ -81,12 +83,15 @@ export function mountSequence(spec: SequenceSpec): () => void {
 
 
 
+    // ən yaxın hazır bitmap — HƏR İKİ istiqamətdə: yuxarı scroll-da da video
+    // davam edir (əvvəl axtarış yalnız geriyə idi → geri gələndə posterə düşürdü)
     let bmp: ImageBitmap | null = null
-    for (let k = target; k >= 0; k--) {
-      const b = bitmaps.get(k)
-      if (b) {
+    let best = Infinity
+    for (const [k, b] of bitmaps) {
+      const d = Math.abs(k - target)
+      if (d < best) {
+        best = d
         bmp = b
-        break
       }
     }
     if (!bmp) {
@@ -145,10 +150,15 @@ export function mountSequence(spec: SequenceSpec): () => void {
 
 
   let bitmapBudget = 0
+  let prevCenter = 0
   const pumpBitmaps = (center: number) => {
-    bitmapBudget = 3
-    const lo = Math.max(0, center - 2)
-    const hi = Math.min(n - 1, center + 1 + PERF.decodeAhead)
+    // dekod pəncərəsi hərəkət istiqamətinə açıqdır: aşağı gedəndə irəli,
+    // yuxarı qayıtda geriyə — hər iki istiqamətdə video hazırdır
+    const forward = center >= prevCenter
+    prevCenter = center
+    bitmapBudget = isNarrow() ? 1 : 3
+    const lo = forward ? Math.max(0, center - 2) : Math.max(0, center - 1 - AHEAD)
+    const hi = forward ? Math.min(n - 1, center + 1 + AHEAD) : Math.min(n - 1, center + 2)
     for (let i = lo; i <= hi && bitmapBudget > 0; i++) {
       if (bitmaps.has(i) || bitmapWip.has(i) || !imgs[i]) continue
       bitmapWip.add(i)
@@ -167,9 +177,9 @@ export function mountSequence(spec: SequenceSpec): () => void {
         })
     }
 
-    if (bitmaps.size > PERF.decodeAhead + 10) {
+    if (bitmaps.size > AHEAD + 10) {
       for (const key of [...bitmaps.keys()]) {
-        if (key < center - 6 || key > center + PERF.decodeAhead + 6) {
+        if (key < center - AHEAD - 6 || key > center + AHEAD + 6) {
           bitmaps.get(key)?.close()
           bitmaps.delete(key)
         }
@@ -204,11 +214,16 @@ export function mountSequence(spec: SequenceSpec): () => void {
 
 
   let downloadStarted = false
-  const startDownload = () => {
-    if (downloadStarted) return
-    downloadStarted = true
+  const startDownload = (attempt = 0) => {
+    if (attempt === 0) {
+      if (downloadStarted) return
+      downloadStarted = true
+    }
     fetch(`${BASE}${highDir.split('/')[0]}/manifest.json`)
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error(String(r.status))
+        return r.json()
+      })
       .then((m: { n: number }) => {
         n = m.n
         imgs.length = n
@@ -228,7 +243,8 @@ export function mountSequence(spec: SequenceSpec): () => void {
         }
       })
       .catch(() => {
-
+        // keçici şəbəkə xətası: poster fallback var, 2 dəfəyə qədər yenidən cəhd
+        if (attempt < 2) setTimeout(() => startDownload(attempt + 1), 1200 * (attempt + 1))
       })
   }
   const dlIo = new IntersectionObserver(
@@ -241,6 +257,9 @@ export function mountSequence(spec: SequenceSpec): () => void {
     { rootMargin: '250% 0px' },
   )
   dlIo.observe(canvas)
+  // loader-gated fəsil (leap): refresh hansı mövqedən başlayarsa başlasın,
+  // pərdənin progressi və hazırlığı mövqeydən asılı olmasın
+  if (spec.trackProgress) startDownload()
 
 
   poster.onload = () => {

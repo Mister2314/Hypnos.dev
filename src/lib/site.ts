@@ -3,13 +3,11 @@
 
 
 export const SITE = {
-
-
   name: 'Khayal',
-  email: '',
-  instagram: '',
-  github: '',
-  linkedin: '',
+  email: 'xeyalhuseynli06@gmail.com',
+  instagram: 'https://www.instagram.com/hypnos.dev',
+  github: 'https://github.com/Mister2314',
+  linkedin: 'https://www.linkedin.com/in/x%C9%99yal-h%C3%BCseynli-3487b91ba/',
   cv: '',
 } as const
 

@@ -6,6 +6,11 @@ import App from './App'
 import './styles/fonts.css'
 import './styles/global.css'
 
+// Hər yükləmə hero-dan başlayır. Brauzerin scroll bərpası (refresh-də köhnə mövqe)
+// fəsilləri yüklənməmiş tutub videonu sındırırdı — manual + top bu dəstəni kökündən silir.
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+window.scrollTo(0, 0)
+
 const smooth = lenis
 if (smooth) {
   smooth.on('scroll', ScrollTrigger.update)
