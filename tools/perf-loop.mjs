@@ -67,11 +67,16 @@ await new Promise((res, rej) => {
 let id = 0
 const pending = new Map()
 const pageErrors = []
+const traceEvents = []
+let traceCollecting = false
 ws.onmessage = (e) => {
   const m = JSON.parse(e.data)
   if (m.method === 'Runtime.exceptionThrown') {
     const d = m.params.exceptionDetails
     pageErrors.push(`${d.text} ${d.exception?.description ?? ''}`.slice(0, 300))
+  }
+  if (m.method === 'Tracing.dataCollected' && traceCollecting && Array.isArray(m.params.value)) {
+    traceEvents.push(...m.params.value)
   }
   if (m.id && pending.has(m.id)) {
     const { res, rej } = pending.get(m.id)
@@ -195,8 +200,36 @@ await idle('idle — scroll yoxdur')
 // headless raster xərci ilə qarışır — reference üçün ölçülür
 const a = await pass(80, 'sürətli keçid (wheel, teleport)')
 
-// REALİSTİK keçid — ~1.9k px/s: real oxucu sürəti — ƏSAS göstərici
+// TRACE — realistik keçid zamanı main-thread-i kim bloklayır?
+traceCollecting = true
+await send('Tracing.start', {
+  traceConfig: { includedCategories: ['devtools.timeline', 'v8'] },
+})
 const b = await pass(250, 'realistik keçid (wheel)')
+await send('Tracing.end')
+await new Promise((res) => {
+  const handler = (e) => {
+    const m = JSON.parse(e.data)
+    if (m.method === 'Tracing.tracingComplete') {
+      ws.removeEventListener('message', handler)
+      res(m.params)
+    }
+  }
+  ws.addEventListener('message', handler)
+})
+traceCollecting = false
+
+// ən uzun 14 main-thread task — harada, hansı funksiyada
+const tasks = traceEvents
+  .filter((ev) => (ev.name === 'FunctionCall' || ev.name === 'RunTask' || ev.name === 'Task') && ev.dur > 20000)
+  .sort((x, y) => y.dur - x.dur)
+  .slice(0, 14)
+console.log('TRACE — ən uzun main-thread task-ları:')
+for (const t of tasks) {
+  const d = t.args?.data ?? {}
+  const loc = d.url ? `${String(d.url).split('/').pop()}:${d.lineNumber ?? '?'}${d.functionName ? ' ' + d.functionName : ''}` : ''
+  console.log(`  ${(t.dur / 1000).toFixed(1)}ms  ${t.name}  ${loc}`)
+}
 
 const RED = b.droppedPct > 8 || b.max > 150
 console.log('')

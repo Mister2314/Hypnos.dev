@@ -2476,3 +2476,48 @@ html.has-cursor * {
       linear-gradient(0deg, rgba(10, 14, 30, 0.62) 0%, rgba(10, 14, 30, 0.45) 100%);
   }
 }
+
+/* ---------- v6.12 — mobil: bahalı filtrlərin xərci azaldılır ---------- */
+/* Görünüş eyni qalır: blur radius-ları mobil GPU üçün yumşaldılır
+   (desktop dəyərləri toxunulmazdır). Perf-loop: mobile max 266ms → hədəf <150. */
+@media (max-width: 720px) {
+  /* ⚠️ mobilde backdrop-filter TAMAMILƏ yoxdur — zəif GPU-da ən bahalı
+     effektdir (perf-loop: contact girişində 250ms). Yarımşəffaf fon
+     eyni şüşə görünüşünü verir. */
+  .glass {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.06), transparent 42%), rgba(18, 19, 14, 0.86);
+  }
+  .marble__shafts {
+    filter: blur(14px);
+  }
+  .hands__hand {
+    filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.55)) sepia(0.14) saturate(1.06);
+  }
+}
+
+/* ---------- v6.12b — mobil: q-card blur-ları da yumşaldılır ---------- */
+@media (max-width: 720px) {
+  .q-card {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.07);
+  }
+}
+
+/* ---------- v6.12c — backdrop-filter pipeline primeri ---------- */
+/* İlk backdrop-filter istifadəsi mobil GPU-da ~200ms pipeline kompilyasiyası
+   tutur (perf-loop: contact girişində 216ms spike). 8px görünməz element
+   bunu səhifə açılışında ödəyir — contact-a çatanda pipeline hazırdır. */
+.glass-prime {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+  opacity: 0.011;
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+}
