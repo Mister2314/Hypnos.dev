@@ -63,25 +63,10 @@ export const SPEAK = {
 } as const
 
 
-export const POND = {
-  head: 'The pond is at the end of the path.',
-  sub: 'In the film, the scenes keep returning to this water. The night swim, the morning after, the afternoons that asked for nothing. The surface keeps whatever is not said.',
-  hint: 'Touch the water.',
-} as const
-
-
 export const LEAP = {
   quote: 'Everyone keeps telling me how my story is supposed to go.',
   nah: 'Nah. I’m gonna do my own thing.',
   source: 'Miles Morales · Across the Spider-Verse',
-} as const
-
-
-export const QUIET = {
-  head: 'Stay still.',
-  sub: 'Nothing is coming. That is the arrangement.',
-  hold: 'hold still',
-  reward: 'One film I love ends on a four-minute shot that explains nothing. This is me learning that patience.',
 } as const
 
 
@@ -95,8 +80,7 @@ export const SIGNATURE = {
   close: "Thanks for scrolling. Now go do something you'll remember.",
 
   colophon:
-    'One page, many worlds. Hand-written WebGL, no 3D library, no page builder. The water and the grain are all code.',
-  ringsNone: 'You passed the pond without touching it. More restraint than I have.',
+    'One page, many worlds. Hand-written WebGL, no 3D library, no page builder. The grain is all code.',
 } as const
 
 export const PROJECTS = [
@@ -115,7 +99,7 @@ export const PROJECTS = [
     kind: 'Web',
     stack: 'React · GSAP · hand-written WebGL',
     blurb:
-      'One page, many worlds. No 3D library: the water is generated from code, and the film grain is two shaders.',
+      'One page, many worlds. No 3D library: the light and the grain are all code.',
     href: '',
   },
 ] as const
@@ -145,9 +129,5 @@ export const FAQ = [
   {
     q: 'What is the deal with the hands?',
     a: 'Michelangelo put the whole of creation in the space between two fingers. I think he was right about that and wrong about nothing else.',
-  },
-  {
-    q: 'Is the water real?',
-    a: 'As real as code makes it. Every wave is math, no textures and no video. It gives a slightly different pond on every visit, which felt more honest than a borrowed one.',
   },
 ] as const

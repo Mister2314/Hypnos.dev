@@ -1,31 +1,17 @@
-
-
-
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import Line from '../components/Line'
 import { PROJECTS, SIGNATURE, SITE, links } from '../lib/site'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
-import { onJourney } from '../lib/journey'
 
 export default function Signature() {
   const ref = useRef<HTMLElement>(null)
   const socials = links()
-
-
-  const [ring, setRing] = useState({ n: 0, visited: false })
-  useEffect(() => onJourney((n, visited) => setRing({ n, visited })), [])
 
   useGSAP(
     () => {
       const q = gsap.utils.selector(ref)
 
       if (prefersReducedMotion) {
-
-
-
-
-
-
         gsap.set(
           q('.signature__close .rv, .socials li, .signature__work li, .signature__title, .signature__colophon'),
           { opacity: 1, y: 0, yPercent: 0 },
@@ -61,7 +47,6 @@ export default function Signature() {
         scrollTrigger: { trigger: q('.signature__work')[0], start: 'top 92%' },
       })
 
-
       gsap.from(q('.signature__rule'), {
         scaleX: 0,
         transformOrigin: 'left center',
@@ -70,9 +55,6 @@ export default function Signature() {
         scrollTrigger: { trigger: q('.signature__rule')[0], start: 'top 96%' },
       })
 
-
-
-
       gsap.from(q('.signature__title'), {
         yPercent: 112,
         duration: 1.25,
@@ -80,7 +62,7 @@ export default function Signature() {
         scrollTrigger: { trigger: q('.signature__title-mask')[0], start: 'top 94%' },
       })
 
-      gsap.from(q('.signature__colophon, .signature__harvest, .signature__mark'), {
+      gsap.from(q('.signature__colophon, .signature__mark'), {
         opacity: 0,
         y: 14,
         duration: 0.8,
@@ -101,14 +83,6 @@ export default function Signature() {
         className="signature__close"
         text={SIGNATURE.close}
       />
-
-      {ring.visited && (
-        <p className="signature__harvest">
-          {ring.n === 0
-            ? SIGNATURE.ringsNone
-            : `${ring.n} ${ring.n === 1 ? 'ring' : 'rings'} on the water`}
-        </p>
-      )}
 
       {socials.length > 0 ? (
         <ul className="socials">

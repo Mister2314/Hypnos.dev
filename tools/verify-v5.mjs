@@ -139,14 +139,6 @@ const probe = await evalJs(`(() => {
     speakAdmission: document.querySelector('.speak__admission')?.textContent?.trim() ?? null,
     speakAnswer: document.querySelector('.speak__answer')?.textContent?.trim() ?? null,
 
-    // 06 — pond (v6)
-    pondHead: document.querySelector('.pond__head')?.textContent?.trim() ?? null,
-    pondHint: document.querySelector('.pond__hint')?.textContent?.trim() ?? null,
-    pondSvh: (() => {
-      const e = document.querySelector('.section--pond')
-      return e ? +(e.getBoundingClientRect().height / svh).toFixed(0) : null
-    })(),
-    orchardGone: !document.querySelector('.section--orchard'),
     glassSide: !!document.querySelector('.glass__side'),
     speakVideo: !!document.querySelector('.speak__video'),
     speakScrim: !!document.querySelector('.speak__scrim'),
@@ -178,7 +170,7 @@ const probe = await evalJs(`(() => {
   }
 })()`)
 
-check('15 dünya render olunur', probe.worlds === 15, `${probe.worlds} dünya`)
+check('12 dünya render olunur', probe.worlds === 12, `${probe.worlds} dünya`)
 check(
   '03 — köhnə berm GETDİ',
   probe.bermGone === true,
@@ -207,14 +199,10 @@ check(
 check('05 — sual yerindədir', /speak/i.test(probe.speakQuestion || '') && /die/i.test(probe.speakQuestion || ''))
 check('05 — cavab yerindədir', /better to speak/i.test(probe.speakAnswer || ''))
 
-check('06 — ağac GETDİ, gölmə GƏLDİ', probe.orchardGone && /pond/i.test(probe.pondHead || ''), JSON.stringify(probe.pondHead))
-check('06 — toxunma təlimatı var', /touch/i.test(probe.pondHint || ''), JSON.stringify(probe.pondHint))
-check('06 — büdcə 380svh', probe.pondSvh === 380, `${probe.pondSvh}svh`)
-
-check('13 — büdcə 540svh', probe.leapSvh === 540, `${probe.leapSvh}svh`)
-check('12 Contact — sağ panel var', probe.glassSide === true)
-check('13 — üsyan sətri yerindədir', /own thing/i.test(probe.leapNah || ''), JSON.stringify(probe.leapNah))
-check('13 — büdcə 540svh', probe.leapSvh === 540, `${probe.leapSvh}svh`)
+check('01 — büdcə 540svh', probe.leapSvh === 540, `${probe.leapSvh}svh`)
+check('10 Contact — sağ panel var', probe.glassSide === true)
+check('01 — üsyan sətri yerindədir', /own thing/i.test(probe.leapNah || ''), JSON.stringify(probe.leapNah))
+check('01 — büdcə 540svh', probe.leapSvh === 540, `${probe.leapSvh}svh`)
 
 check('büdcə — counterweight 360svh', probe.cwSvh === 360, `${probe.cwSvh}svh`)
 check('büdcə — speak 320svh', probe.speakSvh === 320, `${probe.speakSvh}svh`)

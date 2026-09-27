@@ -30,7 +30,7 @@ function cspMeta(): Plugin {
 }
 
 // `base: './'` — nisbi yollar. `dist` həm kökdən (Vercel), həm fayl kimi (file://) işləyir.
-// Runtime-da şəkillər `import.meta.env.BASE_URL` ilə yığılır (bax: Marble.tsx, Summer.tsx).
+// Runtime-da şəkillər `import.meta.env.BASE_URL` ilə yığılır (bax: lib/sequence.ts).
 export default defineConfig({
   base: './',
   plugins: [react(), cspMeta()],

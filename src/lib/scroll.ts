@@ -39,15 +39,11 @@ export const WORLDS: World[] = [
   { id: 'sapere', n: '05', title: 'Sapere aude', bg: '#0e100f', text: '#fffce1', accent: '#b08d57', grain: 0.30, halo: 0.10, lx: 0.62, ly: 0.36 },
   { id: 'speak', n: '06', title: 'Speak or die', bg: '#0c1512', text: '#f1f1ea', accent: '#c9c3a4', grain: 0.38, halo: 0.28, lx: 0.24, ly: 0.34 },
 
-  { id: 'pond', n: '07', title: 'The Pond', bg: '#101410', text: '#fffce1', accent: '#e8a87c', grain: 0.42, halo: 0.62, lx: 0.66, ly: 0.30 },
-
-  { id: 'quiet', n: '08', title: 'The Quiet', bg: '#0a0b0a', text: '#e6e3d8', accent: '#a89a7c', grain: 0.24, halo: 0.06, lx: 0.50, ly: 0.38 },
-  { id: 'worlds', n: '09', title: 'Worlds', bg: '#0b0d0c', text: '#fffce1', accent: '#a8b0c0', grain: 0.26, halo: 0.05, lx: 0.50, ly: 0.40 },
-  { id: 'marble', n: '10', title: 'Marble', bg: '#e8e3da', text: '#1b1a19', accent: '#8c8377', grain: 0.20, halo: 0.22, lx: 0.34, ly: 0.30 },
-  { id: 'work', n: '11', title: 'Work', bg: '#14150f', text: '#fffce1', accent: '#b08d57', grain: 0.34, halo: 0.06, lx: 0.50, ly: 0.50 },
-  { id: 'questions', n: '12', title: 'Questions', bg: '#101210', text: '#fffce1', accent: '#b08d57', grain: 0.32, halo: 0.04, lx: 0.50, ly: 0.46 },
-  { id: 'contact', n: '13', title: 'Contact', bg: '#0b0c0b', text: '#fffce1', accent: '#b08d57', grain: 0.28, halo: 0.02, lx: 0.50, ly: 0.42 },
-  { id: 'signature', n: '14', title: 'Signature', bg: '#0e100f', text: '#fffce1', accent: '#b08d57', grain: 0.30, halo: 0.00, lx: 0.50, ly: 0.40 },
+  { id: 'worlds', n: '07', title: 'Worlds', bg: '#0b0d0c', text: '#fffce1', accent: '#a8b0c0', grain: 0.26, halo: 0.05, lx: 0.50, ly: 0.40 },
+  { id: 'work', n: '08', title: 'Work', bg: '#14150f', text: '#fffce1', accent: '#b08d57', grain: 0.34, halo: 0.06, lx: 0.50, ly: 0.50 },
+  { id: 'questions', n: '09', title: 'Questions', bg: '#101210', text: '#fffce1', accent: '#b08d57', grain: 0.32, halo: 0.04, lx: 0.50, ly: 0.46 },
+  { id: 'contact', n: '10', title: 'Contact', bg: '#0b0c0b', text: '#fffce1', accent: '#b08d57', grain: 0.28, halo: 0.02, lx: 0.50, ly: 0.42 },
+  { id: 'signature', n: '11', title: 'Signature', bg: '#0e100f', text: '#fffce1', accent: '#b08d57', grain: 0.30, halo: 0.00, lx: 0.50, ly: 0.40 },
 ]
 
 
