@@ -68,6 +68,12 @@ export const LEAP = {
 } as const
 
 
+export const JOIN = {
+  line: 'In one of them, it lands.',
+  sub: 'The gap stays open here. Somewhere else, the spark crosses it.',
+} as const
+
+
 export const WORLDS_INTRO = {
   head: 'Every version of me, none of them cancelled',
   note: 'In one of them I never left. In one of them I never started. This is the one where I did both — and I refuse to rank them.',

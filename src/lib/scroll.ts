@@ -34,16 +34,17 @@ export const WORLDS: World[] = [
   { id: 'leap', n: '01', title: 'The Leap', bg: '#0a0e1e', text: '#fbfbfc', accent: '#00fcfd', grain: 0.40, halo: 0.5, lx: 0.50, ly: 0.38 },
   { id: 'summer', n: '02', title: 'Summer', bg: '#30312d', text: '#f1f1ea', accent: '#ffc2ae', grain: 0.46, halo: 0.55, lx: 0.78, ly: 0.26 },
   { id: 'hands', n: '03', title: 'The Hands', bg: '#12100c', text: '#fffce1', accent: '#e0c9a6', grain: 0.40, halo: 0.42, lx: 0.50, ly: 0.46 },
+  { id: 'join', n: '04', title: 'The Join', bg: '#100d12', text: '#fffce1', accent: '#e8c9a0', grain: 0.34, halo: 0.5, lx: 0.50, ly: 0.42 },
 
-  { id: 'counterweight', n: '04', title: 'The Counterweight', bg: '#0f0a16', text: '#fffce1', accent: '#cfa9e8', grain: 0.36, halo: 0.62, lx: 0.50, ly: 0.44 },
-  { id: 'sapere', n: '05', title: 'Sapere aude', bg: '#0e100f', text: '#fffce1', accent: '#b08d57', grain: 0.30, halo: 0.10, lx: 0.62, ly: 0.36 },
-  { id: 'speak', n: '06', title: 'Speak or die', bg: '#0c1512', text: '#f1f1ea', accent: '#c9c3a4', grain: 0.38, halo: 0.28, lx: 0.24, ly: 0.34 },
+  { id: 'counterweight', n: '05', title: 'The Counterweight', bg: '#0f0a16', text: '#fffce1', accent: '#cfa9e8', grain: 0.36, halo: 0.62, lx: 0.50, ly: 0.44 },
+  { id: 'sapere', n: '06', title: 'Sapere aude', bg: '#0e100f', text: '#fffce1', accent: '#b08d57', grain: 0.30, halo: 0.10, lx: 0.62, ly: 0.36 },
+  { id: 'speak', n: '07', title: 'Speak or die', bg: '#0c1512', text: '#f1f1ea', accent: '#c9c3a4', grain: 0.38, halo: 0.28, lx: 0.24, ly: 0.34 },
 
-  { id: 'worlds', n: '07', title: 'Worlds', bg: '#0b0d0c', text: '#fffce1', accent: '#a8b0c0', grain: 0.26, halo: 0.05, lx: 0.50, ly: 0.40 },
-  { id: 'work', n: '08', title: 'Work', bg: '#14150f', text: '#fffce1', accent: '#b08d57', grain: 0.34, halo: 0.06, lx: 0.50, ly: 0.50 },
-  { id: 'questions', n: '09', title: 'Questions', bg: '#101210', text: '#fffce1', accent: '#b08d57', grain: 0.32, halo: 0.04, lx: 0.50, ly: 0.46 },
-  { id: 'contact', n: '10', title: 'Contact', bg: '#0b0c0b', text: '#fffce1', accent: '#b08d57', grain: 0.28, halo: 0.02, lx: 0.50, ly: 0.42 },
-  { id: 'signature', n: '11', title: 'Signature', bg: '#0e100f', text: '#fffce1', accent: '#b08d57', grain: 0.30, halo: 0.00, lx: 0.50, ly: 0.40 },
+  { id: 'worlds', n: '08', title: 'Worlds', bg: '#0b0d0c', text: '#fffce1', accent: '#a8b0c0', grain: 0.26, halo: 0.05, lx: 0.50, ly: 0.40 },
+  { id: 'work', n: '09', title: 'Work', bg: '#14150f', text: '#fffce1', accent: '#b08d57', grain: 0.34, halo: 0.06, lx: 0.50, ly: 0.50 },
+  { id: 'questions', n: '10', title: 'Questions', bg: '#101210', text: '#fffce1', accent: '#b08d57', grain: 0.32, halo: 0.04, lx: 0.50, ly: 0.46 },
+  { id: 'contact', n: '11', title: 'Contact', bg: '#0b0c0b', text: '#fffce1', accent: '#b08d57', grain: 0.28, halo: 0.02, lx: 0.50, ly: 0.42 },
+  { id: 'signature', n: '12', title: 'Signature', bg: '#0e100f', text: '#fffce1', accent: '#b08d57', grain: 0.30, halo: 0.00, lx: 0.50, ly: 0.40 },
 ]
 
 

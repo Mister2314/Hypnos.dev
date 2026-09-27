@@ -446,7 +446,8 @@ a {
   .section--sapere,
   .section--speak,
   .section--counterweight,
-  .section--hands {
+  .section--hands,
+  .section--join {
     padding: 0;
   }
   .summer__hands {
@@ -2081,4 +2082,106 @@ html.has-cursor * {
   opacity: 0.011;
   backdrop-filter: blur(10px) saturate(130%);
   -webkit-backdrop-filter: blur(10px) saturate(130%);
+}
+
+/* ── 04 — The Join ───────────────────────────────────────────────────────────
+   The Hands-ın cavabı: boşluq bağlanır, qığılcım düşür. Videosuz breather —
+   saf SVG kontur + scrub. Faylın SONUNDA (cascade dərsi: universal media
+   qaydasından sonradır). */
+.section--join {
+  display: block;
+  min-height: 200svh;
+  padding: 0;
+  position: relative;
+}
+
+.join__stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.1rem, 3vh, 2rem);
+  overflow: hidden;
+  padding: 0 max(6vw, env(safe-area-inset-left));
+}
+
+.join__scene-wrap {
+  position: relative;
+  width: min(100%, 1040px);
+}
+
+.join__scene {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.join__bloom-wrap {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.join__bloom {
+  width: min(46vw, 460px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(232, 201, 160, 0.2) 0%,
+    rgba(232, 201, 160, 0.05) 44%,
+    transparent 70%
+  );
+  opacity: 0.55;
+}
+
+.join__stroke {
+  stroke: rgba(255, 252, 225, 0.72);
+  stroke-width: 2;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.join__stroke--fine {
+  stroke: rgba(255, 252, 225, 0.46);
+  stroke-width: 1.4;
+}
+
+.join__tip {
+  fill: var(--accent);
+}
+
+.join__spark {
+  fill: #fff6e2;
+}
+
+.join__ring {
+  fill: none;
+  stroke: rgba(232, 201, 160, 0.8);
+  stroke-width: 1.4;
+  opacity: 0;
+}
+
+.join__line {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2rem, 5.4vw, 3.8rem);
+  line-height: 1.12;
+  margin: 0;
+  text-align: center;
+}
+
+.join__sub {
+  max-width: 52ch;
+  margin: 0;
+  text-align: center;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  opacity: 0.6;
 }
