@@ -1,12 +1,6 @@
-/**
- * TopBar — yuxarı zolaq.
- *
- * Solda ad, sağda tək giriş qapısı ("Say hello"). Fəsil relsi (`ChapterNav`) sağdadır,
- * ona görə buranı sadə saxlayırıq — iki naviqasiya döyüşməsin.
- *
- * ⚠️ `mix-blend-mode: difference` → həm tünd, həm **işıq mərmər** fəslində oxunur.
- * Ayrı rəng dəyişənləri idarə etmək lazım deyil — qarışma özü həll edir.
- */
+
+
+
 import { SITE } from '../lib/site'
 import { scrollToId } from '../lib/lenis'
 

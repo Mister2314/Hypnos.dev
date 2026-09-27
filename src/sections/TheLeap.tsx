@@ -1,26 +1,6 @@
-/**
- * 13 — The Leap (Spider-Verse). — C variantı: imzadan ƏVVƏL.
- *
- * **Konsept:** Across-in üsyanı + Into-nun sıçrayışı — iki beat, bir fəsil:
- *   · SÖZ: *"Everyone keeps telling me how my story is supposed to go."*
- *   · CAVAB: *"Nah. I'm gonna do my own thing."* — bu, ONUN öz cümləsidir
- *     («men oz bildiyimi edecem») — filmdəki sitat eyni mənanı daşıyır.
- *
- * **Effekt dili — Spider-Verse NATIV** (`research/10`):
- *   · **halftone** — Ben-Day nöqtə qatı (filmin çap toxuması; saytdaki
- *     Summer halftone-un qohumu)
- *   · **CMYK misregistration** — «Nah» sözləri sınmış çap kimi düşür
- *     (cyan sağa, magenta sola) və scroll ilə BÜTÜN qayıtır — bu dünyada
- *     glitch SÜNİ deyil, ÇAP dilidir (v6.4 dərsinin düzgün tətbiqi)
- *   · **stepped → smooth** — sitat «on twos»-dur (steps ease — Miles
- *     12fps-də animasiya olunur), sıçrayışdan sonra hamar («on ones» —
- *     filmin ən məşhur xarakterizasiya qərarı: kadr tempinə görə qəhrəman
- *     yetişir; mənbə: Film-East, CinemaSolace retrospektivləri)
- *   · **sıçrayış** — zirvədə səhnə YUXARI qalxır: düşmə tərsinə çevrilir
- *     (Polygon: *«the fall is inverted into control»*)
- *
- * ⚠️ Player: `lib/sequence.ts` — 243 kadr, iki qat. Scroll: **380svh**.
- */
+
+
+
 import { Fragment, useEffect, useRef } from 'react'
 import Line from '../components/Line'
 import { LEAP } from '../lib/site'
@@ -33,7 +13,7 @@ export default function TheLeap() {
   const ref = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  /* ---- kadr ardıcıllığı: yüklə + scroll ilə scrub (bax: lib/sequence.ts) ---- */
+
   useEffect(
     () =>
       mountSequence({
@@ -62,8 +42,8 @@ export default function TheLeap() {
         return
       }
 
-      /* «Nah» — SINMIŞ ÇAP kimi başlayır: söz səviyyəsində misregistration
-         (cyan sağa, magenta sola) + səpələnmə. Scrub onları BÜTÜN qaytarır. */
+
+
       gsap.set(words, {
         opacity: 0,
         x: () => gsap.utils.random(-14, 14),
@@ -80,14 +60,14 @@ export default function TheLeap() {
         },
       })
 
-      // video — karadan açılır
+
       tl.fromTo(q('.leap__video'), { opacity: 0.4 }, { opacity: 1, duration: 1 }, 0)
 
-      // halftone — çap toxuması görünür, sona doğru azalır (print → clean)
+
       tl.fromTo(q('.leap__halftone'), { opacity: 0 }, { opacity: 0.4, duration: 0.25 }, 0.05)
       tl.to(q('.leap__halftone'), { opacity: 0.26, duration: 0.2 }, 0.78)
 
-      // sitat — STEPPED («on twos»): sözlər çap kimi düşür
+
       tl.from(
         q('.leap__quote .rv'),
         { yPercent: 110, duration: 0.06, ease: 'steps(3)', stagger: 0.012 },
@@ -96,8 +76,8 @@ export default function TheLeap() {
 
       tl.from(q('.leap__source'), { opacity: 0, y: 10, duration: 0.07 }, 0.24)
 
-      // ⚠️ v6.8 — ÜSYAN GEÇ GƏLİR (Khayal: 1.5-2.5s gecikmə). Sitat tək
-      // qalır — «hamı danışır» hissi uzanır, cavab öz vaxtında gəlir.
+
+
       tl.to(
         words,
         {
@@ -111,7 +91,7 @@ export default function TheLeap() {
         0.5,
       )
 
-      // zirvədə TƏK blink — bir kadr misregistration, dərhal təmiz
+
       tl.to(
         words,
         { textShadow: '4px 0 rgba(0,252,253,0.7), -4px 0 rgba(255,0,254,0.7)', duration: 0.015 },
@@ -123,11 +103,11 @@ export default function TheLeap() {
         0.745,
       )
 
-      // SICRAYIŞ — səhnə yuxarı qalxır: düşmə tərsinə çevrilir
+
       const riseTargets = [canvasRef.current, q('.leap__inner')[0]].filter(Boolean)
       tl.to(riseTargets, { yPercent: -3.5, duration: 0.16, ease: 'power2.inOut' }, 0.8)
 
-      // ── BOŞ VƏZİYYƏT ── video canlıdır; əlavə JS animasiya yoxdur
+
       ambient(q('.leap__source'), { y: -2 }, 9)
     },
     { scope: ref },
@@ -147,9 +127,9 @@ export default function TheLeap() {
 
           <p className="leap__source">— {LEAP.source}</p>
 
-          {/* «Nah» — sözlər aria-hidden, tam cümlə aria-label ilə.
-              ⚠️ Boşluq span-ların ARASINDADır: inline-block daxilindəki
-              qapanan boşluq render olunmur («Nah.I'mgonna» buqu). */}
+          {
+
+ }
           <p className="leap__nah" aria-label={LEAP.nah}>
             {NAH_WORDS.map((w, i) => (
               <Fragment key={i}>

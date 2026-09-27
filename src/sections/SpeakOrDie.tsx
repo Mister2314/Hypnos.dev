@@ -1,27 +1,6 @@
-/**
- * 05 — Speak or die.
- *
- * CMBYN-in mərkəzi sualı: *"Is it better to speak or to die?"* — və cavabı.
- *
- * Cihaz: seçim **görünən** edilir. Scroll etdikcə «die» sözünün üstündən xətt
- * çəkilir, «speak» altından qızıl xətt açılır. Yəni sayt sadəcə sitat gətirmir —
- * seçimi **icra edir**. Sonra cavab böyük ölçüdə açılır.
- *
- * ⚠️ v6 — ARXA PLAN: qatar səhnəsi (Khayalın öz kəsdiyi klip) **frame
- * ardıcıllığı** kimi (§5.1 qərarı: video yox, WebP kadr). Scroll scrub edir —
- * qatar fəsil boyu keçir, cavab gələndə ekrandan çıxır. Player indi
- * `lib/sequence.ts`-dədir (04 SapereAude ikinci istifadəçidir).
- *
- * ⚠️ Yükləmə: poster dərhal, kadr-lar ardıcıllıqla (pəncərə = 8). Scrub
- * **ardıcıl yüklənmiş** son kadra qədər gedir — yarı-yüklü video atlamır.
- *
- * ⚠️ Xətlər `::after` DEYİL, ayrı `<span>`-dır: GSAP yalnız real elementi
- * hədəfləyə bilər. Pseudo-elementi tween etmək mümkün deyil.
- *
- * ⚠️ Işıq soldan gəlir (`--speak-rim`) — filmin struktur cihazı: işıq həmişə
- * pəncərədən, yandan düşür (KONSEPT §2.3). Video üstündə kölgə (`.speak__scrim`)
- * mətni oxunaqlı saxlayır — sol tərəf ağır, sağ yüngül (qatar sağdan keçir).
- */
+
+
+
 import { useEffect, useRef } from 'react'
 import { SPEAK } from '../lib/site'
 import { ambient, eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
@@ -31,7 +10,7 @@ export default function SpeakOrDie() {
   const ref = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  /* ---- kadr ardıcıllığı: yüklə + scroll ilə scrub (bax: lib/sequence.ts) ---- */
+
   useEffect(
     () =>
       mountSequence({
@@ -59,7 +38,7 @@ export default function SpeakOrDie() {
         return
       }
 
-      // --- açılış: sual söz-söz (scrub deyil) ---
+
       gsap.from(q('.speak__word'), {
         yPercent: 70,
         opacity: 0,
@@ -78,7 +57,7 @@ export default function SpeakOrDie() {
         scrollTrigger: { trigger: q('.speak__source')[0], start: 'top 92%' },
       })
 
-      // --- scrub: seçim icra olunur ---
+
       const tl = gsap.timeline({
         defaults: { ease: 'none', duration: 1 },
         scrollTrigger: {
@@ -89,15 +68,15 @@ export default function SpeakOrDie() {
         },
       })
 
-      // «die» üstündən xətt çəkilir — soldan sağa
+
       tl.fromTo(q('.speak__strike'), { scaleX: 0 }, { scaleX: 1, duration: 0.14 }, 0.06)
 
-      // «speak» altından qızıl xətt açılır — bir az gecikmə ilə (qərar ani deyil)
+
       tl.fromTo(q('.speak__underline'), { scaleX: 0 }, { scaleX: 1, duration: 0.18 }, 0.24)
 
-      // Elio-nun qorxusu — sual eşidiləndən sonra, cavabdan ƏVVƏL.
-      // Niyə bu sətir var: `03 The Berm` əvvəl eyni sualı deyirdi (təkrar).
-      // İndi `05` sualı **tam** verir: sual → qorxu → cavab. Bax `research/08 §3`.
+
+
+
       tl.fromTo(
         q('.speak__admission'),
         { opacity: 0, y: 18 },
@@ -105,7 +84,7 @@ export default function SpeakOrDie() {
         0.38,
       )
 
-      // cavab — böyüyüb gəlir
+
       tl.fromTo(
         q('.speak__answer'),
         { opacity: 0, y: 30, filter: 'blur(10px)' },
@@ -113,10 +92,10 @@ export default function SpeakOrDie() {
         0.54,
       )
 
-      // şəxsi qat — ən sonda, ən sakit
+
       tl.fromTo(q('.speak__reflect'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.18 }, 0.76)
 
-      // işıq — yavaş-yavaş güclənir (otaq işıqlanır)
+
       tl.fromTo(
         q('.speak__rim'),
         { opacity: 0.18, scale: 1.05 },
@@ -124,18 +103,18 @@ export default function SpeakOrDie() {
         0,
       )
 
-      // video — karadan başlayır, qərar verdikcə açılır
+
       tl.fromTo(q('.speak__video'), { opacity: 0.5 }, { opacity: 1, duration: 1 }, 0)
 
-      // ── BOŞ VƏZİYYƏT HƏRƏKƏTİ ────────────────────────────────────────────
-      // ⚠️ Bu, saytın **zirvə** fəsılıdır (`research/07 §1`) — ona görə burada
-      // ən SÜRƏTLİ ambient işləyir (4.5s). `07 The Quiet` 11s, `Hero` 7s.
-      // Məqsəd hərəkətin özü deyil — **kontrastdır.** `research/07 §4`.
-      //
-      // Sual işarəsi "döyünür": sual cavabsız qalır, ona görə sakitləşmir.
-      // ⚠️ `scale` + `opacity`, `y` deyil — scrub timeline bu elementə heç nə
-      // yazmır, amma `y` işlədilsəydi `.speak__word` stagger-ı ilə vizual
-      // toqquşardı. Fərqli ox seçilir.
+
+
+
+
+
+
+
+
+
       ambient(q('.speak__qmark'), { scale: 1.14, opacity: 0.9 }, 4.5)
     },
     { scope: ref },

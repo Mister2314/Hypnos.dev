@@ -1,17 +1,6 @@
-/**
- * 06 — Worlds (multiverse indeksi).
- *
- * Bu fəsil **xəritədir**: saytın bütün dünyaları bir ekranda. Konseptin özü budur —
- * *"many worlds, one head"*. Bir adam bir büdcəyə sığmır, ona görə hamısı yan-yana
- * düzülür və **heç biri digərindən üstün sayılmır**.
- *
- * ⚠️ Rənglər `WORLDS`-dən gəlir — kart burada **öz dünyasının rəngi ilə** çəkilir.
- * Yəni bu, dekorativ grid deyil: hər kart həqiqi palitranın nümunəsidir. Palitra
- * dəyişsə, kart özü dəyişir — iki yerdə saxlanan rəng köhnəlmir.
- *
- * ⚠️ Hiperaktiv ritm: giriş `stagger: 0.028` — kartlar sürətlə, dalğa kimi açılır.
- * Yavaş stagger "təntənəli" görünür; bu saytın tonu o deyil.
- */
+
+
+
 import { useRef } from 'react'
 import type { CSSProperties } from 'react'
 import { WORLDS, eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'

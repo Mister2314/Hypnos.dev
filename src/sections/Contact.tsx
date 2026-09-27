@@ -1,20 +1,6 @@
-/**
- * 07 — Contact.
- *
- * KONSEPT §3: **liquid-glass forma** — `--rim / --bev / --spec / --sat / --ins` CSS dəyişənləri.
- *
- * ⚠️ v5 — formanın sağ tərəfi dolduruldu (masaüstü iki sütun, mobil tək):
- * «Other ways in» paneli — sosiallar birbaşa şüşənin içində. Əvvəl linklər
- * kartın dibində səpələnmişdi, masaüstündə isə formanın sağı boş qalırdı —
- * istifadəçinin birbaşa şikayəti. Linklər boşdursa panel dürüst deyir ki
- * tutulmayıb — sayt yalan danışmır (`site.ts` qaydası).
- *
- * ⚠️ Backend YOXDUR. Forma `mailto:` yığır — dürüst davranış: "göndərildi" yalanı yoxdur,
- * istifadəçinin öz poçt proqramı açılır. `SITE.email` boşdursa forma **demir ki göndərdi** —
- * panel açıq şəkildə deyir ki ünvan hələ qoşulmayıb.
- *
- * Ünvanı doldurmaq üçün: `src/lib/site.ts` → `email`.
- */
+
+
+
 import { useRef, useState } from 'react'
 import Line from '../components/Line'
 import { SITE, links } from '../lib/site'

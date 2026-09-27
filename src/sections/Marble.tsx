@@ -1,19 +1,6 @@
-/**
- * 07 — Marble (Roma).
- *
- * ⚠️ 26 sentyabr: **101 kadrlı büst ardıcıllığı silindi.** Khayal dedi ki
- * *"heykel videosu çox okey deyil"* — fikir deyil, icra zəif idi. Ona görə
- * «fırlanan büst» tamamilə atıldı və yerinə **Roma kolonnadası** gəldi:
- * bir kadr, amma qat-qat dərinlik + hərəkət.
- *
- * Niyə bu daha yaxşıdır:
- *   * 202 fayl (≈10 MB) → 1 fayl (≈128 KB)
- *   * `Sequence` komponenti, kadr ön-yükləmə, DPR məntiqi — hamısı lazımsız qaldı
- *   * heykəl «3D render» kimi oxunurdu; arxitektura isə **məkan** verir
- *
- * ⚠️ Dərinlik bir kadrdan çıxarılır: fon (yavaş zoom), işıq zolaqları (sürətli),
- * kənar sütunlar (ən sürətli). Parallaks sürət fərqidir — ayrı şəkillər deyil.
- */
+
+
+
 import { useRef } from 'react'
 import Line from '../components/Line'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
@@ -42,20 +29,20 @@ export default function Marble() {
         },
       })
 
-      // ən yavaş qat — kolonnada: yüngül zoom-out + şaquli sürüşmə
+
       tl.fromTo(q('.marble__bg'), { scale: 1.2, yPercent: -3 }, { scale: 1, yPercent: 3 }, 0)
 
-      // orta qat — işıq zolaqları: daha sürətli, istiqamət dəyişir
+
       tl.fromTo(q('.marble__shafts'), { xPercent: -6, opacity: 0.5 }, { xPercent: 6, opacity: 0.95 }, 0)
 
-      // ən sürətli qat — kənar sütunlar içəri girir → «çərçivə içində çərçivə»
+
       tl.fromTo(q('.marble__edge--l'), { xPercent: -55 }, { xPercent: 0 }, 0)
       tl.fromTo(q('.marble__edge--r'), { xPercent: 55 }, { xPercent: 0 }, 0)
 
-      // istilik — kadr getdikcə istiləşir (soyuq daş → axşam işığı)
+
       tl.fromTo(q('.marble__warm'), { opacity: 0 }, { opacity: 0.5 }, 0.1)
 
-      // mətn — ortada açılır, sonda bir az yuxarı sürüşür
+
       tl.fromTo(
         q('.marble__overlay'),
         { opacity: 0, y: 34 },

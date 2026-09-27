@@ -1,28 +1,6 @@
-/**
- * 04 — Sapere aude (Merli).
- * Scroll: qızıl xətt soldan sağa İŞIQ KOMETASI ilə çəkilir, sətir söz-söz açılır.
- *
- * ⚠️ v6.6 — Khayalın üç şikayəti düzəldi:
- *
- *   1. **«text effekti men ora gelmeden gelir bitir»** — əvvəl `gsap.from`
- *      + trigger `top 80%` idi: bir dəfə oynayır, sticky səhnədə trigger
- *      fəsildən ƏVVƏL keçirdi və heç vaxt təkrarlanmadı. Həll: BÜTÜN mətn
- *      hərəkətləri **scrub timeline**-dadır — fəsilin scroll progressinə
- *      bağlıdır: yalnız fəsil daxilində mövcuddur, **hər girişdə yenidən**
- *      oynayır, geri sarsan geriyə döyünür (Counterweight qaydası).
- *
- *   2. **«rule svg soldan saga effektle, yeni effektle daha gozel»** —
- *      xətt iki qatdır: **base** soldan sağa çəkilir + ucunda **işıq
- *      kometası** gəzir (26px parlaq segment — dasharray pəncərəsi,
- *      `drop-shadow` ilə). Fortiche-in painted light dili: xətt rəsm
- *      deyil, işıq izidir. Kometа base-dən ÖNDƏ gəzir, sona çatanda
- *      sönmür — yox olur (prilot jabası kimi).
- *
- *   3. **Mobil: video tam ekran deyil idi** — stage `100dvh` + canvas
- *      şaquli overscan (bax: `global.css` → v6.6 mobil qaydası).
- *
- * ⚠️ Player: `lib/sequence.ts` — 111 kadr, iki qat. Scroll: 240svh.
- */
+
+
+
 import { useEffect, useRef } from 'react'
 import Line from '../components/Line'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
@@ -32,7 +10,7 @@ export default function SapereAude() {
   const ref = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  /* ---- kadr ardıcıllığı: yüklə + scroll ilə scrub (bax: lib/sequence.ts) ---- */
+
   useEffect(
     () =>
       mountSequence({
@@ -42,7 +20,7 @@ export default function SapereAude() {
         lowDir: 'sapere/frames-1280',
         poster: 'sapere/poster-1920.webp',
         ease: 0.07,
-        /* Süjet sağdadır (tələbə profili) — mobil kəsimi ora baxır (m2c yoxlaması). */
+
         focusX: 0.7,
       }),
     [],
@@ -61,13 +39,13 @@ export default function SapereAude() {
         return
       }
 
-      // base xətt: JS ilə ölçülür (viewBox uzunluğu sabit — 396.44)
+
       if (base) {
         const len = base.getTotalLength()
         gsap.set(base, { strokeDasharray: len, strokeDashoffset: len })
       }
 
-      /* ---- scrub: hər girişdə yenidən oynayır, yalnız fəsil daxilində ---- */
+
       const tl = gsap.timeline({
         defaults: { ease: 'none', duration: 1 },
         scrollTrigger: {
@@ -78,10 +56,10 @@ export default function SapereAude() {
         },
       })
 
-      // video — karadan açılır
+
       tl.fromTo(q('.sapere__video'), { opacity: 0.45 }, { opacity: 1, duration: 1 }, 0)
 
-      // sitat söz-söz — hər dəfə yenidən
+
       tl.from(q('.section__line .rv'), {
         yPercent: 60,
         opacity: 0,
@@ -90,12 +68,12 @@ export default function SapereAude() {
         stagger: 0.012,
       }, 0.04)
 
-      // qızıl xətt — base soldan sağa çəkilir
+
       if (base) {
         tl.to(base, { strokeDashoffset: 0, duration: 0.22, ease: 'power1.inOut' }, 0.08)
       }
 
-      // işıq kometası — base-dən ÖNDƏ gəzir, sona çatanda yox olur
+
       if (spark) {
         tl.fromTo(
           spark,
@@ -131,12 +109,12 @@ export default function SapereAude() {
             preserveAspectRatio="none"
             aria-hidden="true"
           >
-            {/* base — qızıl xətt, soldan sağa çəkilir */}
+            { }
             <path
               className="sapere__rule-base"
               d="M2 8 C 80 2, 160 11, 240 5 S 360 2, 398 7"
             />
-            {/* spark — işıq kometası: 26px parlaq pəncərə, yolu gəzir */}
+            { }
             <path
               className="sapere__rule-spark"
               d="M2 8 C 80 2, 160 11, 240 5 S 360 2, 398 7"

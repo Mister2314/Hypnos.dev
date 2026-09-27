@@ -12,3 +12,8 @@ tools/shots-v6/
 # OS
 .DS_Store
 Thumbs.db
+
+# process notes — local only (AI workflow, decision journal)
+KONSEPT.md
+QERARLAR.md
+research/

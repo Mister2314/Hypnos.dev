@@ -1,7 +1,6 @@
-/**
- * Progress — yuxarıda nazik qızıl xətt, səhifənin scroll gedişatını göstərir.
- * Sırf scroll-a bağlıdır (scrub) — "səhifə hərəkət edir" siqnalı.
- */
+
+
+
 import { useRef } from 'react'
 import { gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
 

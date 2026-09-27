@@ -1,12 +1,6 @@
-/**
- * 05 — Work.
- *
- * KONSEPT §3: Lunora + layihələr, sətir maskası + hover.
- *
- * ⚠️ Dürüstlük qaydası: burada **uydurma layihə yoxdur**. `PROJECTS` yalnız real işi
- * sadalayır; link boşdursa UI link **göstərmir** (işləməyən link portfolio-da yalandır).
- * Yeni layihə → `src/lib/site.ts`-ə əlavə et, bura toxunma.
- */
+
+
+
 import { useRef } from 'react'
 import Line from '../components/Line'
 import { PROJECTS } from '../lib/site'
@@ -34,7 +28,7 @@ export default function Work() {
         scrollTrigger: { trigger: q('.section__line')[0], start: 'top 82%' },
       })
 
-      // iş sətirləri — növbə ilə, aşağıdan sətir maskası kimi
+
       gsap.from(q('.work__item'), {
         yPercent: 105,
         opacity: 0,

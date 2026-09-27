@@ -1,12 +1,6 @@
-/**
- * 0 — Hero (Overture).
- *
- * Giriş: eyebrow → ad (söz-söz) → alt sətir → əl yazısı imza → scroll işarəsi.
- * Scroll: bütün blok yuxarı sürüşür, kiçilir, yox olur (scrub).
- *
- * ⚠️ İmza **əl yazısı şrifti**dir (Italianno), CMBYN titrını **təqlid etmir** —
- * o titr əl ilə çəkilib (Chen Li, KONSEPT §2.1), fontu yoxdur. Bu, sadəcə *öz* imzamız.
- */
+
+
+
 import { useRef } from 'react'
 import { SITE } from '../lib/site'
 import { ambient, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
@@ -19,8 +13,8 @@ export default function Hero() {
       const q = gsap.utils.selector(ref)
 
       if (prefersReducedMotion) {
-        // Tək selector sətri — boş selector nəticəsi GSAP-da `undefined` hədəf yaradır
-        // (bax `Signature.tsx` izahı).
+
+
         gsap.set(q('.hero__eyebrow, .hero__title, .hero__sub, .hero__sign, .hero__cue'), {
           opacity: 1,
         })
@@ -38,7 +32,7 @@ export default function Hero() {
         .from(q('.hero__sign'), { opacity: 0, y: 14, duration: 0.9 }, '-=0.5')
         .from(q('.hero__cue'), { opacity: 0, duration: 0.6 }, '-=0.35')
 
-      // scroll — ad yuxarı çıxır və kiçilir
+
       gsap.to(q('.hero__inner'), {
         yPercent: -12,
         scale: 0.94,
@@ -52,7 +46,7 @@ export default function Hero() {
         },
       })
 
-      // imza — scroll-la bir az sağa "çəkilir"
+
       gsap.to(q('.hero__sign'), {
         xPercent: 6,
         opacity: 0,
@@ -65,21 +59,21 @@ export default function Hero() {
         },
       })
 
-      // ── BOŞ VƏZİYYƏT HƏRƏKƏTİ ────────────────────────────────────────────
-      // Giriş ekranı əvvəl **tam ölü** idi: mətn + bir nazik xətt. Scroll
-      // etmirsənsə heç nə tərpənmirdi (`research/07 §3.3`).
-      //
-      // ⚠️ Niyə `y` + `rotate`, `xPercent` deyil: yuxarıdaki scroll tween
-      // `.hero__sign`-a `xPercent` və `opacity` yazır. GSAP eyni hədəfə iki
-      // tween-i **fərqli property-lərlə** problemsiz işlədir — ona görə burada
-      // **üst-üstə düşməyən** property-lər seçilir. Toqquşma yoxdur.
-      //
-      // 7s = `--amb-mid`. `07 The Quiet` 11s, `05 Speak` 4.5s → **məsafə açılır.**
+
+
+
+
+
+
+
+
+
+
       ambient(q('.hero__sign'), { y: -6, rotate: -0.9 }, 7)
 
-      // İşarə oxu — artıq CSS `cue` animasiyası var; bu ona **ikinci oktava**
-      // əlavə edir (qeyri-bərabər ritm). `threejsresources.com/guides/grass`:
-      // *"Two octaves reads far more convincing than one."*
+
+
+
       ambient(q('.hero__cue-text'), { y: 3, opacity: 0.55 }, 4.5)
     },
     { scope: ref },

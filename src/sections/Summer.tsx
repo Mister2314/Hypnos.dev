@@ -1,18 +1,6 @@
-/**
- * 01 — Summer (Call Me By Your Name).
- *
- * ⚠️ 26 sentyabr: buradaki **əl şəkli silindi**. Khayal onu bəyənmədi və əllər
- * artıq öz fəslinə (02 — The Hands) keçdi, orada Creation of Adam kompozisiyası
- * kimi işlədilir. Burada qalan: **ərik/şaftalı dəstgahı** — filmin ən tanınan
- * maddi detallarından biri, amma heç bir kadrı təkrarlamır (hüquq təmizdir).
- *
- * Scroll: isti işıq nəbzi, yavaş zoom, sətir söz-söz, foto **halftone-dan həqiqi
- * kadra "həll olur"**.
- *
- * ⚠️ Halftone WebGL deyil, CSS-dir: üstdə duran nöqtə qatı `opacity` + `scale` ilə
- * yox olur. Səbəb: yalnız `opacity`/`transform` animasiya olunur → GPU kompozisiyası,
- * hər kadrda maskanın yenidən rastrlaşdırılması yoxdur.
- */
+
+
+
 import { useRef } from 'react'
 import Line from '../components/Line'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
@@ -27,14 +15,14 @@ export default function Summer() {
       const q = gsap.utils.selector(ref)
 
       if (prefersReducedMotion) {
-        // Tək selector sətri — boş selector nəticəsi GSAP-da `undefined` hədəf yaradır
-        // (bax `Signature.tsx` izahı).
+
+
         gsap.set(q('.rv, .summer__plate-img, .summer__caption'), { opacity: 1 })
         gsap.set(q('.summer__halftone'), { opacity: 0 })
         return
       }
 
-      // sətir — söz-söz
+
       gsap.from(q('.section__line .rv'), {
         yPercent: 60,
         opacity: 0,
@@ -53,7 +41,7 @@ export default function Summer() {
         scrollTrigger: { trigger: q('.summer__caption')[0], start: 'top 88%' },
       })
 
-      // dəstgah — yavaş zoom-out + parallaks (bölmə boyu)
+
       gsap.fromTo(
         q('.summer__plate-img'),
         { y: 46, scale: 1.12 },
@@ -70,7 +58,7 @@ export default function Summer() {
         },
       )
 
-      // halftone → həqiqi kadr. Nöqtələr böyüyüb dağılır, altından foto çıxır.
+
       gsap.fromTo(
         q('.summer__halftone'),
         { opacity: 1, scale: 1 },
@@ -87,7 +75,7 @@ export default function Summer() {
         },
       )
 
-      // isti işıq — CMBYN yay işığı, yavaş nəbz
+
       gsap.fromTo(
         q('.summer__bloom'),
         { opacity: 0.12, scale: 1.05 },

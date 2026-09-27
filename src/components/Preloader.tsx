@@ -1,19 +1,6 @@
-/**
- * Preloader — açılış pərdəsi (sayt terzində: tünd fon + serif ad + nazik
- * progress xətti + mono faiz).
- *
- * ⚠️ Nə gözləyir (REAL progress — fake spinner yox):
- *   · 70% — birinci video fəsilin (leap) kadr-ları **dekod** olunmuş
- *     (`lib/sequence.ts` → `loader.setLoaderFrames`)
- *   · 30% — şriftlər (`document.fonts.ready`)
- *
- * ⚠️ Niyə lazımdır: sequence draw heç vaxt dekod olunmamış kadr çəkmir
- * (sync-dekod donmasının qarşısı) — ona görə birinci fəsilin ilk pəncərəsi
- * öncədən hazır olmalıdır. Preloader bu müddəti **gözlənilən** edir.
- *
- * ⚠️ Təhlükəsizlik: 8 saniyədən çox davam etsə (şəbəkə ölü) məcburi bağlanır —
- * istifadəçi loading-də əsir olmur.
- */
+
+
+
 import { useEffect, useRef, useState } from 'react'
 import { prefersReducedMotion } from '../lib/scroll'
 import { isLoaderDone, markLoaderDone, onLoaderProgress, setLoaderFontsReady } from '../lib/loader'
@@ -58,7 +45,7 @@ export default function Preloader() {
       setLoaderFontsReady()
     }
 
-    // failsafe — şəbəkə ölü olsa belə istifadəçi əsir qalmır
+
     const failsafe = setTimeout(() => {
       markLoaderDone()
       finish()

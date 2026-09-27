@@ -1,31 +1,15 @@
-/**
- * 07 — The Quiet (sükut fəsli).
- *
- * **Konsept — CMBYN-in mexanizmi.** Tədqiqat nəticəsi (26 sentyabr): filmi
- * xatırladan şey "nostalgiya" deyil, **verilməyən nəticə + uzadılmış müddət**dir.
- * Guadagnino finalda kameranı dörd dəqiqə saxlayır, heç nə izah etmir, başlığı
- * yalnız son dəqiqədə göstərir. Filmi xatırladan budur — cavabın gəlməməsi.
- *
- * Bu fəsil də elədir: **heç nə vəd etmir.** Altı saniyə hərəkətsiz qalsan açılır.
- * Scroll etsən geri bağlanır. Yəni sayt ziyarətçidən bir şey **istəyir** —
- * və o şey sürətdir, klik deyil, **dayanmaqdır.**
- *
- * ⚠️ Niyyət: bu, "gizli məzmun" deyil. Halqa dolur — yəni vəziyyət görünür və
- * istifadəçi başa düşür ki, dayanmaq nəyəsə aparır. Gizli qalsaydı, sadəcə
- * sınıq görünərdi.
- *
- * ⚠️ `prefers-reduced-motion` → dərhal açılır. Gözləmə məcburiyyəti hərəkət
- * həssaslığı olan istifadəçi üçün maneədir, üslub deyil.
- */
+
+
+
 import { useEffect, useRef } from 'react'
 import { ScrollTrigger, eyebrow, gsap, prefersReducedMotion } from '../lib/scroll'
 import { QUIET } from '../lib/site'
 
-/** Halqanın dolma müddəti (saniyə). 6.5 → darıxdırıcı deyil, tələsik də deyil. */
+
 const QUIET_S = 6.5
-/** Bu qədər ms scroll olmasa "hərəkətsiz" sayılır. */
+
 const STILL_MS = 220
-/** Halqa radiusu — SVG viewBox 48×48 içində. */
+
 const R = 21
 
 export default function TheQuiet() {
@@ -71,7 +55,7 @@ export default function TheQuiet() {
       const dt = Math.min(0.05, (delta || 16.7) / 1000)
       const still = active && now() - lastScroll > STILL_MS
 
-      // Dolma yavaş, boşalma sürətli — səhvən tərpənmək cəzanı ağır etməsin.
+
       hold += still ? dt : -dt * 2.4
       hold = Math.max(0, Math.min(QUIET_S, hold))
 

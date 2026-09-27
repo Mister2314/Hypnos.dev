@@ -1,13 +1,6 @@
-/**
- * Cursor — xüsusi kursor.
- *
- * İki qat: kiçik nöqtə (dərhal) + halqa (gecikməli, `gsap.quickTo`).
- * `mix-blend-mode: difference` → həm tünd, həm işıq dünyada görünür (mərmər fəsli daxil).
- *
- * ⚠️ Yalnız `(hover: hover) and (pointer: fine)` cihazlarda işə düşür — toxunuşda yox.
- * `prefers-reduced-motion` → kursor **işləmir**, yerli kursor qalır.
- * Səbəb: gizlədilmiş yerli kursor + işləməyən əvəz = istifadəçi kursorunu itirir.
- */
+
+
+
 import { useEffect, useRef } from 'react'
 import { gsap, prefersReducedMotion } from '../lib/scroll'
 
@@ -41,7 +34,7 @@ export default function Cursor() {
       dy(e.clientY)
     }
 
-    // Hover hədəfləri — keçidlər, düymələr, iş kartları
+
     const HOVER = 'a, button, input, textarea, [data-cursor="grow"]'
     const grow = () => gsap.to(ring, { scale: 2.1, duration: 0.35, ease: 'power3.out' })
     const shrink = () => gsap.to(ring, { scale: 1, duration: 0.35, ease: 'power3.out' })

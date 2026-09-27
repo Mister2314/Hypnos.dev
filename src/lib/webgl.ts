@@ -1,9 +1,6 @@
-/**
- * webgl.ts — minimal WebGL köməkçiləri.
- *
- * Niyə əl ilə: Three.js ~150 KB gətirir, bizə cəmi 2 shader lazımdır.
- * pear.no da eyni yolu seçib (əl ilə GLSL, kitabxana yox) — bu, səviyyənin özüdür.
- */
+
+
+
 
 export type GL = WebGLRenderingContext
 
@@ -57,7 +54,7 @@ export function buildProgram(gl: GL, vsSrc: string, fsSrc: string): WebGLProgram
   return p
 }
 
-/** Vertex shader — bir böyük üçbucaq bütün ekranı örtür (6 yerinə 3 təpə). */
+
 export const QUAD_VS = `
 attribute vec2 aPos;
 varying vec2 vUv;
@@ -67,7 +64,7 @@ void main() {
 }
 `
 
-/** Tam ekran üçbucağı qur və `aPos` atributunu bağla. */
+
 export function bindFullscreenTriangle(gl: GL, prog: WebGLProgram): void {
   const buf = gl.createBuffer()
   gl.bindBuffer(gl.ARRAY_BUFFER, buf)
@@ -79,7 +76,7 @@ export function bindFullscreenTriangle(gl: GL, prog: WebGLProgram): void {
   }
 }
 
-/** Bütün uniform yerlərini bir dəfə yığ. */
+
 export function uniformLocations<T extends string>(
   gl: GL,
   prog: WebGLProgram,
@@ -90,7 +87,7 @@ export function uniformLocations<T extends string>(
   return out
 }
 
-/** Şəkli tekstura kimi yüklə. `onReady` yalnız uğurlu decode-dan sonra çağırılır. */
+
 export function loadTexture(
   gl: GL,
   src: string,
@@ -119,7 +116,7 @@ export function loadTexture(
   }
 }
 
-/** Canvas-ı CSS ölçüsünə uyğunlaşdır, DPR-ı `cap` ilə məhdudlaşdır. */
+
 export function sizeCanvas(canvas: HTMLCanvasElement, cap = 2): boolean {
   const dpr = Math.min(window.devicePixelRatio || 1, cap)
   const w = Math.max(1, Math.round(canvas.clientWidth * dpr))

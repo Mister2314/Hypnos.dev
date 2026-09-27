@@ -1,8 +1,6 @@
-/**
- * Line — mətni söz-söz açılan span-lara bölür.
- * `.rv` sinfi transform/opacity animasiyası üçün `inline-block` olmalıdır (CSS-də).
- * Boşluq span-dan KƏNARDA qoyulur — yoxsa inline-block içində yox olur.
- */
+
+
+
 import { Fragment } from 'react'
 
 type Props = {

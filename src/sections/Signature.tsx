@@ -1,19 +1,6 @@
-/**
- * 13 — Signature (çıxış).
- *
- * **Konsept — CMBYN-in son kadrı.** Film adını yalnız **sonuncu dəqiqədə**
- * göstərir: kameranı dörd dəqiqə Elio-nun üzündə saxlayır və başlıq o zaman
- * gəlir. Sayt da elə edir — **adı ən sonda, böyük, bir dəfə** göstərir.
- * Hero-da əl yazısı imza var, amma başlıq yox; bu fəsil həmin borcu ödəyir.
- *
- * ⚠️ Dəyişiklik (26 sentyabr): bu fəsil **boş idi** — Khayal dedi
- * *"en sondaki yerde bosluqdu mence biraz ora da sirin elaveler ede bilersen"*.
- * Əlavə olundu: **məhsul sətri** (`journey`-dən — 06-cı fəsildə dərdiyin
- * şaftalı sayı), **kolofon** (sayt nədən qurulub), **xətt** və **başlıq açılışı**.
- *
- * ⚠️ Linklər `src/lib/site.ts`-dən gəlir. Boş olan ünvan **görünmür** —
- * işləməyən link portfolio-da yalandan pisdir. Ünvanı doldur → sətir özü peyda olur.
- */
+
+
+
 import { useEffect, useRef, useState } from 'react'
 import Line from '../components/Line'
 import { PROJECTS, SIGNATURE, SITE, links } from '../lib/site'
@@ -24,7 +11,7 @@ export default function Signature() {
   const ref = useRef<HTMLElement>(null)
   const socials = links()
 
-  // 06-cı fəslin məhsulu. `journey` yalnız artan rəqəm saxlayır.
+
   const [ring, setRing] = useState({ n: 0, visited: false })
   useEffect(() => onJourney((n, visited) => setRing({ n, visited })), [])
 
@@ -33,12 +20,12 @@ export default function Signature() {
       const q = gsap.utils.selector(ref)
 
       if (prefersReducedMotion) {
-        // ⚠️ TƏK selector sətri — iç-içə massiv YOX.
-        // Ölçülmüş səhv: `[q('.rv'), q('.socials li'), q('.signature__work li')]` →
-        // `.socials li` **boş** qaytarır (linklər hələ `site.ts`-də doldurulmayıb) →
-        // GSAP `undefined` hədəf alır → hər kadrda
-        // `TypeError: Cannot read properties of undefined (reading 'opacity')`.
-        // `querySelectorAll` isə həmişə düz massiv verir — boş olsa da `undefined` yox.
+
+
+
+
+
+
         gsap.set(
           q('.signature__close .rv, .socials li, .signature__work li, .signature__title, .signature__colophon'),
           { opacity: 1, y: 0, yPercent: 0 },
@@ -74,7 +61,7 @@ export default function Signature() {
         scrollTrigger: { trigger: q('.signature__work')[0], start: 'top 92%' },
       })
 
-      // Xətt soldan sağa çəkilir — başlıq açılışına hazırlıq.
+
       gsap.from(q('.signature__rule'), {
         scaleX: 0,
         transformOrigin: 'left center',
@@ -83,9 +70,9 @@ export default function Signature() {
         scrollTrigger: { trigger: q('.signature__rule')[0], start: 'top 96%' },
       })
 
-      // ⚠️ Başlıq **maskadan** qalxır (`overflow: hidden` sarğı + `yPercent`).
-      // `opacity` ilə yox: yazı "peyda olur" ki, gəlişi görünsün — filmin son
-      // kadrı da elə gəlir, tədricən yox, bir anda və tam.
+
+
+
       gsap.from(q('.signature__title'), {
         yPercent: 112,
         duration: 1.25,

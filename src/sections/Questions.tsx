@@ -1,32 +1,18 @@
-/**
- * 09 — Questions.
- *
- * FAQ — **3D silindr halqa** (CSS 3D, WebGL deyil). `N` kart `rotateY(i·STEP) translateZ(R)`.
- * Halqa fırlanır → kartlar önə gəlir.
- *
- * ⚠️ TƏK-YAZAN QAYDASI (eyni xəta təkrarlanmasın):
- * `rot.target` — **istək** (scroll yazır, klik yazır, ox yazır, sürüşdürmə yazır).
- * `rot.value`  — **vəziyyət** (yalnız ticker dəyişir).
- * DOM-a transform yazan **tək yer** ticker-dir. İki yazıcı olsa, biri sükutla uduzar.
- *
- * ⚠️ 26 sentyabr — idarəetmə əlavə olundu (Khayal istədi):
- *   ← / → düymələri · klaviatura (yalnız halqa fokusda olanda — yoxsa Lenis-in
- *   öz ox hərəkətini oğurlayardı) · siçanla sürüşdürmə (drag) · sürüşdürmədən
- *   sonra ən yaxın karta **snap**.
- *   Sürüşdürmə `rot.target`-i yazır — yəni eyni tək-yazan qaydası pozulmur.
- */
+
+
+
 import { useEffect, useRef, useState } from 'react'
 import { FAQ } from '../lib/site'
 import { eyebrow, gsap, prefersReducedMotion } from '../lib/scroll'
 
 const N = FAQ.length
 const STEP = 360 / N
-/** Sürüşdürmə həssaslığı — 1 px üfüqi hərəkət neçə dərəcə fırlanma verir. */
+
 const DRAG_K = 0.32
-/** Bu qədər pikseldən az hərəkət «klik» sayılır, sürüşdürmə deyil. */
+
 const DRAG_MIN = 6
 
-/** Bucağı ən qısa yolla hədəfə apar (−180…180) — halqa geriyə dolanmasın. */
+
 function shortest(from: number, to: number): number {
   let d = (((to - from) % 360) + 540) % 360 - 180
   if (d === -180) d = 180
@@ -50,19 +36,16 @@ export default function Questions() {
     let lockedUntil = 0
     let idx = 0
 
-    /** radius — səhnə genişliyindən; CSS `translateZ(var(--ring-r))` oxuyur.
-     *  Alt hədd 185px: ondan aşağı kartlar (mobil) halqada üst-üstə düşür. */
+
+
     const size = () => {
       const r = Math.max(185, Math.min(stage.clientWidth * 0.48, 430))
       stage.style.setProperty('--ring-r', `${r}px`)
-      // Addım koddan yazılır — CSS-də 72° sərt yazılsaydı, sual sayı dəyişəndə sınardı.
+
       stage.style.setProperty('--ring-step', `${STEP}deg`)
-      /* ⚠️ Kart eni RADİUSDAN çıxarılır: akkord = 2·r·sin(π/N).
-         Qonşu kartların mərkəzləri arasındaki məsafə budur; kart ondan geniş olsa,
-         halqada üst-üstə minir. Əvvəl bu rəqəm CSS-də SƏRT yazılmışdı və 5 sual /
-         72° güman edirdi (`2·185·sin36° ≈ 217px`) — 6-cı sual əlavə edəndə həndəsə
-         sükutla sındı: akkord 185px oldu, kart isə 260px qaldı.
-         İndi iki yerdə saxlanan rəqəm yoxdur — hesablanır. */
+
+
+
       const chord = 2 * r * Math.sin(Math.PI / N)
       const cardW = Math.max(140, Math.min(340, chord - 18))
       stage.style.setProperty('--card-w', `${Math.round(cardW)}px`)
@@ -74,7 +57,7 @@ export default function Questions() {
       ring.style.transform = `translateZ(calc(var(--ring-r) * -1)) rotateY(${rot.value.toFixed(3)}deg)`
       for (let i = 0; i < cards.length; i++) {
         const a = (((rot.value + i * STEP) % 360) + 540) % 360 - 180
-        const d = Math.abs(a) / 180 // 0 = ön, 1 = arxa
+        const d = Math.abs(a) / 180
         cards[i].style.filter = `blur(${(d * 2.6).toFixed(2)}px)`
         cards[i].style.opacity = String(1 - d * 0.62)
       }
@@ -84,7 +67,7 @@ export default function Questions() {
       lockedUntil = performance.now() + ms
     }
 
-    // Klik → kartı önə gətir. Scroll 1.2 saniyəlik kilidi gözləyir (yoxsa dərhal oğurlayır).
+
     pickRef.current = (i: number) => {
       idx = i
       setActive(i)
@@ -92,8 +75,8 @@ export default function Questions() {
       lock(1200)
     }
 
-    // ← / → — bir addım. `rot.target` sınırsızdır (dolanmır), ona görə sadəcə
-    // bir addım əlavə edilir; `shortest` yalnız kart indeksinə tullananda lazımdır.
+
+
     stepRef.current = (dir: 1 | -1) => {
       idx = (idx + dir + N) % N
       setActive(idx)
@@ -101,15 +84,15 @@ export default function Questions() {
       lock(1400)
     }
 
-    // reduced-motion → fırlanma yoxdur, kartlar CSS-də sadə siyahıya sökülür
+
     if (prefersReducedMotion) {
       stage.dataset.static = '1'
       paint()
       return () => window.removeEventListener('resize', size)
     }
 
-    // Scroll → hədəfi sürüşdür. `getBoundingClientRect` layout oxuyur → ticker-də YOX,
-    // yalnız scroll hadisəsində (Lenis onsuz da hər rAF-da hadisə göndərir).
+
+
     const onScroll = () => {
       if (performance.now() < lockedUntil) return
       const rect = stage.getBoundingClientRect()
@@ -123,7 +106,7 @@ export default function Questions() {
       }
     }
 
-    // Vəziyyəti hədəfə yaxınlaşdıran TƏK yazıcı
+
     const tick = () => {
       const diff = rot.target - rot.value
       if (Math.abs(diff) < 0.02) return
@@ -131,7 +114,7 @@ export default function Questions() {
       paint()
     }
 
-    /* ---------- sürüşdürmə (drag) ---------- */
+
     const drag = { on: false, x0: 0, rot0: 0, moved: 0 }
     const onDown = (e: PointerEvent) => {
       if (e.button !== 0 && e.pointerType === 'mouse') return
@@ -139,7 +122,7 @@ export default function Questions() {
       drag.x0 = e.clientX
       drag.rot0 = rot.target
       drag.moved = 0
-      lock(1e9) // sürüşdürmə bitənə qədər scroll halqanı oğurlamasın
+      lock(1e9)
     }
     const onMove = (e: PointerEvent) => {
       if (!drag.on) return
@@ -151,7 +134,7 @@ export default function Questions() {
       if (!drag.on) return
       drag.on = false
       if (drag.moved >= DRAG_MIN) {
-        // ən yaxın karta snap
+
         const nearest = Math.round(rot.target / STEP) * STEP
         rot.target = nearest
         const i = ((-Math.round(nearest / STEP) % N) + N) % N
@@ -161,7 +144,7 @@ export default function Questions() {
       lock(1200)
     }
 
-    /* ---------- klaviatura — yalnız fokusda ---------- */
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') {
         e.preventDefault()

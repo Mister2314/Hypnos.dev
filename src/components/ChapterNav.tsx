@@ -1,16 +1,6 @@
-/**
- * ChapterNav — sağ kənarda fəsil relsi.
- *
- * Hər dünyaya bir nöqtə. `n: ''` olan fəsil (Hero) relsdə **görünmür** — o, girişdir,
- * fəsil deyil. Aktiv fəsil scroll-la işarələnir; kliklə həmin bölməyə sürüşür.
- *
- * ⚠️ Aktivlik **`IntersectionObserver`** ilə tapılır, `ScrollTrigger` ilə YOX.
- * Səbəb: pin-lər layout-u dəyişir, trigger mövqeləri isə refresh sırasına bağlıdır.
- * IO layout-dan asılı deyil — ekranın ortasındaki zolağa hansı fəsil düşürsə, o aktivdir.
- *
- * ⚠️ Mətn **yalnız hover/focus**-da açılır — rels sakit qalır, oxunuşu pozmur.
- * `aria-label` həmişə var → ekran oxuyucusu üçün gizli deyil.
- */
+
+
+
 import { useEffect, useRef, useState } from 'react'
 import { WORLDS, gsap, prefersReducedMotion } from '../lib/scroll'
 import { scrollToId } from '../lib/lenis'
@@ -33,7 +23,7 @@ export default function ChapterNav() {
           if (e.isIntersecting) setActive((e.target as HTMLElement).dataset.world ?? '')
         }
       },
-      // Ekranın ortasındaki 10% zolaq — hansı fəsil oradadırsa, o aktivdir.
+
       { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
     )
     for (const el of targets) io.observe(el)

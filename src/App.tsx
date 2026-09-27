@@ -1,21 +1,9 @@
-/**
- * App — səhifə quruluşu.
- *
- * Sıra **məcburidir** və `WORLDS` ilə 1:1 üst-üstə düşür (`lib/scroll.ts`) — 15 fəsil:
- *   hero · leap · summer · hands · counterweight · sapere · speak · pond · quiet ·
- *   worlds · marble · work · questions · contact · signature
- *
- * ⚠️ `<Backdrop />` ən sonda: ScrollTrigger-ləri bölmələrdən SONRA yaranır → refresh düzgün.
- * ⚠️ Backdrop halation blobu kontentin ÜSTÜNDƏDIR (z-10) — film qatının varisi.
- *
- * ⚠️ Sıra dəyişsə `WORLDS` massivi də dəyişməlidir — `Backdrop` rəngi bölmələrin
- * `getBoundingClientRect().top`-undan hesablayır, indeks isə `WORLDS`-dən gəlir.
- * İkisi sürüşsə, rəng bir fəsil geri qalır və bunu **gözlə görmək çətindir.**
- */
+
+
+
 import Backdrop from './components/Backdrop'
 import ChapterNav from './components/ChapterNav'
 import Cursor from './components/Cursor'
-import FilmOverlay from './components/FilmOverlay'
 import Preloader from './components/Preloader'
 import Progress from './components/Progress'
 import TopBar from './components/TopBar'
@@ -62,7 +50,6 @@ export default function App() {
         <Signature />
       </main>
 
-      <FilmOverlay />
       <Backdrop />
     </>
   )
