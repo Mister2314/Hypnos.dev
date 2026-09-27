@@ -1,0 +1,100 @@
+/**
+ * 05 — Work.
+ *
+ * KONSEPT §3: Lunora + layihələr, sətir maskası + hover.
+ *
+ * ⚠️ Dürüstlük qaydası: burada **uydurma layihə yoxdur**. `PROJECTS` yalnız real işi
+ * sadalayır; link boşdursa UI link **göstərmir** (işləməyən link portfolio-da yalandır).
+ * Yeni layihə → `src/lib/site.ts`-ə əlavə et, bura toxunma.
+ */
+import { useRef } from 'react'
+import Line from '../components/Line'
+import { PROJECTS } from '../lib/site'
+import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
+
+export default function Work() {
+  const ref = useRef<HTMLElement>(null)
+
+  useGSAP(
+    () => {
+      const q = gsap.utils.selector(ref)
+
+      if (prefersReducedMotion) {
+        gsap.set(q('.rv, .work__item'), { opacity: 1 })
+        return
+      }
+
+      gsap.from(q('.section__line .rv'), {
+        yPercent: 60,
+        opacity: 0,
+        filter: 'blur(8px)',
+        duration: 0.9,
+        stagger: 0.05,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: q('.section__line')[0], start: 'top 82%' },
+      })
+
+      // iş sətirləri — növbə ilə, aşağıdan sətir maskası kimi
+      gsap.from(q('.work__item'), {
+        yPercent: 105,
+        opacity: 0,
+        duration: 0.95,
+        stagger: 0.12,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: q('.work__list')[0], start: 'top 84%' },
+      })
+
+      gsap.from(q('.work__foot'), {
+        opacity: 0,
+        y: 16,
+        duration: 0.8,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: q('.work__foot')[0], start: 'top 94%' },
+      })
+    },
+    { scope: ref },
+  )
+
+  return (
+    <section className="section section--work" data-world="work" id="work" ref={ref}>
+      <p className="section__eyebrow">{eyebrow('work')}</p>
+      <Line className="section__line" text="I would rather show you two real things than ten neat ones." />
+
+      <ul className="work__list">
+        {PROJECTS.map((p, i) => (
+          <li className="work__item" key={p.title}>
+            <span className="work__index">{String(i + 1).padStart(2, '0')}</span>
+            <div className="work__body">
+              <h3 className="work__title">
+                {p.href ? (
+                  <a href={p.href} target="_blank" rel="noreferrer noopener">
+                    {p.title}
+                  </a>
+                ) : (
+                  p.title
+                )}
+              </h3>
+              <p className="work__meta">
+                <span>{p.kind}</span>
+                <span className="work__dot" aria-hidden="true">
+                  ·
+                </span>
+                <span>{p.stack}</span>
+                <span className="work__dot" aria-hidden="true">
+                  ·
+                </span>
+                <span>{p.year}</span>
+              </p>
+              <p className="work__blurb">{p.blurb}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <p className="work__foot">
+        More in progress. The rest of it lives in the chapters above, which is the honest
+        portfolio anyway.
+      </p>
+    </section>
+  )
+}

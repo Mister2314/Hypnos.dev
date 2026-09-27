@@ -1,0 +1,2744 @@
+/* ============================================================
+   Khayal — üç dünya, bir baş
+   Master brief: C:\Ikinci beyin\Layihə\10 Şəxsi sayt — master brief.md
+   Rəng keçidi scroll-la idarə olunur (Backdrop → :root dəyişənləri)
+   ============================================================ */
+
+:root {
+  /* dünya dəyişənləri — Backdrop scroll boyu bunları dəyişir */
+  --bg: #0e100f;
+  --text: #fffce1;
+  --accent: #b08d57;
+
+  --hairline: #212121;
+  --gold: #b08d57;
+  --gold-dim: #6f6759;
+
+  /* Yay (CMBYN) */
+  --summer-bg: #30312d;
+  --summer-text: #f1f1ea;
+  --summer-peach: #ffc2ae;
+  --summer-apricot: #ffa07a;
+  --summer-cream: #ffdab9;
+
+  /* Mərmər */
+  --marble-bg: #e8e3da;
+  --marble-text: #1b1a19;
+  --marble-dim: #8c8377;
+  --marble-light: #cfc7ba;
+
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  /* Əl yazısı — imza və qeyd. CMBYN titrını TƏQLİD ETMİR: o titr əl ilə çəkilib,
+     fontu yoxdur (KONSEPT §2.1). Bu, sadəcə öz əlimizin əvəzidir. */
+  --font-hand: 'Italianno', 'Cormorant Garamond', cursive;
+
+  /* ═══ HƏRƏKƏT LÜĞƏTİ — üç ailə, üç müddət ═══
+     (26 sentyabr · `research/07-uiux-hekaye-interaktivlik.md §3–4`)
+
+     ⚠️ DİAQNOZ: əvvəl BİR əyri vardı (`--ease-out`) və 26 hərəkətin **22-si**
+     0.2–0.5s arasında idi. Yəni ön planda **tək sürət, tək əyri** — göz öyrəşir
+     və sayt *"sakit"* oxunur. Sayt sakit deyil, **hamar**dır. Fərqli şeylərdir.
+
+     ⚠️ DÜZƏLİŞ: hər ailənin ÖZ işi var, hamısı bir yerdə işlədilmir.
+     Bir jestdə **iki** tier işlət — bir tier mexaniki görünür. */
+  --ease-snap: cubic-bezier(0.2, 0, 0, 1); /* CAVAB — sürətli girir, bərk oturur */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* MÜHİT — yumşaq dayanır (köhnə, qalır) */
+  --ease-over: cubic-bezier(0.34, 1.56, 0.64, 1); /* CANLI — hədəfi keçib qayıdır */
+
+  --t-snap: 0.12s; /* barmaq/düymə cavabı — yoxdursa sayt "gecikmiş" oxunur */
+  --t-base: 0.35s; /* normal */
+  --t-settle: 0.9s; /* ağır şeyin oturması — kütlə hissi */
+
+  /* Boş vəziyyət hərəkəti (idle motion) — `research/07 §3.3`:
+     scroll etmirsənsə, saytın ön planı TAM dayanırdı. `07 The Quiet`-də artıq
+     var idi (`quiet-breathe` 11s) — **amma yalnız orada.** Qalan fəsıllar ölü ekran.
+     İndi: eyni mexanizm, SÜRƏTİ fəsla görə dəyişir → kontrast yaranır.
+     `07` = ən yavaş (dərə). Aktiv fəsıllar = daha sürətli (zirvə). */
+  --amb-slow: 11s;
+  --amb-mid: 7s;
+  --amb-fast: 4.5s;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scrollbar-width: none;
+  overflow-x: hidden;
+}
+html::-webkit-scrollbar {
+  display: none;
+}
+
+/* Lenis — rəsmi tövsiyə olunan qaydalar */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--summer-peach);
+  color: #1b1a19;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BOŞ VƏZİYYƏT HƏRƏKƏTİ — `.amb`
+   (`research/07-uiux-hekaye-interaktivlik.md §3.3, §4.1`)
+
+   ⚠️ PROBLEM: scroll etmirsənsə, saytın ön planı **tam dayanırdı.**
+   Hiperaktiv oxucu üçün bu, ölü ekrandır — film kadrı heç vaxt tam dayanmır
+   (qran, işıq, yarpaq). `07 The Quiet`-də artıq `quiet-breathe` (11s) var idi,
+   **amma yalnız orada.** Qalan 13 fəsıl ölü idi.
+
+   ⚠️ HƏLL: eyni mexanizm, **sürəti fəsla görə dəyişir.** Bu, `§4`-ün mərkəzidir —
+   səs artırmaq yox, **məsafəni açmaq**:
+     `07 The Quiet`  → `--amb-slow` (11s) — dərə, ən yavaş
+     orta fəsıllar   → `--amb-mid`  (7s)
+     aktiv fəsıllar  → `--amb-fast` (4.5s) — zirvə, ən sürətli
+
+   ⚠️ XƏRC: **0 KB JS.** Yalnız CSS `animation` — kompozitor qatında işləyir,
+   `requestAnimationFrame` işlətmir, scroll-u bloklamır.
+   `prefers-reduced-motion` → tam söndürülür (aşağıda).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.amb {
+  animation: amb-drift var(--amb-dur, var(--amb-mid)) var(--ease-out) infinite;
+  animation-delay: var(--amb-delay, 0s);
+  will-change: transform, opacity;
+}
+
+/* İkinci qat — qeyri-bərabər ritm. Tək sinus mexaniki oxunur; iki dalğa
+   (biri uzun, biri qısa) canlı oxunur. `threejsresources.com/guides/grass`
+   eyni prinsipi külək üçün deyir: *"Two octaves reads far more convincing." */
+.amb--two {
+  animation-name: amb-drift-two;
+}
+
+@keyframes amb-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: var(--amb-lo, 0.5);
+  }
+  50% {
+    transform: translate3d(0, var(--amb-y, -10px), 0) scale(var(--amb-scale, 1.04));
+    opacity: var(--amb-hi, 0.82);
+  }
+}
+
+@keyframes amb-drift-two {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: var(--amb-lo, 0.5);
+  }
+  38% {
+    transform: translate3d(var(--amb-x, 6px), var(--amb-y, -10px), 0) scale(var(--amb-scale, 1.04));
+    opacity: var(--amb-hi, 0.82);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: var(--amb-lo, 0.5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .amb {
+    animation: none;
+  }
+}
+
+a {
+  color: inherit;
+}
+
+/* ---------- fon qatı — dənə + vinyetka ---------- */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.backdrop__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.backdrop__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 50% 45%, transparent 42%, rgba(0, 0, 0, 0.22) 100%);
+}
+
+/* ---------- scroll gedişatı ---------- */
+
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: var(--accent);
+  z-index: 20;
+}
+
+/* ---------- söz-söz açılan mətn ---------- */
+
+/* ⚠️ v6.9 — `.rv`-dən `will-change` SİLİNDİ: 14 fəsil × 10-30 söz = yüzlerle
+   GPU qatı — qat ağacı böyüyür, kompozisiya bahalaşır. GSAP animasiya
+   başlayanda özü qatı yüksəldir, bitirəndə salır. */
+.rv {
+  display: inline-block;
+}
+
+/* ---------- section qabığı — fon ŞƏFFAF (backdrop danışır) ---------- */
+
+.section {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12vh 6vw;
+  position: relative;
+  background: transparent;
+}
+
+.section__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin: 0 0 1.2rem;
+}
+
+.section__line {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.06;
+  margin: 0;
+  max-width: 22ch;
+  text-wrap: balance;
+}
+
+/* ---------- 0 Hero ---------- */
+
+.section--hero {
+  justify-content: center;
+}
+
+.hero__title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(3.4rem, 13vw, 200px);
+  line-height: 0.98;
+  margin: 0;
+}
+
+.hero__word {
+  display: inline-block;
+}
+
+.hero__word--name {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero__sub {
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+  max-width: 34ch;
+  margin-top: 2.4rem;
+  opacity: 0.85;
+}
+
+.hero__cue {
+  position: absolute;
+  bottom: 5vh;
+  left: 6vw;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.hero__cue-line {
+  display: block;
+  width: 46px;
+  height: 1px;
+  background: currentColor;
+  transform-origin: 0 50%;
+  animation: cue 2.4s var(--ease-out) infinite;
+}
+
+@keyframes cue {
+  0%,
+  100% {
+    transform: scaleX(0.35);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* ---------- 01 Yay (CMBYN) ---------- */
+
+.section--summer {
+  justify-content: center;
+  overflow: hidden;
+}
+
+.summer__bloom {
+  position: absolute;
+  top: 8%;
+  right: -10%;
+  width: 62vw;
+  height: 62vw;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 190, 140, 0.55) 0%, rgba(255, 160, 122, 0) 68%);
+  filter: blur(10px);
+  z-index: 0;
+}
+
+.summer__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.section--summer .section__line {
+  font-size: clamp(2.2rem, 5.6vw, 4.8rem);
+  color: var(--summer-cream);
+}
+
+.section--summer .section__eyebrow {
+  color: var(--summer-peach);
+}
+
+.summer__caption {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  margin: 1.6rem 0 0;
+  opacity: 0.8;
+}
+
+.summer__caption em {
+  color: var(--summer-peach);
+  font-style: italic;
+}
+
+/* ---------- 04 Sapere aude (Merli) ---------- */
+
+/* ⚠️ v6.2 — scroll büdcəsi: fəsil indi video səhnəsidir (§5.1 qərarı).
+   240svh − 100svh = 140svh scroll → klip fəsil boyu sürüşür. */
+.section--sapere {
+  display: block;
+  min-height: 240svh;
+  padding: 0;
+}
+
+.sapere__stage {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* ⚠️ viewport-fit=cover ilə video notchun ALTINA keçir — mətn safe-area
+     ilə qorunur (max(): dəstəklənməyəndə sadəcə 6vw qalır). */
+  padding: 0 max(6vw, env(safe-area-inset-right)) 0 max(6vw, env(safe-area-inset-left));
+}
+
+/* Həyət işıqlıdır — kölgə speak-dən ağır və bərabərdir: mətn hər yerdə. */
+.sapere__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(14, 16, 15, 0.8) 0%, rgba(14, 16, 15, 0.6) 48%, rgba(14, 16, 15, 0.42) 100%),
+    linear-gradient(0deg, rgba(14, 16, 15, 0.5) 0%, rgba(14, 16, 15, 0.26) 45%, rgba(14, 16, 15, 0.42) 100%);
+  pointer-events: none;
+}
+
+.sapere__inner {
+  position: relative;
+}
+
+.section--sapere .section__line {
+  font-size: clamp(2rem, 5.2vw, 4.4rem);
+}
+
+.section--sapere .section__eyebrow {
+  color: var(--gold);
+}
+
+.sapere__rule {
+  display: block;
+  width: min(100%, 520px);
+  height: 12px;
+  margin: 2rem 0 0;
+}
+
+/* ⚠️ v6.6 — xətt İKİ qatdır: base (qızıl, çəkilir) + spark (işıq kometası).
+   Spark = 26px parlaq pəncərə (dasharray), yolu başdan sona gəzir və yox olur.
+   `drop-shadow` — painted light: xətt rəsm deyil, işıq izidir. */
+.sapere__rule path {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.sapere__rule .sapere__rule-base {
+  stroke: var(--gold);
+  stroke-width: 2;
+}
+
+.sapere__rule .sapere__rule-spark {
+  stroke: #ecd7a8;
+  stroke-width: 2.6;
+  stroke-dasharray: 26 371;
+  stroke-dashoffset: 26;
+  filter: drop-shadow(0 0 6px rgba(216, 169, 232, 0.85));
+}
+
+.sapere__sub {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.15rem, 2vw, 1.65rem);
+  margin: 1.6rem 0 0;
+  opacity: 0.85;
+}
+
+.sapere__caption {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin: 1.4rem 0 0;
+}
+
+/* ---------- 07 Mərmər (Roma) — kolonnada ---------- */
+
+/* ⚠️ 26 sentyabr: 101 kadrlı büst ardıcıllığı silindi, `Sequence` komponenti getdi.
+   Yerinə bir kadr + qat-qat dərinlik. Səbəb `Marble.tsx` başlığında.
+
+   ⚠️ SCROLL BÜDCƏSİ — `min-height` + `position: sticky`, `pin` DEYİL.
+   320svh − 100svh = 220svh scroll. `overflow: hidden` SƏHNƏNİN ÖZÜNDƏDİR:
+   əhatə edən `overflow: hidden` sticky-ni sındırır (yeni scroll konteyneri yaradır). */
+.section--marble {
+  display: block;
+  min-height: 320svh;
+  padding: 0;
+}
+
+.marble__stage {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--marble-bg);
+}
+
+/* Ən yavaş qat. `scale` 1.2-dən başlayır → kiçilir = "içəri girmə" hissi. */
+.marble__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform;
+}
+
+/* İşıq zolaqları — filmin struktur cihazı (KONSEPT §2.3), CSS-lə.
+   `screen` blend: qaranlıq hissələr yox olur, yalnız işıq qalır. */
+.marble__shafts {
+  position: absolute;
+  inset: -20%;
+  background: repeating-linear-gradient(
+    104deg,
+    transparent 0 46px,
+    rgba(255, 246, 224, 0.5) 46px 78px,
+    transparent 78px 190px
+  );
+  mix-blend-mode: screen;
+  filter: blur(26px);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* İstilik qatı — kadr getdikcə axşam işığına keçir */
+.marble__warm {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 90% at 24% 34%,
+    rgba(255, 214, 150, 0.55),
+    rgba(214, 150, 92, 0.22) 46%,
+    transparent 72%
+  );
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+/* Kənar sütunlar — ən sürətli qat. İçəri girəndə "çərçivə içində çərçivə" yaranır. */
+.marble__edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 13vw;
+  background: linear-gradient(to right, rgba(20, 18, 15, 0.9), rgba(20, 18, 15, 0));
+  pointer-events: none;
+  will-change: transform;
+}
+.marble__edge--l {
+  left: 0;
+}
+.marble__edge--r {
+  right: 0;
+  transform: scaleX(-1);
+}
+
+.marble__overlay {
+  position: absolute;
+  inset: auto 6vw 10vh 6vw;
+  z-index: 2;
+  color: var(--marble-text);
+}
+
+.marble__overlay .section__eyebrow {
+  color: var(--marble-dim);
+}
+
+.section--marble .section__line {
+  font-size: clamp(2.2rem, 5.6vw, 4.8rem);
+  text-shadow: 0 1px 30px rgba(232, 227, 218, 0.75);
+}
+
+.marble__caption {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin: 1.4rem 0 0;
+}
+
+/* ---------- 04 İmza ---------- */
+
+.signature__close {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 3.4vw, 2.8rem);
+  line-height: 1.16;
+  max-width: 24ch;
+  margin: 0 0 3.6rem;
+}
+
+.socials,
+.signature__work {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4rem 2.4rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.socials a,
+.signature__work a {
+  font-family: var(--font-mono);
+  text-decoration: none;
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 0.35rem;
+  transition: border-color 0.35s var(--ease-out), color 0.35s var(--ease-out);
+}
+
+.socials a {
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.signature__work {
+  margin-top: 2.8rem;
+  opacity: 0.75;
+}
+
+.signature__work a {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+.socials a:hover,
+.signature__work a:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ---------- mobil ---------- */
+
+@media (max-width: 720px) {
+  .section {
+    padding: 10vh 7vw;
+  }
+  /* ⚠️ v6.6b — video fəsilləri çərçivədən ÇIX (Khayalın F12 tapıntısı):
+     bu media `.section--sapere`-dən (372-ci sətir) SONRA gəldiyi üçün onun
+     `padding: 0`-ını üstələyirdi → yalnız sapere mobilde 7vw çərçivədə idi.
+     Digər video fəsillərinin `padding: 0`-ı bu mediadan SONRADIR — onsuz da
+     qalib idi; bərabərlik üçün hamısı açıq yazılır. */
+  .section--leap,
+  .section--sapere,
+  .section--speak,
+  .section--pond,
+  .section--counterweight,
+  .section--hands,
+  .section--marble,
+  .section--quiet {
+    padding: 0;
+  }
+  .summer__hands {
+    width: 100%;
+  }
+  .summer__bloom {
+    width: 100vw;
+    height: 100vw;
+    right: -30%;
+  }
+  .hero__cue {
+    left: 7vw;
+  }
+  .marble__overlay {
+    inset: auto 7vw 9vh 7vw;
+  }
+}
+
+/* ---------- hərəkəti azalt ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__cue-line {
+    animation: none;
+  }
+  .rv {
+    will-change: auto;
+  }
+  .progress {
+    display: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ============================================================
+   v2 — qlobal qatlar + yeni fəsillər
+   Sıra: film qatı · topbar · fəsil relsi · kursor · fəsil CSS-ləri
+   ============================================================ */
+
+/* ---------- film qranı (v6.10: kadr-ların İÇİNƏ baked) ----------
+   Ayrı fullscreen qran qatı YOXDUR: qran sequence draw-ında
+   `globalCompositeOperation: overlay` ilə kadrin üstünə çəkilir
+   (2 pattern, frame parity). Qalan yerlər üçün `.backdrop__grain`
+   statik qatı var. */
+
+/* ---------- v6.11 — açılış pərdəsi (Preloader) ----------
+   REAL progress: 70% leap kadr-larının dekodu + 30% şriftlər.
+   `html.is-loading` — scroll bloklanır (pərdə arxasında hər şey yüklənir). */
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.8rem;
+  background: #0e100f;
+  transition: opacity 0.7s ease 0.1s;
+}
+
+.preloader.is-done {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.preloader__name {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2.6rem, 7vw, 5.2rem);
+  line-height: 1;
+  color: var(--text);
+  margin: 0;
+}
+
+.preloader__bar {
+  width: min(46vw, 320px);
+  height: 1px;
+  background: rgba(255, 252, 225, 0.14);
+  overflow: hidden;
+}
+
+.preloader__bar i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+
+.preloader__pct {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  opacity: 0.5;
+  margin: 0;
+}
+
+.preloader__pct b {
+  font-weight: 400;
+}
+
+html.is-loading {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader {
+    transition: none;
+  }
+}
+
+/* ---------- yuxarı zolaq ---------- */
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  /* viewport-fit=cover: notch telefonlarda status barın ALTINA düşməsin */
+  padding: max(1.5rem, env(safe-area-inset-top)) max(6vw, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(6vw, env(safe-area-inset-left));
+  /* difference → həm tünd, həm İŞIQ mərmər fəslində oxunur. Ayrı rəng idarəsi lazım deyil. */
+  mix-blend-mode: difference;
+  color: #fff;
+  pointer-events: none;
+}
+
+.topbar__mark,
+.topbar__cta {
+  pointer-events: auto;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: opacity 0.35s var(--ease-out);
+}
+
+.topbar__mark {
+  font-family: var(--font-serif);
+  font-size: clamp(0.95rem, 1.3vw, 1.15rem);
+  letter-spacing: 0.02em;
+}
+
+.topbar__cta {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 0.3rem;
+}
+
+.topbar__mark:hover,
+.topbar__cta:hover {
+  opacity: 1;
+}
+
+/* ---------- fəsil relsi ---------- */
+
+.chapter-nav {
+  position: fixed;
+  right: 1.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 25;
+  mix-blend-mode: difference;
+  color: #fff;
+}
+
+.chapter-nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.85rem;
+}
+
+.chapter-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background: none;
+  border: 0;
+  padding: 0.2rem 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.chapter-nav__label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateX(6px);
+  transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+}
+
+.chapter-nav__link:hover .chapter-nav__label,
+.chapter-nav__link:focus-visible .chapter-nav__label {
+  opacity: 1;
+  transform: none;
+}
+
+.chapter-nav__num {
+  opacity: 0.55;
+}
+
+.chapter-nav__dot {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  transition: background-color 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+}
+
+.chapter-nav__link[data-active='1'] .chapter-nav__dot {
+  background: currentColor;
+  transform: scale(1.4);
+}
+
+.chapter-nav__link[data-active='1'] .chapter-nav__label {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- xüsusi kursor ---------- */
+
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: difference;
+  will-change: transform;
+}
+
+.cursor--ring {
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  border: 1px solid #fff;
+}
+
+.cursor--dot {
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  background: #fff;
+}
+
+/* ---------- 0 Hero — əl yazısı imza ---------- */
+
+.hero__sign {
+  position: absolute;
+  right: 6vw;
+  bottom: 5vh;
+  margin: 0;
+  font-family: var(--font-hand);
+  font-size: clamp(2.2rem, 5vw, 4.4rem);
+  line-height: 1;
+  color: var(--gold);
+  opacity: 0.92;
+  transform: rotate(-4deg);
+  pointer-events: none;
+}
+
+/* ---------- 01 Yay — halftone reveal ---------- */
+
+.summer__plate {
+  position: relative;
+  width: min(72vw, 900px);
+  margin-top: 3.4rem;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.summer__plate-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  will-change: transform;
+}
+
+/* Nöqtə qatı — yalnız `opacity` + `transform` animasiya olunur (GPU kompozisiyası).
+   `mask-size` tween-i hər kadrda maskanı yenidən rastrlaşdırır — bu, ~10× bahadır. */
+.summer__halftone {
+  position: absolute;
+  inset: -2%;
+  background-image: radial-gradient(circle, var(--summer-bg) 40%, transparent 41%);
+  background-size: 7px 7px;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+/* ---------- v6.3 — 03 The Counterweight (Arcane astral) ---------- */
+
+/* ⚠️ SCROLL BÜDCƏSİ — v6.5 final: **360svh** (260 + ~100). Onun sözü:
+   *"scrollu biraz artir ki text tamamlananda biraz qalim gormus olum,
+   amma cox uzatma da."* Mətn 0.84-də bitir → 0.16 × 260svh ≈ 2s dayanma.
+   Effekt tarixçəsi: v6.4 rədd (§30) · v6.5-B rədd (§31) — FROZEN. */
+.section--counterweight {
+  display: block;
+  min-height: 360svh;
+  padding: 0;
+  /* WebGL/frame yüklənməyənə qədər dünya fonu — astral bənövşəyi-qara. */
+  background: linear-gradient(180deg, #0d0814 0%, #140b20 48%, #0f0a16 100%);
+}
+
+.cw__stage {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.cw__video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Painted light — Fortiche-in render üstü rəng boyamasının sayt tərcüməsi.
+   Scroll ilə nəfəs alır, alın-çırpma anında (~0.68) zirvəyə çatır. */
+.cw__bloom {
+  position: absolute;
+  inset: -18%;
+  background: radial-gradient(
+    circle at 50% 46%,
+    rgba(255, 246, 230, 0.85) 0%,
+    rgba(216, 169, 232, 0.5) 20%,
+    rgba(122, 82, 184, 0.2) 46%,
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+  opacity: 0.1;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* Kölgə: mətn soldadır — sol ağır, sağ yüngül (süjet mərkəz-sağdadır). */
+.cw__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(15, 10, 22, 0.74) 0%, rgba(15, 10, 22, 0.42) 46%, rgba(15, 10, 22, 0.28) 100%),
+    linear-gradient(0deg, rgba(15, 10, 22, 0.45) 0%, rgba(15, 10, 22, 0.2) 45%, rgba(15, 10, 22, 0.38) 100%);
+  pointer-events: none;
+}
+
+.cw__inner {
+  position: relative;
+  z-index: 2;
+  padding: 0 max(6vw, env(safe-area-inset-right)) 0 max(6vw, env(safe-area-inset-left));
+  max-width: 1000px;
+}
+
+.section--counterweight .section__eyebrow {
+  color: var(--accent);
+}
+
+.cw__quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2.3rem, 6vw, 5rem);
+  line-height: 1.06;
+  margin: 0;
+  max-width: 16ch;
+  text-wrap: balance;
+}
+
+.cw__source {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.58;
+  margin: 1.6rem 0 0;
+}
+
+/* Şəxsi sətir — pıçıltı: sualdan kiçik, sitatdan kiçik. GSAP scrub-la gec açılır. */
+.cw__personal {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.1vw, 1.6rem);
+  line-height: 1.5;
+  max-width: 30ch;
+  margin: clamp(2.2rem, 5.5vh, 3.6rem) 0 0;
+  color: var(--text);
+  opacity: 0.85;
+}
+
+/* ---------- 05 Work ---------- */
+
+.section--work .section__line {
+  font-size: clamp(1.8rem, 4.2vw, 3.4rem);
+  max-width: 26ch;
+}
+
+.work__list {
+  list-style: none;
+  margin: 3.6rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 2.2rem;
+}
+
+.work__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.4rem 1fr;
+  gap: 1.4rem;
+  padding-top: 1.9rem;
+}
+
+/* Ayırıcı xətt — `border` yerinə pseudo: rəng `currentColor`-dən gəlir, hər dünyada işləyir */
+.work__item::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.12;
+}
+
+.work__index {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  opacity: 0.45;
+  padding-top: 0.55rem;
+}
+
+.work__title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.6vw, 3rem);
+  line-height: 1.05;
+  margin: 0 0 0.5rem;
+}
+
+.work__title a {
+  text-decoration: none;
+  transition: color 0.35s var(--ease-out);
+}
+
+.work__title a:hover {
+  color: var(--accent);
+}
+
+.work__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.work__dot {
+  opacity: 0.6;
+}
+
+.work__blurb {
+  margin: 0;
+  max-width: 52ch;
+  font-size: 0.98rem;
+  opacity: 0.78;
+}
+
+.work__foot {
+  margin: 3rem 0 0;
+  max-width: 46ch;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  opacity: 0.6;
+}
+
+/* ---------- 06 Questions — 3D silindr ---------- */
+
+.section--questions {
+  overflow: hidden;
+}
+
+.questions__head {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.8vw, 2.3rem);
+  margin: 0 0 2rem;
+}
+
+.ring-stage {
+  --ring-r: 360px;
+  --ring-step: 60deg;
+  /* Kart eni JS-dən gəlir (`Questions.tsx` → akkord hesabı). Buradaki dəyər yalnız
+     JS işləməzdən əvvəlki ilk kadr üçündür. */
+  --card-w: 340px;
+  --card-h: min(34vh, 250px);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: min(42vh, 380px);
+  perspective: 1400px;
+  /* ⚠️ GENİŞLİK MƏCBURİDİR. Əvvəl `.ring-stage` flex element idi və eni məzmuna
+     görə yığılırdı (`≈340px`) → `clientWidth * 0.48` alt həddə (185px) düşürdü.
+     6 kart 60° aralıqla 185px radiusda BİR-BİRİNİN ÜSTÜNƏ MİNİR (akkord = 185px,
+     kart eni = 340px). Ölçü ölçmə ilə tapıldı, gözlə görünmürdü — CDP `--ring-r`-i
+     `185px` göstərdi. İndi səhnə böyüyür, radius 430px tavanına çatır. */
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 1080px;
+  /* Üfüqi sürüşdürmə bizə, şaquli scroll brauzerə — mobil üçün məcburidir.
+     `none` olsaydı, barmaqla aşağı sürüşmək də halqanı fırladardı. */
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.ring-stage:active {
+  cursor: grabbing;
+}
+
+.ring-stage:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--text) 45%, transparent);
+  outline-offset: 14px;
+}
+
+/* ⚠️ `will-change: transform` BURADA YOXDUR — preserve-3d ilə birlikdə
+   bəzi brauzerlərdə 3D səhnəni düzəldir (flatten), kartlar üst-üstə düşür. */
+.ring {
+  position: relative;
+  width: var(--card-w, 340px);
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.q-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--card-w, 340px);
+  height: var(--card-h, 250px);
+  margin: calc(var(--card-h, 250px) / -2) 0 0 calc(var(--card-w, 340px) / -2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.4rem;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transform-style: preserve-3d;
+  transition: border-color 0.4s var(--ease-out), background-color 0.4s var(--ease-out);
+}
+
+/* ⚠️ Addım `--ring-step`-dən gəlir, koddan yazılmır. Əvvəl burada 72° sərt yazılmışdı
+   (5 sual üçün) — sual sayı dəyişəndə halqa sınardı. İndi `Questions.tsx`
+   `360 / FAQ.length` hesablayıb dəyişəni yazır. */
+.q-card:nth-child(1) {
+  transform: rotateY(calc(var(--ring-step) * 0)) translateZ(var(--ring-r));
+}
+.q-card:nth-child(2) {
+  transform: rotateY(calc(var(--ring-step) * 1)) translateZ(var(--ring-r));
+}
+.q-card:nth-child(3) {
+  transform: rotateY(calc(var(--ring-step) * 2)) translateZ(var(--ring-r));
+}
+.q-card:nth-child(4) {
+  transform: rotateY(calc(var(--ring-step) * 3)) translateZ(var(--ring-r));
+}
+.q-card:nth-child(5) {
+  transform: rotateY(calc(var(--ring-step) * 4)) translateZ(var(--ring-r));
+}
+.q-card:nth-child(6) {
+  transform: rotateY(calc(var(--ring-step) * 5)) translateZ(var(--ring-r));
+}
+
+.q-card[data-front='1'] {
+  border-color: var(--accent);
+  background: rgba(176, 141, 87, 0.1);
+}
+
+.q-card__num {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  opacity: 0.5;
+}
+
+.q-card__q {
+  font-family: var(--font-serif);
+  font-size: clamp(1.05rem, 1.9vw, 1.5rem);
+  line-height: 1.18;
+}
+
+.questions__answer {
+  margin-top: 2.4rem;
+  max-width: 60ch;
+}
+
+.questions__a-text {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.8vw, 1.45rem);
+  opacity: 0.9;
+  animation: qfade 0.5s var(--ease-out);
+}
+
+@keyframes qfade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 0.9;
+    transform: none;
+  }
+}
+
+.questions__dots {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.4rem;
+}
+
+.questions__dot {
+  width: 22px;
+  height: 2px;
+  padding: 0;
+  border: 0;
+  background: currentColor;
+  opacity: 0.25;
+  cursor: pointer;
+  transition: opacity 0.3s var(--ease-out);
+}
+
+.questions__dot[data-active='1'] {
+  opacity: 0.9;
+}
+
+/* reduced-motion → halqa sökülür, kartlar sadə siyahı olur */
+.ring-stage[data-static='1'] {
+  display: block;
+  height: auto;
+  perspective: none;
+}
+
+.ring-stage[data-static='1'] .ring {
+  display: grid;
+  gap: 0.9rem;
+  width: 100%;
+  height: auto;
+  transform: none !important;
+}
+
+.ring-stage[data-static='1'] .q-card {
+  position: static;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  transform: none !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* ---------- 07 Contact — liquid glass ---------- */
+
+.section--contact .section__line {
+  font-size: clamp(1.8rem, 4.2vw, 3.4rem);
+  max-width: 24ch;
+}
+
+.glass {
+  --rim: rgba(255, 255, 255, 0.18);
+  --bev: rgba(255, 255, 255, 0.06);
+  --spec: rgba(255, 255, 255, 0.42);
+  --sat: rgba(255, 255, 255, 0.03);
+  --ins: rgba(255, 255, 255, 0.1);
+
+  position: relative;
+  overflow: hidden;
+  max-width: 620px;
+  margin-top: 3rem;
+  padding: 2rem;
+  border-radius: 22px;
+  border: 1px solid var(--rim);
+  background: linear-gradient(150deg, var(--bev), transparent 42%), var(--sat);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow:
+    inset 0 1px 0 var(--ins),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+.glass__sheen {
+  position: absolute;
+  inset: -40% -10% auto -10%;
+  height: 70%;
+  transform: rotate(-8deg);
+  background: linear-gradient(100deg, transparent 20%, var(--spec) 48%, transparent 62%);
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.glass__form {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.2rem;
+}
+
+.glass__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.glass__field--wide {
+  grid-column: 1 / -1;
+}
+
+.glass__field span {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+
+.glass__field input,
+.glass__field textarea {
+  font: inherit;
+  color: inherit;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  outline: none;
+  resize: vertical;
+  transition: border-color var(--t-snap) var(--ease-snap), background-color var(--t-snap) var(--ease-snap);
+}
+
+.glass__field input:focus,
+.glass__field textarea:focus {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.glass__submit {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.75rem 1.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: inherit;
+  cursor: pointer;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: rgba(176, 141, 87, 0.16);
+  /* CAVAB ailəsi — düymə "gecikmiş" deyil, cavab verir.
+     `--ease-snap` rəngi dərhal dəyişir, `--ease-over` isə kiçik ölçü sıçrayışı verir
+     (hədəfi keçib qayıdır). İkisi birgə **iki tier** yaradır — `research/07 §4.2`:
+     bir jestdə iki tier = canlı, bir tier = mexaniki. */
+  transition:
+    background-color var(--t-snap) var(--ease-snap),
+    color var(--t-snap) var(--ease-snap),
+    transform var(--t-base) var(--ease-over);
+}
+
+.glass__submit:hover {
+  background: var(--accent);
+  color: #14150f;
+  transform: translateY(-2px) scale(1.03);
+}
+
+/* Basma — **əks istiqamət**. Bu, `anticipation` prinsipidir: bədən əvvəlcə yığılır,
+   sonra atılır. Yoxdursa, düymə "kağız" kimi hiss olunur. */
+.glass__submit:active {
+  transform: translateY(0) scale(0.98);
+  transition-duration: var(--t-snap);
+}
+
+/* ⚠️ v5 — masaüstündə şüşə iki sütunlu: forma solda, «Other ways in» sağda.
+   Əvvəl formanın sağ tərəfi boş qalırdı — 620px kart 900px+ ekranda tək qol ilə
+   dururdu (istifadəçinin birbaşa şikayəti). Mobil tək sütun: forma → status → panel. */
+@media (min-width: 901px) {
+  .glass {
+    max-width: 880px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    grid-template-areas:
+      'form side'
+      'status side';
+    gap: 1.2rem 2.6rem;
+    align-items: start;
+    align-content: start;
+  }
+
+  .glass__form {
+    grid-area: form;
+  }
+
+  .glass__status {
+    grid-area: status;
+    margin-top: 0;
+  }
+
+  .glass__side {
+    grid-area: side;
+  }
+}
+
+.glass__side {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  min-width: 0;
+  padding-left: 1.6rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass__side-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin: 0;
+}
+
+.glass__direct {
+  list-style: none;
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+}
+
+.glass__direct a {
+  font-family: var(--font-serif);
+  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+  line-height: 1.2;
+  color: inherit;
+  text-decoration: none;
+  width: fit-content;
+  transition: color var(--t-snap) var(--ease-snap);
+}
+
+.glass__direct a:hover {
+  color: var(--accent);
+}
+
+.glass__pending {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  opacity: 0.65;
+  max-width: 30ch;
+}
+
+.glass__status {
+  position: relative;
+  margin: 1.2rem 0 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.glass__status:empty {
+  display: none;
+}
+
+.glass__status[data-state='missing'] {
+  color: var(--summer-cream);
+}
+
+.glass__status[data-state='invalid'] {
+  color: var(--summer-peach);
+}
+
+.glass__links {
+  position: relative;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin: 1.4rem 0 0;
+  padding: 0;
+}
+
+.glass__links a {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 0.3rem;
+  transition: color 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
+}
+
+.glass__links a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ---------- 08 Signature — əlavələr ---------- */
+
+.socials--pending {
+  display: block;
+  margin: 0;
+  max-width: 44ch;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  opacity: 0.65;
+}
+
+.signature__work span {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  opacity: 0.6;
+}
+
+.signature__mark {
+  margin: 3.2rem 0 0;
+  font-family: var(--font-hand);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: 1;
+  color: var(--gold);
+  opacity: 0.7;
+}
+
+/* ---------- v2 — mobil ---------- */
+
+@media (max-width: 900px) {
+  .topbar {
+    padding: 1.1rem 7vw;
+  }
+  .chapter-nav {
+    right: 0.7rem;
+  }
+  .chapter-nav__label {
+    display: none;
+  }
+  .chapter-nav__list {
+    gap: 0.7rem;
+  }
+  .work__item {
+    grid-template-columns: 2.2rem 1fr;
+    gap: 0.9rem;
+  }
+  .glass {
+    padding: 1.4rem;
+  }
+  .glass__form {
+    grid-template-columns: 1fr;
+  }
+  .ring-stage {
+    height: min(38vh, 320px);
+  }
+  .cw__inner {
+    padding: 0 7vw;
+  }
+  .cw__scrim {
+    background:
+      linear-gradient(0deg, rgba(15, 10, 22, 0.6) 0%, rgba(15, 10, 22, 0.42) 100%);
+  }
+}
+
+@media (max-width: 720px) {
+  .hero__sign {
+    right: 7vw;
+    bottom: 4vh;
+  }
+  .summer__plate {
+    width: 100%;
+  }
+  .signature__mark {
+    margin-top: 2.4rem;
+  }
+  /* Mobil: kart ENİ burada yazılmır — JS akkorddan hesablayır (`--card-w`).
+     Əvvəl burada `min(52vw, 260px)` sərt yazılmışdı və şərh 72° addımı güman edirdi;
+     6-cı sual əlavə olunanda həndəsə sükutla sındı. İndi yalnız hündürlük dəyişir. */
+  .ring-stage {
+    --card-h: min(28vh, 190px);
+  }
+}
+
+/* ---------- v2 — hərəkəti azalt ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    display: none;
+  }
+  .chapter-nav__label {
+    opacity: 1;
+    transform: none;
+  }
+  .summer__halftone {
+    opacity: 0;
+  }
+  .questions__a-text {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   v3 — 26 sentyabr: 12 fəsil, «many worlds, one head»
+   Yeni: 02 The Hands · 05 Speak or die · 06 Worlds
+   Dəyişən: 07 Marble (büst → kolonnada) · 09 Questions (oxlar)
+   ============================================================ */
+
+/* ---------- 02 The Hands (Creation of Adam) ---------- */
+
+/* ⚠️ SCROLL BÜDCƏSİ — `min-height` + `position: sticky`, `pin` DEYİL (bax `.section--marble`).
+   340svh − 100svh = 240svh scroll. Kəsmə səhnənin ÖZÜNDƏDİR, bölmədə yox. */
+.section--hands {
+  display: block;
+  min-height: 340svh;
+  padding: 0;
+}
+
+.hands__stage {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+}
+
+/* ⚠️ Zoom buradadır, `.hands__stage`-də DEYİL. Səbəb ölçmə ilə tapıldı:
+   səhnəyə `scale(1.6)` verilsə, onun öz boyanmış qutusu 1.6× böyüyür və mobil
+   ölçüdə `scrollWidth` 151px artıq çıxırdı (504 × 0.3). `overflow: hidden` bunu
+   tutmur — kəsmə elementin LOKAL fəzasında olur, transform isə ondan SONRA.
+   İndi kəsən səhnədir, böyüyən isə daxili qat. */
+.hands__zoom {
+  position: absolute;
+  inset: 0;
+  transform: scale(var(--hands-zoom, 1));
+  transform-origin: 50% 50%;
+}
+
+/* Hər əl öz qatındadır: GSAP `transform`-u yalnız `<img>`-ə yazır, qat yerini saxlayır.
+   İkisi bir elementdə olsaydı, GSAP mövqeləndirməni əzərdi. */
+.hands__layer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  width: 50vw;
+  pointer-events: none;
+}
+.hands__layer--reach {
+  left: 0;
+  justify-content: flex-start;
+}
+.hands__layer--open {
+  right: 0;
+  justify-content: flex-end;
+}
+
+.hands__hand {
+  display: block;
+  width: 100%;
+  height: auto;
+  will-change: transform;
+  /* İsti kənar işığı — mərməri tünd fondan ayırır. `drop-shadow` işləyir, çünki
+     şəkillərdə HƏQİQİ alfa var (`background: transparent` ilə generasiya olunub). */
+  filter: drop-shadow(0 26px 60px rgba(0, 0, 0, 0.6)) sepia(0.14) saturate(1.06);
+}
+
+/* Təmas nöqtəsi — «Yaradılış» elə bu boşluqda baş verir */
+.hands__spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff6dd 0%, rgba(224, 201, 166, 0.7) 34%, transparent 70%);
+  box-shadow: 0 0 90px 30px rgba(255, 240, 205, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* Saç teli qədər nazik xətt — yalnız təmas anında görünür */
+.hands__hairline {
+  position: absolute;
+  left: 50%;
+  top: 33%;
+  width: 1px;
+  height: 34%;
+  margin-left: -0.5px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 246, 221, 0.9), transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hands__inner {
+  position: absolute;
+  inset: auto 6vw 11svh 6vw;
+  z-index: 2;
+  text-align: center;
+  pointer-events: none;
+}
+
+.section--hands .section__eyebrow {
+  color: var(--accent);
+}
+
+.section--hands .section__line {
+  font-size: clamp(1.75rem, 4.4vw, 3.7rem);
+  max-width: 26ch;
+  margin: 0 auto;
+}
+
+.hands__caption {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.58;
+  margin: 1.5rem 0 0;
+}
+
+/* ---------- 05 Speak or die ---------- */
+
+/* ⚠️ SCROLL BÜDCƏSİ — 26 sentyabr: **260svh → 320svh**.
+   Bu fəsıl artıq saytın **sual mərkəzidir** (`research/08 §3`): sual + Elio-nun qorxusu
+   + cavab + şəxsi qat. Dörd qat üçün 160svh scroll az idi. `03 The Berm` isə 190svh-a
+   düşdü — ikisi arasında **1.7× fərq** var, təkrar hissi yox olur. */
+.section--speak {
+  display: block;
+  min-height: 320svh;
+  padding: 0;
+}
+
+/* ⚠️ v6 — video arxa planlar: frame ardıcıllığı, scroll ilə scrub.
+   `<video>` yox — currentTime scrub-u iOS-da təkanlıdır.
+   05 SpeakOrDie (qatar) · 04 SapereAude (həyət) · 03 Counterweight (astral)
+   eyni player-i işlədir (`lib/sequence.ts`). */
+.speak__video,
+.sapere__video,
+.cw__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  /* JS yüklənənə qədər dünya fonu görünür — kadr poster ilə dərhal əvəz olunur */
+  opacity: 0.5;
+}
+
+/* Mətn kölgəsi — sol tərəf ağır (sual soldadır), sağ yüngül (qatar sağdan keçir). */
+.speak__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(12, 21, 18, 0.78) 0%, rgba(12, 21, 18, 0.5) 44%, rgba(12, 21, 18, 0.22) 100%),
+    linear-gradient(0deg, rgba(12, 21, 18, 0.5) 0%, rgba(12, 21, 18, 0.18) 40%, rgba(12, 21, 18, 0.35) 100%);
+  pointer-events: none;
+}
+
+.speak__stage {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+/* İşıq soldan — filmin struktur cihazı: işıq həmişə pəncərədən, yandan düşür. */
+.speak__rim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(90% 72% at 4% 42%, rgba(201, 195, 164, 0.5), transparent 64%);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.speak__inner {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 1180px);
+  padding: 0 max(6vw, env(safe-area-inset-right)) 0 max(6vw, env(safe-area-inset-left));
+}
+
+.speak__question {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2rem, 5.8vw, 4.9rem);
+  line-height: 1.14;
+  letter-spacing: -0.012em;
+  margin: 0 0 1.1rem;
+  max-width: 20ch;
+}
+
+.speak__word {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.speak__pole {
+  position: relative;
+}
+
+/* ⚠️ Xətlər AYRI elementdir — GSAP pseudo-elementi (`::after`) hədəfləyə bilmir.
+   Bu, ilk cəhddə tutulan tələ idi. */
+.speak__strike,
+.speak__underline {
+  position: absolute;
+  left: -2%;
+  width: 104%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+.speak__strike {
+  top: 55%;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.7;
+}
+.speak__underline {
+  bottom: -0.05em;
+  height: 3px;
+  background: var(--accent);
+  box-shadow: 0 0 24px rgba(201, 195, 164, 0.6);
+}
+
+.speak__qmark {
+  opacity: 0.5;
+}
+
+.speak__source {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.58;
+  margin: 0 0 clamp(1.6rem, 4vh, 2.8rem);
+}
+
+/* Elio-nun qorxusu — sual ilə cavabın ARASINDA.
+   Niyə burada: `03 The Berm` əvvəl eyni sualı deyirdi (təkrar oxunurdu).
+   İndi `05` sualı tam verir: sual → qorxu → cavab. Bax `research/08-berm-grass-tekrar.md §3`.
+   Ton: sualdan kiçik, cavabdan kiçik — **pıçıltı**, sitat deyil. */
+.speak__admission {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.05rem, 2.1vw, 1.6rem);
+  line-height: 1.45;
+  max-width: 34ch;
+  color: var(--text);
+  opacity: 0;
+  margin: 0 0 clamp(1.4rem, 3.4vh, 2.4rem);
+}
+
+.speak__answer {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 7.6vw, 6.4rem);
+  line-height: 1;
+  margin: 0;
+  color: var(--accent);
+  opacity: 0;
+}
+
+.speak__reflect {
+  font-size: clamp(0.94rem, 1.5vw, 1.12rem);
+  line-height: 1.62;
+  max-width: 44ch;
+  margin: 1.7rem 0 0;
+  opacity: 0;
+}
+
+/* ---------- 06 Worlds — multiverse indeksi ---------- */
+
+.section--worlds {
+  min-height: 150svh;
+}
+
+.worlds__head {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.9rem, 4.6vw, 3.7rem);
+  line-height: 1.08;
+  margin: 0 0 1.1rem;
+  max-width: 20ch;
+}
+
+.worlds__note {
+  max-width: 52ch;
+  margin: 0 0 clamp(2.2rem, 5vh, 3.6rem);
+  opacity: 0.72;
+  line-height: 1.62;
+}
+
+.worlds__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  /* ⚠️ 7 sütun — çünki `WORLDS` 14 elementdir və 14 = 2 × 7.
+     Fəsil əlavə olunsa sonuncu sıra natamam qalar (sınmır, sadəcə asimmetrik olur).
+     Sütun sayını CSS-də hesablamaq mümkün deyil, ona görə bu rəqəm `WORLDS.length`
+     ilə əl-ələ dəyişməlidir — `review_vault` bu cür sayları tutmur, diqqətli ol. */
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.65rem;
+  width: min(100%, 1080px);
+}
+
+.worlds__cell {
+  margin: 0;
+}
+
+/* Kart **öz dünyasının** rəngi ilə çəkilir — dekorativ grid deyil, palitra xəritəsidir.
+   Palitra `scroll.ts`-də dəyişsə, kart özü dəyişir: iki yerdə saxlanan rəng köhnəlmir. */
+.world-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  padding: 0.8rem 0.85rem;
+  border: 0;
+  border-radius: 3px;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  background: var(--card-bg);
+  color: var(--card-fg);
+  overflow: hidden;
+  transition:
+    transform 0.5s var(--ease-out),
+    box-shadow 0.5s var(--ease-out);
+}
+
+.world-card__num {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  opacity: 0.55;
+}
+
+.world-card__title {
+  position: absolute;
+  left: 0.85rem;
+  right: 0.85rem;
+  bottom: 0.8rem;
+  font-family: var(--font-serif);
+  font-size: clamp(0.82rem, 1.05vw, 1.1rem);
+  line-height: 1.16;
+}
+
+.world-card__swatch {
+  position: absolute;
+  inset: 0;
+  background: var(--card-ac);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease-out);
+}
+
+.world-card:hover,
+.world-card:focus-visible {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.45);
+}
+
+.world-card:hover .world-card__swatch,
+.world-card:focus-visible .world-card__swatch {
+  opacity: 0.16;
+}
+
+/* ---------- 09 Questions — oxlar və idarəetmə ---------- */
+
+.ring-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 1.8vw, 1.8rem);
+  width: 100%;
+}
+
+.ring-arrow {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--text) 20%, transparent);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    background-color 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out),
+    transform 0.35s var(--ease-out);
+}
+
+.ring-arrow svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ring-arrow:hover {
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+  border-color: color-mix(in srgb, var(--text) 45%, transparent);
+}
+
+.ring-arrow:active {
+  transform: scale(0.9);
+}
+
+.questions__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.questions__count {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  opacity: 0.7;
+}
+
+.questions__count-sep {
+  opacity: 0.35;
+}
+
+.questions__hint {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.35;
+}
+
+/* ---------- v3 — mobil ---------- */
+
+@media (max-width: 900px) {
+  .hands__stage {
+    --hands-zoom: 1.45;
+  }
+  .worlds__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .speak__inner {
+    padding: 0 7vw;
+  }
+}
+
+@media (max-width: 720px) {
+  .hands__stage {
+    --hands-zoom: 1.6;
+  }
+  .hands__inner {
+    bottom: 8svh;
+  }
+  .worlds__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+  .ring-arrow {
+    width: 40px;
+    height: 40px;
+  }
+  .questions__hint {
+    display: none;
+  }
+  .speak__question {
+    max-width: none;
+  }
+  /* Mobil: mətn genişdir — kölgə bərabər ağır olsun (ekran yoxlaması: günəş/miras
+   üstündə söz itirdi). */
+  .speak__scrim {
+    background:
+      linear-gradient(0deg, rgba(12, 21, 18, 0.62) 0%, rgba(12, 21, 18, 0.45) 100%);
+  }
+  .sapere__scrim {
+    background:
+      linear-gradient(0deg, rgba(14, 16, 15, 0.55) 0%, rgba(14, 16, 15, 0.4) 100%);
+  }
+}
+
+/* ---------- v3 — hərəkəti azalt ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .speak__admission,
+  .speak__answer,
+  .speak__reflect {
+    opacity: 1;
+  }
+  .speak__strike,
+  .speak__underline {
+    transform: scaleX(1);
+  }
+  .hands__spark,
+  .hands__hairline {
+    display: none;
+  }
+  .marble__shafts {
+    opacity: 0.6;
+  }
+}
+
+/* ---------- v5 — 06 The Pond (analitik su gölməsi) ---------- */
+
+/* ⚠️ SCROLL BÜDCƏSİ — `min-height` + `position: sticky`, `pin` DEYİL (bax `.section--marble`).
+   380svh − 100svh = 280svh scroll: kamera oturur, günəş sərvlərin arxasında batır,
+   külək ortada güclənir. Ağac fəsli ilə eyni büdcə qaldı — fəsil hələ də saytın
+   ən uzun interaktiv set-piecesidir, amma indi əvvəlcədən bilinən bir şey dərmir:
+   hər toxunuş başqa halqa açır. */
+.section--pond {
+  display: block;
+  min-height: 380svh;
+  padding: 0;
+  /* WebGL yoxdursa (və ya hələ yüklənməyibsə) su yoxdur — amma fəsil oxunmalıdır:
+     səma → sahil → dərin su qradiyenti, mətn üstündə qalır. */
+  background: linear-gradient(180deg, #17160b 0%, #1d2110 40%, #101410 100%);
+}
+
+.pond__sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+}
+
+/* `touch-action: pan-y` — barmaqla şaquli scroll işləməlidir, suya toxunmaq
+   onu bloklamamalıdır. `pointerdown` təkbaşına scroll-u tutmur, amma bu sığorta. */
+.pond__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: pan-y;
+}
+
+/* Mətn canvas-ın ÜSTÜNDƏ, amma klikləri udmur — suya toxunmaq mətnin
+   altından da işləməlidir. Ona görə `pointer-events: none`.
+   ⚠️ Kölgə məcburidir: mobilde mətn günəş parıltısının ÜSTÜNƏ düşür —
+   yüngül tünd hələ oxunaqlılığı qaytarır (ekran yoxlaması, 390×844). */
+.pond__copy {
+  position: absolute;
+  top: clamp(9svh, 13vh, 17svh);
+  left: 6vw;
+  max-width: min(44ch, 48vw);
+  pointer-events: none;
+  text-shadow: 0 1px 3px rgba(8, 10, 7, 0.55), 0 2px 26px rgba(8, 10, 7, 0.65);
+}
+
+.pond__head {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.9rem, 4.4vw, 3.4rem);
+  line-height: 1.06;
+  margin: 0 0 1rem;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+.pond__sub {
+  margin: 0;
+  line-height: 1.68;
+  opacity: 0.7;
+  max-width: 46ch;
+}
+
+.pond__hint {
+  position: absolute;
+  right: 6vw;
+  bottom: clamp(7svh, 11vh, 15vh);
+  margin: 0;
+  max-width: 26ch;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+/* İlk toxunuşdan sonra təlimat lazımsızdır — amma tam yox olmur, çünki
+   "dəydim" məlumatı da özü bir məlumatdır. */
+.pond__hint.is-done {
+  opacity: 0.16;
+}
+
+/* ---------- v4 — 07 The Quiet (sükut fəsli) ---------- */
+
+.section--quiet {
+  display: block;
+  min-height: 210svh;
+  padding: 0;
+}
+
+.quiet__sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vh, 2.8rem);
+  text-align: center;
+  padding: 0 6vw;
+}
+
+/* Nəfəs. 11 saniyə — ürək döyüntüsündən yavaş, gözlə "canlı" sezilən hədd. */
+.quiet__glow {
+  position: absolute;
+  width: min(88vmin, 760px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 46%, var(--accent) 0%, transparent 66%);
+  opacity: 0.14;
+  animation: quiet-breathe 11s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes quiet-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.12;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.2;
+  }
+}
+
+/* Cırcırama / otaq səsi — **səs yox, görüntü kimi**. Yavaş yayılan halqalar
+   filmin səssizliyini göstərir: heç nə deyilmir, amma otaq doludur. */
+.quiet__ripples {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.quiet__ripples span {
+  position: absolute;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  opacity: 0;
+  animation: quiet-ripple 14s ease-out infinite;
+}
+
+/* ⚠️ v5 — həqiqi sükut: əvvəl üç halqa hər 3 saniyə bir doğulurdu — dərə yox,
+   «gözləmə zalı» oxunurdu. İndi tək halqa, 14 saniyəlik dövrdə bir. 06 The Pond
+   partlayışının qarşısında məsafə açılır (SYNTHESIS §5: zirvə 9/10, dərə 2/10). */
+.quiet__ripples span:nth-child(2),
+.quiet__ripples span:nth-child(3) {
+  display: none;
+}
+
+@keyframes quiet-ripple {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  14% {
+    opacity: 0.26;
+  }
+  100% {
+    transform: scale(5.4);
+    opacity: 0;
+  }
+}
+
+.quiet__core {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+}
+
+.quiet__ring {
+  width: 92px;
+  height: 92px;
+  /* 12 saatdan başlasın — yoxsa halqa 3-dən başlayır və "dolum" yanlış oxunur. */
+  transform: rotate(-90deg);
+}
+
+.quiet__ring-track {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.14;
+}
+
+.quiet__ring-fill {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.quiet__dot {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.45;
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+.quiet__hold {
+  position: absolute;
+  bottom: -2rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.38;
+  transition: opacity 0.6s ease;
+}
+
+.quiet__copy {
+  max-width: 30ch;
+}
+
+.quiet__head {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2.1rem, 5.6vw, 4rem);
+  line-height: 1.02;
+  margin: 0 0 0.85rem;
+  text-wrap: balance;
+}
+
+.quiet__sub {
+  margin: 0;
+  line-height: 1.62;
+  opacity: 0.6;
+}
+
+/* ⚠️ Mətn `opacity: 0`-da belə YER TUTUR — açılanda layout tərpənməsin.
+   Yer saxlamasa, 6 saniyə gözləyən istifadəçinin qarşısında hər şey sıçrayar. */
+.quiet__reward {
+  max-width: 48ch;
+  margin: 0;
+  line-height: 1.72;
+  opacity: 0;
+  transform: translateY(10px);
+  /* 1.4s — gəlişi **yavaş** olmalıdır. Sürətli gəlsə, gözləmənin mənası qalmaz. */
+  transition: opacity 1.4s ease 0.2s, transform 1.4s ease 0.2s;
+}
+
+.quiet__sticky.is-open .quiet__reward {
+  opacity: 0.84;
+  transform: none;
+}
+
+.quiet__sticky.is-open .quiet__dot {
+  opacity: 1;
+  transform: scale(1.55);
+}
+
+.quiet__sticky.is-open .quiet__glow {
+  opacity: 0.3;
+}
+
+/* Açılandan sonra təlimat öz işini bitirir. */
+.quiet__sticky.is-open .quiet__hold {
+  opacity: 0;
+}
+
+/* ---------- v4 — 13 Signature (son fəsil dolduruldu) ---------- */
+
+.signature__harvest {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin: 1.3rem 0 0;
+}
+
+.signature__colophon {
+  max-width: 56ch;
+  margin: clamp(1.8rem, 4.5vh, 3.2rem) 0 0;
+  line-height: 1.72;
+  font-size: 0.92rem;
+  opacity: 0.55;
+}
+
+.signature__rule {
+  display: block;
+  height: 1px;
+  width: min(100%, 1080px);
+  background: currentColor;
+  opacity: 0.18;
+  margin: clamp(2.2rem, 6vh, 3.8rem) 0 clamp(1.4rem, 3.6vh, 2.4rem);
+}
+
+.signature__title-mask {
+  overflow: hidden;
+  width: min(100%, 1080px);
+}
+
+/* ⚠️ Başlıq **bir dəfə** göstərilir — CMBYN adını son dəqiqədə göstərir.
+   `Hero`-da əl yazısı imza var, burada həqiqi başlıq. İkisi eyni şey deyil. */
+.signature__title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(3.2rem, 14vw, 11rem);
+  line-height: 0.94;
+  letter-spacing: -0.02em;
+  margin: 0;
+  will-change: transform;
+}
+
+/* ---------- v4 — mobil ---------- */
+
+@media (max-width: 900px) {
+  .pond__copy {
+    max-width: min(46ch, 72vw);
+  }
+  .signature__title {
+    font-size: clamp(3rem, 16vw, 7rem);
+  }
+}
+
+@media (max-width: 720px) {
+  .section--pond {
+    min-height: 330svh;
+  }
+  .pond__copy {
+    top: 8svh;
+    left: 6vw;
+    right: 6vw;
+    max-width: none;
+  }
+  .pond__head {
+    font-size: clamp(1.55rem, 7vw, 2.3rem);
+    max-width: none;
+  }
+  .pond__sub {
+    font-size: 0.92rem;
+  }
+  .glass__side {
+    padding-left: 0;
+    border-left: none;
+    margin-top: 0.8rem;
+  }
+  .pond__hint {
+    left: 6vw;
+    right: 6vw;
+    bottom: 4.5svh;
+    max-width: none;
+    text-align: left;
+    font-size: 0.66rem;
+  }
+  .section--quiet {
+    min-height: 190svh;
+  }
+  .quiet__core,
+  .quiet__ring {
+    width: 78px;
+    height: 78px;
+  }
+  .quiet__reward {
+    max-width: none;
+    font-size: 0.94rem;
+  }
+  .signature__title {
+    font-size: clamp(2.8rem, 19vw, 5.5rem);
+  }
+}
+
+/* ---------- v4 — hərəkəti azalt ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Nəfəs və dalğalar dayanır — sükut fəsli sakit qalır, amma **canlı** görünmür.
+     `is-open` effect-də dərhal qoyulur, ona görə mükafat mətni görünür. */
+  .quiet__glow {
+    animation: none;
+    opacity: 0.18;
+  }
+  .quiet__ripples {
+    display: none;
+  }
+  .quiet__reward,
+  .quiet__dot,
+  .quiet__hold,
+  .quiet__glow {
+    transition: none;
+  }
+  /* Suya toxunma statik kadda da işləyir — yalnız hərəkət yoxdur. */
+  .pond__hint {
+    transition: none;
+  }
+}
+
+/* ---------- v6.6b — mobil: video TAM ekran (faylın SONU — cascade) ---------- */
+/* Khayal: *"mobilde full scren deyile video, sanki cercive icindedi — tekce
+   sapere aude-de."* Kök səbəb İKİ qatlı idi: ① toolbar yıxılanda görünən sahə
+   100svh-dan böyüyür → stage qalır, ətrafda dünya fonu («çərçivə» hissi)
+   ② effekt qaydası faylın ORTASINDA idi — sonrakı `.speak__stage` /
+   `.pond__sticky` / `.cw__stage` / paylaşılan video qaydası onu üstələyirdi
+   (CSS cascade: eyni spesifiklikdə SONRAKI qalib gəlir). İndi blok faylın
+   ƏN SONUNDADIR: `100dvh` + 30svh şaquli overscan — dörd stage-də də. */
+.speak__stage,
+.sapere__stage,
+.pond__sticky,
+.cw__stage {
+  height: 100svh;
+  height: 100dvh;
+}
+
+.speak__video,
+.sapere__video,
+.cw__video,
+.pond__canvas {
+  height: calc(100% + 30svh);
+  top: -15svh;
+}
+
+/* ---------- v6.7 — 13 The Leap (Spider-Verse) ---------- */
+
+/* ⚠️ SCROLL BÜDCƏSİ — v6.8: 540svh (Khayal: «Nah» 1.5-2.5s GEÇ gəlsin —
+   sitat tək qalır, cavab gecikir). Xoreoqrafiya: sitat «on twos» (stepped ease —
+   Miles-in 12fps cihazı) → HOLD (sitat tək danışır) → ÜSYAN (~0.50) → blink →
+   SICRAYIŞ (səhnə yuxarı qalxır — düşmə tərsinə çevrilir) → hamar son. */
+.section--leap {
+  display: block;
+  min-height: 540svh;
+  padding: 0;
+  background: linear-gradient(180deg, #070b18 0%, #0e1330 50%, #0a0e1e 100%);
+}
+
+.leap__stage {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+/* Öz-overscan daxildir (bax: v6.6b — cascade dərsi) */
+.leap__video {
+  position: absolute;
+  top: -15svh;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 30svh);
+  display: block;
+  opacity: 0.45;
+}
+
+/* Ben-Day nöqtələri — filmin çap toxuması. Overlay blend + scrub opacity. */
+.leap__halftone {
+  position: absolute;
+  inset: -2%;
+  background-image: radial-gradient(circle, rgba(251, 251, 252, 0.4) 1px, transparent 1.4px);
+  background-size: 7px 7px;
+  mix-blend-mode: overlay;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.leap__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(10, 14, 30, 0.78) 0%, rgba(10, 14, 30, 0.45) 46%, rgba(10, 14, 30, 0.3) 100%),
+    linear-gradient(0deg, rgba(10, 14, 30, 0.5) 0%, rgba(10, 14, 30, 0.22) 45%, rgba(10, 14, 30, 0.4) 100%);
+  pointer-events: none;
+}
+
+.leap__inner {
+  position: relative;
+  z-index: 2;
+  padding: 0 max(6vw, env(safe-area-inset-right)) 0 max(6vw, env(safe-area-inset-left));
+  max-width: 1100px;
+}
+
+.section--leap .section__eyebrow {
+  color: var(--accent);
+}
+
+.leap__quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.9rem, 4.6vw, 3.9rem);
+  line-height: 1.1;
+  margin: 0;
+  max-width: 20ch;
+  text-wrap: balance;
+}
+
+.leap__source {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.58;
+  margin: 1.6rem 0 0;
+}
+
+/* Üsyan — BÜYÜK, DÜZ (italic deyil: üsyan bərkdir). CMYK başlanğıcı JS-də. */
+.leap__nah {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 7vw, 6rem);
+  line-height: 1.04;
+  margin: clamp(2.4rem, 6vh, 4rem) 0 0;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.leap__nw {
+  display: inline-block;
+  will-change: transform;
+}
+
+@media (max-width: 720px) {
+  .section--leap {
+    min-height: 460svh;
+  }
+  .leap__scrim {
+    background:
+      linear-gradient(0deg, rgba(10, 14, 30, 0.62) 0%, rgba(10, 14, 30, 0.45) 100%);
+  }
+}

@@ -1,0 +1,130 @@
+/**
+ * 07 — Contact.
+ *
+ * KONSEPT §3: **liquid-glass forma** — `--rim / --bev / --spec / --sat / --ins` CSS dəyişənləri.
+ *
+ * ⚠️ v5 — formanın sağ tərəfi dolduruldu (masaüstü iki sütun, mobil tək):
+ * «Other ways in» paneli — sosiallar birbaşa şüşənin içində. Əvvəl linklər
+ * kartın dibində səpələnmişdi, masaüstündə isə formanın sağı boş qalırdı —
+ * istifadəçinin birbaşa şikayəti. Linklər boşdursa panel dürüst deyir ki
+ * tutulmayıb — sayt yalan danışmır (`site.ts` qaydası).
+ *
+ * ⚠️ Backend YOXDUR. Forma `mailto:` yığır — dürüst davranış: "göndərildi" yalanı yoxdur,
+ * istifadəçinin öz poçt proqramı açılır. `SITE.email` boşdursa forma **demir ki göndərdi** —
+ * panel açıq şəkildə deyir ki ünvan hələ qoşulmayıb.
+ *
+ * Ünvanı doldurmaq üçün: `src/lib/site.ts` → `email`.
+ */
+import { useRef, useState } from 'react'
+import Line from '../components/Line'
+import { SITE, links } from '../lib/site'
+import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
+
+export default function Contact() {
+  const ref = useRef<HTMLElement>(null)
+  const [sent, setSent] = useState<'' | 'ok' | 'missing' | 'invalid'>('')
+  const socials = links()
+
+  useGSAP(
+    () => {
+      const q = gsap.utils.selector(ref)
+      if (prefersReducedMotion) {
+        gsap.set(q('.rv, .glass'), { opacity: 1 })
+        return
+      }
+      gsap.from(q('.section__line .rv'), {
+        yPercent: 60,
+        opacity: 0,
+        filter: 'blur(8px)',
+        duration: 0.9,
+        stagger: 0.05,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: q('.section__line')[0], start: 'top 84%' },
+      })
+      gsap.from(q('.glass'), {
+        y: 40,
+        opacity: 0,
+        scale: 0.98,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: q('.glass')[0], start: 'top 88%' },
+      })
+    },
+    { scope: ref },
+  )
+
+  const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const fd = new FormData(e.currentTarget)
+    const name = String(fd.get('name') ?? '').trim()
+    const from = String(fd.get('email') ?? '').trim()
+    const msg = String(fd.get('message') ?? '').trim()
+
+    if (!name || !from || !msg) {
+      setSent('invalid')
+      return
+    }
+    if (!SITE.email) {
+      setSent('missing')
+      return
+    }
+    const subject = `Hello from ${name}`
+    const body = `${msg}\n\n— ${name}\n${from}`
+    window.location.href = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    setSent('ok')
+  }
+
+  return (
+    <section className="section section--contact" data-world="contact" id="contact" ref={ref}>
+      <p className="section__eyebrow">{eyebrow('contact')}</p>
+      <Line className="section__line" text="Say something. The worst that happens is a conversation." />
+
+      <div className="glass">
+        <div className="glass__sheen" aria-hidden="true" />
+        <form className="glass__form" onSubmit={submit} noValidate>
+          <label className="glass__field">
+            <span>Name</span>
+            <input name="name" type="text" autoComplete="name" required />
+          </label>
+          <label className="glass__field">
+            <span>Email</span>
+            <input name="email" type="email" autoComplete="email" required />
+          </label>
+          <label className="glass__field glass__field--wide">
+            <span>Message</span>
+            <textarea name="message" rows={4} required />
+          </label>
+          <button className="glass__submit" type="submit">
+            <span>Send</span>
+          </button>
+        </form>
+
+        <p className="glass__status" data-state={sent} role="status">
+          {sent === 'invalid' && 'Fill in all three fields first.'}
+          {sent === 'missing' &&
+            'This form has no address wired to it yet — so it will not pretend to send. The direct line opens shortly.'}
+          {sent === 'ok' && 'Your mail app should be open with the message ready.'}
+        </p>
+
+        <aside className="glass__side">
+          <p className="glass__side-label">Other ways in</p>
+          {socials.length > 0 ? (
+            <ul className="glass__direct">
+              {socials.map((s) => (
+                <li key={s.label}>
+                  <a href={s.href} target="_blank" rel="noreferrer noopener">
+                    {s.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="glass__pending">
+              The handles go here. Instagram, GitHub, LinkedIn. Until they are wired up, this form is the honest way in.
+            </p>
+          )}
+        </aside>
+      </div>
+    </section>
+  )
+}

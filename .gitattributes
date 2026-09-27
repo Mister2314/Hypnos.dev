@@ -1,0 +1,10 @@
+# satır sonları — repo həmişə LF, working copy OS-ə görə
+* text=auto eol=lf
+
+# ikili fayllar
+*.png binary
+*.webp binary
+*.jpg binary
+*.mp4 binary
+*.woff2 binary
+*.woff binary
