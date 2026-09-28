@@ -2,7 +2,7 @@
 
 
 import { gsap, prefersReducedMotion, ScrollTrigger } from './scroll'
-import { PERF, isNarrow } from './perf'
+import { PERF, isNarrow, pickTierDir } from './perf'
 import { registerSequence, setSequenceFraction, markSequenceSkipped } from './loader'
 import { sizeCanvas } from './webgl'
 
@@ -39,7 +39,7 @@ export function mountSequence(spec: SequenceSpec): () => void {
     return () => {}
   }
 
-  const dir = isNarrow() ? lowDir : highDir
+  const dir = pickTierDir(highDir, lowDir)
   const progressRef = { v: 0 }
   // mobil: daha kiçik dekod pəncərəsi — giriş burstlarını endirir
   const AHEAD = isNarrow() ? 10 : PERF.decodeAhead
@@ -49,6 +49,8 @@ export function mountSequence(spec: SequenceSpec): () => void {
 
   const poster = new Image()
   poster.decoding = 'async'
+  // M8: poster pərdə arxasında ilk görünən kadrdir — yükləmə prioriteti yüksək
+  ;(poster as HTMLImageElement & { fetchPriority?: string }).fetchPriority = 'high'
   poster.src = BASE + posterPath
 
   const cover = (img: HTMLImageElement | ImageBitmap) => {

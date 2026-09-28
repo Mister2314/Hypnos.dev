@@ -19,7 +19,7 @@ export default function TheCounterweight() {
       mountSequence({
         canvas: canvasRef.current!,
         trigger: ref.current,
-        highDir: 'counterweight/frames-1920',
+        highDir: 'counterweight/frames-1440',
         lowDir: 'counterweight/frames-1280',
         poster: 'counterweight/poster-1920.webp',
         ease: 0.07,

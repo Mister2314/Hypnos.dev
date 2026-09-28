@@ -18,7 +18,7 @@ export default function SapereAude() {
       mountSequence({
         canvas: canvasRef.current!,
         trigger: ref.current,
-        highDir: 'sapere/frames-1920',
+        highDir: 'sapere/frames-1440',
         lowDir: 'sapere/frames-1280',
         poster: 'sapere/poster-1920.webp',
         ease: 0.07,

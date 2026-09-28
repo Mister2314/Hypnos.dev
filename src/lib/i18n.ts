@@ -85,6 +85,8 @@ export type Copy = {
   summerCaptionRest: string
   handsLine: string
   handsCaption: string
+  interludeLine: string
+  interludeCaption: string
   cwQuote: string
   cwPersonal: string
   sapereLine: string
@@ -130,6 +132,8 @@ const EN: Copy = {
   summerCaptionRest: ' — the summer that never really ended.',
   handsLine: 'Nothing ever happened in the touch. Everything happened in the gap.',
   handsCaption: 'After Michelangelo — the spark never lands, it only almost does.',
+  interludeLine: 'Twelve worlds on one page. None of them rushed.',
+  interludeCaption: '— a breath between worlds',
   cwQuote: 'You were never broken.',
   cwPersonal: 'So I keep the flaws. They are the only proof the work is mine.',
   sapereLine: 'A teacher I never met taught me to question everything, including myself.',
@@ -223,6 +227,8 @@ const AZ: Copy = {
   summerCaptionRest: ' — heç bitməyən yay.',
   handsLine: 'Toxunuşda heç nə baş vermədi. Hər şey boşluqda baş verdi.',
   handsCaption: 'Michelangelo-dan sonra — qığılcım heç vaxt düşmür, düşməyə az qalır.',
+  interludeLine: 'Bir səhifədə on iki dünya. Heç biri tələsmir.',
+  interludeCaption: '— dünyalar arasında nəfəs',
   cwQuote: 'Sən heç vaxt qırılmamışdın.',
   cwPersonal: 'Ona görə qüsurlarımı saxlayıram. Onlar işin mənim olduğunun yeganə sübutudur.',
   sapereLine: 'Heç görüşmədiyim bir müəllim mənə hər şeyi — özümü də — sorğulamağı öyrətdi.',
@@ -316,6 +322,8 @@ const TR: Copy = {
   summerCaptionRest: ' — hiç bitmeyen yaz.',
   handsLine: 'Dokunuşta hiçbir şey olmadı. Her şey boşlukta oldu.',
   handsCaption: 'Michelangelo’dan sonra — kıvılcım asla düşmez, sadece düşmeye yaklaştır.',
+  interludeLine: 'Tek sayfada on iki dünya. Hiçbiri acele etmiyor.',
+  interludeCaption: '— dünyalar arasındaki bir nefes',
   cwQuote: 'Sen hiçbir zaman kırılmadın.',
   cwPersonal: 'Bu yüzden kusurları tutuyorum. Onlar işin bana ait olduğunun tek kanıtı.',
   sapereLine: 'Hiç tanışmadığım bir öğretmen bana her şeyi — kendimi de — sorgulamayı öğretti.',

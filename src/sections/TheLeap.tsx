@@ -20,8 +20,8 @@ export default function TheLeap() {
       mountSequence({
         canvas: canvasRef.current!,
         trigger: ref.current,
-        highDir: 'leap/frames-1920',
-        lowDir: 'leap/frames-1280',
+        highDir: 'leap/frames-1440',
+        lowDir: 'leap/frames-960',
         poster: 'leap/poster-1920.webp',
         ease: 0.07,
         trackProgress: true,
