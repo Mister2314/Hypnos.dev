@@ -127,7 +127,7 @@ const probe = await evalJs(`(() => {
     title: document.title,
     worlds: document.querySelectorAll('[data-world]').length,
 
-    // 03 — counterweight (v6.3)
+    // 04 — counterweight
     cwQuote: document.querySelector('.cw__quote')?.textContent?.trim() ?? null,
     cwSource: document.querySelector('.cw__source')?.textContent?.trim() ?? null,
     cwPersonal: document.querySelector('.cw__personal')?.textContent?.trim() ?? null,
@@ -200,13 +200,12 @@ check(
   /courage/i.test(probe.speakAdmission || ''),
   JSON.stringify(probe.speakAdmission),
 )
-check('05 — sual yerindədir', /speak/i.test(probe.speakQuestion || '') && /die/i.test(probe.speakQuestion || ''))
-check('05 — cavab yerindədir', /better to speak/i.test(probe.speakAnswer || ''))
+check('06 — sual yerindədir', /speak/i.test(probe.speakQuestion || '') && /die/i.test(probe.speakQuestion || ''))
+check('06 — cavab yerindədir', /better to speak/i.test(probe.speakAnswer || ''))
 
 check('01 — büdcə 540svh', probe.leapSvh === 540, `${probe.leapSvh}svh`)
 check('09 Contact — sağ panel var', probe.glassSide === true)
 check('01 — üsyan sətri yerindədir', /own thing/i.test(probe.leapNah || ''), JSON.stringify(probe.leapNah))
-check('01 — büdcə 540svh', probe.leapSvh === 540, `${probe.leapSvh}svh`)
 
 check('büdcə — counterweight 360svh', probe.cwSvh === 360, `${probe.cwSvh}svh`)
 check('büdcə — speak 320svh', probe.speakSvh === 320, `${probe.speakSvh}svh`)
@@ -234,7 +233,7 @@ const vid = await evalJs(`(() => {
   } catch { return { drawn: -1 } }
   return { drawn: luma > 0 ? 1 : 0 }
 })()`)
-check('05 — qatar kadrı canvas-da ÇƏKİLİB', vid.drawn === 1, JSON.stringify(vid))
+check('06 — qatar kadrı canvas-da ÇƏKİLİB', vid.drawn === 1, JSON.stringify(vid))
 
 // v6.2 — sapere həyəti eyni player ilə çəkilirmi?
 await evalJs(`document.querySelector('#sapere').scrollIntoView({behavior:'instant'}); window.scrollBy(0, window.innerHeight * 1.2); true`)
@@ -250,8 +249,8 @@ const vid2 = await evalJs(`(() => {
   } catch { return { drawn: -1 } }
   return { drawn: luma > 0 ? 1 : 0 }
 })()`)
-check('04 — həyət kadrı canvas-da ÇƏKİLİB', vid2.drawn === 1, JSON.stringify(vid2))
-check('04 — işıq kometası (spark) var', probe.sapereSpark === true)
+check('05 — həyət kadrı canvas-da ÇƏKİLİB', vid2.drawn === 1, JSON.stringify(vid2))
+check('05 — işıq kometası (spark) var', probe.sapereSpark === true)
 
 // ── 2. Ambient həqiqətən tərpənir? (vaxt keçdikcə dəyər dəyişir) ─────────────
 const before = await evalJs(
