@@ -140,7 +140,8 @@ const probe = await evalJs(`(() => {
     speakAnswer: document.querySelector('.speak__answer')?.textContent?.trim() ?? null,
 
     glassSide: !!document.querySelector('.glass__side'),
-    joinLine: document.querySelector('.join__line')?.textContent?.trim() ?? null,
+    interludeGone: !document.querySelector('[data-world="interlude"]'),
+    worldsGone: !document.querySelector('[data-world="worlds"]'),
     speakVideo: !!document.querySelector('.speak__video'),
     speakScrim: !!document.querySelector('.speak__scrim'),
     sapereVideo: !!document.querySelector('.sapere__video'),
@@ -171,7 +172,9 @@ const probe = await evalJs(`(() => {
   }
 })()`)
 
-check('13 dünya render olunur', probe.worlds === 13, `${probe.worlds} dünya`)
+check('11 dünya render olunur (interlude + worlds silinib)', probe.worlds === 11, `${probe.worlds} dünya`)
+check('interlude tamamilə GETDİ', probe.interludeGone === true, `interlude: ${probe.interludeGone}`)
+check('worlds bölməsi tamamilə GETDİ', probe.worldsGone === true, `worlds: ${probe.worldsGone}`)
 check(
   '03 — köhnə berm GETDİ',
   probe.bermGone === true,
@@ -201,8 +204,7 @@ check('05 — sual yerindədir', /speak/i.test(probe.speakQuestion || '') && /di
 check('05 — cavab yerindədir', /better to speak/i.test(probe.speakAnswer || ''))
 
 check('01 — büdcə 540svh', probe.leapSvh === 540, `${probe.leapSvh}svh`)
-check('04 — The Join sətri yerindədir', /lands/i.test(probe.joinLine || ''), JSON.stringify(probe.joinLine))
-check('10 Contact — sağ panel var', probe.glassSide === true)
+check('09 Contact — sağ panel var', probe.glassSide === true)
 check('01 — üsyan sətri yerindədir', /own thing/i.test(probe.leapNah || ''), JSON.stringify(probe.leapNah))
 check('01 — büdcə 540svh', probe.leapSvh === 540, `${probe.leapSvh}svh`)
 

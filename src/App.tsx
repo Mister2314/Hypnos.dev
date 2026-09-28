@@ -1,9 +1,9 @@
 /**
  * App — səhifə quruluşu.
  *
- * Sıra **məcburidir** və `WORLDS` ilə 1:1 üst-üstə düşür (`lib/scroll.ts`) — 13 fəsil:
- *   hero · leap · summer · hands · interlude · counterweight · sapere · speak ·
- *   worlds · work · questions · contact · signature
+ * Sıra **məcburidir** və `WORLDS` ilə 1:1 üst-üstə düşür (`lib/scroll.ts`) — 11 səhnə:
+ *   hero · leap · summer · hands · counterweight · sapere · speak ·
+ *   work · questions · contact · signature
  *
  * ⚠️ `<Backdrop />` ən sonda: ScrollTrigger-ləri bölmələrdən SONRA yaranır → refresh düzgün.
  * ⚠️ Sıra dəyişsə `WORLDS` massivi də dəyişməlidir — `Backdrop` rəngi bölmələrin
@@ -20,11 +20,9 @@ import Hero from './sections/Hero'
 import TheLeap from './sections/TheLeap'
 import Summer from './sections/Summer'
 import TheHands from './sections/TheHands'
-import TheInterlude from './sections/TheInterlude'
 import TheCounterweight from './sections/TheCounterweight'
 import SapereAude from './sections/SapereAude'
 import SpeakOrDie from './sections/SpeakOrDie'
-import Worlds from './sections/Worlds'
 import Work from './sections/Work'
 import Questions from './sections/Questions'
 import Contact from './sections/Contact'
@@ -46,11 +44,9 @@ export default function App() {
         <TheLeap />
         <Summer />
         <TheHands />
-        <TheInterlude />
         <TheCounterweight />
         <SapereAude />
         <SpeakOrDie />
-        <Worlds />
         <Work />
         <Questions />
         <Contact />

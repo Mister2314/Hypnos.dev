@@ -85,8 +85,6 @@ export type Copy = {
   summerCaptionRest: string
   handsLine: string
   handsCaption: string
-  interludeLine: string
-  interludeCaption: string
   cwQuote: string
   cwPersonal: string
   sapereLine: string
@@ -99,8 +97,6 @@ export type Copy = {
   speakAdmission: string
   speakAnswer: string
   speakReflection: string
-  worldsHead: string
-  worldsNote: string
   workLine: string
   workFoot: string
   projects: ProjectCopy[]
@@ -132,8 +128,6 @@ const EN: Copy = {
   summerCaptionRest: ' — the summer that never really ended.',
   handsLine: 'Nothing ever happened in the touch. Everything happened in the gap.',
   handsCaption: 'After Michelangelo — the spark never lands, it only almost does.',
-  interludeLine: 'Twelve worlds on one page. None of them rushed.',
-  interludeCaption: '— a breath between worlds',
   cwQuote: 'You were never broken.',
   cwPersonal: 'So I keep the flaws. They are the only proof the work is mine.',
   sapereLine: 'A teacher I never met taught me to question everything, including myself.',
@@ -151,9 +145,6 @@ const EN: Copy = {
   speakAdmission: 'I’ll never have the courage to ask a question like that.',
   speakAnswer: 'Better to speak.',
   speakReflection: 'I spent years picking the other one. This page is the answer I kept not giving.',
-  worldsHead: 'Every version of me, none of them cancelled',
-  worldsNote:
-    'In one of them I never left. In one of them I never started. This is the one where I did both — and I refuse to rank them.',
   workLine: 'I would rather show you two real things than ten neat ones.',
   workFoot:
     'More in progress. The rest of it lives in the chapters above, which is the honest portfolio anyway.',
@@ -227,8 +218,6 @@ const AZ: Copy = {
   summerCaptionRest: ' — heç bitməyən yay.',
   handsLine: 'Toxunuşda heç nə baş vermədi. Hər şey boşluqda baş verdi.',
   handsCaption: 'Michelangelo-dan sonra — qığılcım heç vaxt düşmür, düşməyə az qalır.',
-  interludeLine: 'Bir səhifədə on iki dünya. Heç biri tələsmir.',
-  interludeCaption: '— dünyalar arasında nəfəs',
   cwQuote: 'Sən heç vaxt qırılmamışdın.',
   cwPersonal: 'Ona görə qüsurlarımı saxlayıram. Onlar işin mənim olduğunun yeganə sübutudur.',
   sapereLine: 'Heç görüşmədiyim bir müəllim mənə hər şeyi — özümü də — sorğulamağı öyrətdi.',
@@ -246,9 +235,6 @@ const AZ: Copy = {
   speakAdmission: 'Belə bir sual verməyə heç vaxt cəsarətim olmayacaq.',
   speakAnswer: 'Danışmaq daha yaxşıdır.',
   speakReflection: 'İllər boyu digərini seçdim. Bu səhifə, vermədiyim cavabdır.',
-  worldsHead: 'Mənim hər versiyam — heç biri ləğv edilməyib',
-  worldsNote:
-    'Birində heç getmədim. Birində heç başlamadım. Bu, hər ikisini etdiyim versiyadır — və onları dərəcələməkdən imtina edirəm.',
   workLine: 'On səliqəli şey yerinə sizə iki real şey göstərmək istəyirəm.',
   workFoot:
     'Daha çoxu yoldadır. Qalanı yuxarıdakı fəsillərdə yaşayır — ən səmimi portfolyo onsuz da odur.',
@@ -322,8 +308,6 @@ const TR: Copy = {
   summerCaptionRest: ' — hiç bitmeyen yaz.',
   handsLine: 'Dokunuşta hiçbir şey olmadı. Her şey boşlukta oldu.',
   handsCaption: 'Michelangelo’dan sonra — kıvılcım asla düşmez, sadece düşmeye yaklaştır.',
-  interludeLine: 'Tek sayfada on iki dünya. Hiçbiri acele etmiyor.',
-  interludeCaption: '— dünyalar arasındaki bir nefes',
   cwQuote: 'Sen hiçbir zaman kırılmadın.',
   cwPersonal: 'Bu yüzden kusurları tutuyorum. Onlar işin bana ait olduğunun tek kanıtı.',
   sapereLine: 'Hiç tanışmadığım bir öğretmen bana her şeyi — kendimi de — sorgulamayı öğretti.',
@@ -341,9 +325,6 @@ const TR: Copy = {
   speakAdmission: 'Böyle bir soru sormaya asla cesaretim olmayacak.',
   speakAnswer: 'Konuşmak daha iyi.',
   speakReflection: 'Yıllarca diğerini seçtim. Bu sayfa, vermediğim cevaptır.',
-  worldsHead: 'Benim her versiyam — hiçbiri iptal edilmedi',
-  worldsNote:
-    'Birinde hiç ayrılmadım. Birinde hiç başlamadım. Bu, ikisini de yaptığım versiyon — ve onları sıralamayı reddediyorum.',
   workLine: 'On düzgün şey yerine size iki gerçek şey göstermeyi tercih ederim.',
   workFoot:
     'Dahası yolda. Gerisi yukarıdaki bölümlerde yaşıyor — en dürüst portfolyo zaten o.',

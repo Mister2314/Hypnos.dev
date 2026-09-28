@@ -1738,98 +1738,6 @@ html.has-cursor * {
   opacity: 0;
 }
 
-.section--worlds {
-  min-height: 150svh;
-}
-
-.worlds__head {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  font-size: clamp(1.9rem, 4.6vw, 3.7rem);
-  line-height: 1.08;
-  margin: 0 0 1.1rem;
-  max-width: 20ch;
-}
-
-.worlds__note {
-  max-width: 52ch;
-  margin: 0 0 clamp(2.2rem, 5vh, 3.6rem);
-  opacity: 0.72;
-  line-height: 1.62;
-}
-
-.worlds__grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 0.65rem;
-  width: min(100%, 1080px);
-}
-
-.worlds__cell {
-  margin: 0;
-}
-
-.world-card {
-  position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  padding: 0.8rem 0.85rem;
-  border: 0;
-  border-radius: 3px;
-  text-align: left;
-  font: inherit;
-  cursor: pointer;
-  background: var(--card-bg);
-  color: var(--card-fg);
-  overflow: hidden;
-  transition:
-    transform 0.5s var(--ease-out),
-    box-shadow 0.5s var(--ease-out);
-}
-
-.world-card__num {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.16em;
-  opacity: 0.55;
-}
-
-.world-card__title {
-  position: absolute;
-  left: 0.85rem;
-  right: 0.85rem;
-  bottom: 0.8rem;
-  font-family: var(--font-serif);
-  font-size: clamp(0.82rem, 1.05vw, 1.1rem);
-  line-height: 1.16;
-}
-
-.world-card__swatch {
-  position: absolute;
-  inset: 0;
-  background: var(--card-ac);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s var(--ease-out);
-}
-
-.world-card:hover,
-.world-card:focus-visible {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.45);
-}
-
-.world-card:hover .world-card__swatch,
-.world-card:focus-visible .world-card__swatch {
-  opacity: 0.16;
-}
-
 .ring-row {
   display: flex;
   align-items: center;
@@ -1905,9 +1813,6 @@ html.has-cursor * {
   .hands__stage {
     --hands-zoom: 1.45;
   }
-  .worlds__grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
   .speak__inner {
     padding: 0 7vw;
   }
@@ -1919,10 +1824,6 @@ html.has-cursor * {
   }
   .hands__inner {
     bottom: 8svh;
-  }
-  .worlds__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem;
   }
   .ring-arrow {
     width: 40px;
@@ -2154,25 +2055,4 @@ html.has-cursor * {
   opacity: 0.011;
   backdrop-filter: blur(10px) saturate(130%);
   -webkit-backdrop-filter: blur(10px) saturate(130%);
-}
-
-/* ── 04 Interlude — video fəsilləri arasındaki nəfəs (M4-b) ─────────────── */
-
-.section--interlude {
-  min-height: 64svh;
-}
-
-.interlude__caption {
-  margin: 1.4rem 0 0;
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.55;
-}
-
-@media (max-width: 760px) {
-  .interlude__caption {
-    font-size: 0.6rem;
-  }
 }
