@@ -1,7 +1,6 @@
 
 
 
-
 type Listener = (pct: number) => void
 
 const listeners = new Set<Listener>()
@@ -9,6 +8,12 @@ const listeners = new Set<Listener>()
 let framesFraction = 0
 let fontsReady = false
 let done = false
+
+// v9: pərdə ALL seqsiyaların kadr baytları yüklənəndə qalxır — hər seqsiya
+// mount-da qeydiyyatdan keçir, öz yüklənmə fraksiyasını bildirir, pərdə
+// ortalamaya baxır (biri geciksə də sayaç düz durur).
+const seqFractions = new Map<number, number>()
+let seqSeq = 0
 
 function emit(): void {
   const pct = compute()
@@ -20,14 +25,29 @@ function compute(): number {
   return framesFraction * 0.7 + (fontsReady ? 0.3 : 0)
 }
 
+export function registerSequence(): number {
+  const id = ++seqSeq
+  seqFractions.set(id, 0)
+  emit()
+  return id
+}
 
-export function setLoaderFrames(fraction: number): void {
-  const v = Math.min(1, Math.max(0, fraction))
-  if (v <= framesFraction) return
-  framesFraction = v
+export function setSequenceFraction(id: number, f: number): void {
+  if (!seqFractions.has(id)) return
+  const v = Math.min(1, Math.max(0, f))
+  if (v === seqFractions.get(id)) return
+  seqFractions.set(id, v)
+  let sum = 0
+  for (const x of seqFractions.values()) sum += x
+  framesFraction = sum / seqFractions.size
   emit()
 }
 
+
+/** reduced-motion-da kadr oynamır — bayt yükləməsini də gözləmə */
+export function markSequenceSkipped(id: number): void {
+  setSequenceFraction(id, 1)
+}
 
 export function setLoaderFontsReady(): void {
   fontsReady = true

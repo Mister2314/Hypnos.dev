@@ -3,7 +3,7 @@
 
 import { gsap, prefersReducedMotion, ScrollTrigger } from './scroll'
 import { PERF, isNarrow } from './perf'
-import { setLoaderFrames } from './loader'
+import { registerSequence, setSequenceFraction, markSequenceSkipped } from './loader'
 import { sizeCanvas } from './webgl'
 
 const BASE = import.meta.env.BASE_URL
@@ -43,6 +43,9 @@ export function mountSequence(spec: SequenceSpec): () => void {
   const progressRef = { v: 0 }
   // mobil: daha kiçik dekod pəncərəsi — giriş burstlarını endirir
   const AHEAD = isNarrow() ? 10 : PERF.decodeAhead
+  // v9: seqsiya pərdəyə qeydiyyatdadır — pərdə onun BÜTÜN kadrları yüklənənə
+  // qədər gözləyir (scroll videoyu keçə bilməz, çünki yükləmə pərdədə bitir)
+  const seqId = registerSequence()
 
   const poster = new Image()
   poster.decoding = 'async'
@@ -64,12 +67,11 @@ export function mountSequence(spec: SequenceSpec): () => void {
   let decodedCount = 0
   let loadedCount = 0
 
-  // loader pərdəsi üçün real progress: yükləmə 35% + ilk dekod pəncərəsi 65%
+  // loader pərdəsi üçün real progress: seqsiyanın yüklənmiş kadr payı
   let bootTimer: ReturnType<typeof setInterval> | null = null
-  const bootN = () => Math.max(1, Math.min(n, AHEAD + 2))
   const reportProgress = () => {
-    if (!spec.trackProgress || !n) return
-    setLoaderFrames(0.35 * (loadedCount / n) + 0.65 * Math.min(1, decodedCount / bootN()))
+    if (!n) return
+    setSequenceFraction(seqId, loadedCount / n)
   }
 
   let n = 0
@@ -193,13 +195,12 @@ export function mountSequence(spec: SequenceSpec): () => void {
         imgs.length = n
         loadChunk(0)
 
-        // loader açılmamışdan əvvəl scroll blokludur → scroll pompası işləmir.
-        // İlk dekod pəncərəsini müstəqil pompala — progress real yüksəlir.
+        // loader-gated fəsil (leap): pərdə açılmamışdan əvvəl scroll pompası
+        // işləmir — ilk dekod pəncərəsini müstəqil pompala
         if (spec.trackProgress && !prefersReducedMotion) {
           bootTimer = setInterval(() => {
             pumpBitmaps(0)
-            reportProgress()
-            if (decodedCount >= bootN() && bootTimer) {
+            if (decodedCount >= AHEAD + 2 && bootTimer) {
               clearInterval(bootTimer)
               bootTimer = null
             }
@@ -209,21 +210,17 @@ export function mountSequence(spec: SequenceSpec): () => void {
       .catch(() => {
         // keçici şəbəkə xətası: poster fallback var, 2 dəfəyə qədər yenidən cəhd
         if (attempt < 2) setTimeout(() => startDownload(attempt + 1), 1200 * (attempt + 1))
+        else setSequenceFraction(seqId, 1)
       })
   }
-  const dlIo = new IntersectionObserver(
-    ([entry]) => {
-      if (entry.isIntersecting) {
-        dlIo.disconnect()
-        startDownload()
-      }
-    },
-    { rootMargin: '250% 0px' },
-  )
-  dlIo.observe(canvas)
-  // loader-gated fəsil (leap): refresh hansı mövqedən başlayarsa başlasın,
-  // pərdənin progressi və hazırlığı mövqeydən asılı olmasın
-  if (spec.trackProgress) startDownload()
+  // v9: hamısı DƏRHAL yüklənməyə başlayır — IO-gated lazy start onu yaradırdı
+  // ki, scroll seqsiyanın üstünə çatanda kadrlar hələ şəbəkədə olurdu.
+  if (prefersReducedMotion) {
+    // kadr oynamayacaq — bayt yükləməsini də synchronically keç
+    markSequenceSkipped(seqId)
+  } else {
+    startDownload()
+  }
 
 
   poster.onload = () => {
@@ -258,7 +255,6 @@ export function mountSequence(spec: SequenceSpec): () => void {
     if (tick) gsap.ticker.remove(tick)
     if (bootTimer) clearInterval(bootTimer)
     window.removeEventListener('resize', resize)
-    dlIo.disconnect()
     io.disconnect()
     st.kill()
     for (const bm of bitmaps.values()) bm.close()
@@ -271,7 +267,6 @@ export function mountSequence(spec: SequenceSpec): () => void {
     else poster.onload = () => draw()
     return cleanup
   }
-
   tick = () => {
     if (!running) return
     smooth += (progressRef.v - smooth) * (spec.ease ?? 0.08)

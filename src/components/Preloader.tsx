@@ -6,7 +6,9 @@ import { prefersReducedMotion } from '../lib/scroll'
 import { isLoaderDone, markLoaderDone, onLoaderProgress, setLoaderFontsReady } from '../lib/loader'
 
 const MIN_SHOW_MS = 700
-const FAILSAFE_MS = 8000
+// v9: pərdə videolar BÜTÜN kadrları yüklənənə qədər qalır. Failsafe artıq
+// "3 saniyədə burax" deyil — yalnız ölü şəbəkə üçün son çıxışdır (20s).
+const FAILSAFE_MS = 20000
 
 export default function Preloader() {
   const ref = useRef<HTMLDivElement>(null)
