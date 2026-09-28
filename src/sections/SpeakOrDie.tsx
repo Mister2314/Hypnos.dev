@@ -2,12 +2,15 @@
 
 
 import { useEffect, useRef } from 'react'
-import { SPEAK } from '../lib/site'
 import { ambient, eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
+import { SPEAK } from '../lib/site'
+import { useCopy } from '../lib/i18n'
 import { mountSequence } from '../lib/sequence'
 
 export default function SpeakOrDie() {
   const ref = useRef<HTMLElement>(null)
+  const copy = useCopy()
+  const sq = copy.speakQ
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
 
@@ -131,29 +134,33 @@ export default function SpeakOrDie() {
           <p className="section__eyebrow">{eyebrow('speak')}</p>
 
           <h2 className="speak__question">
-            <span className="speak__word">Is</span>{' '}
-            <span className="speak__word">it</span>{' '}
-            <span className="speak__word">better</span>{' '}
-            <span className="speak__word">to</span>{' '}
-            <span className="speak__word speak__pole speak__pole--speak">
-              speak
-              <span className="speak__underline" aria-hidden="true" />
-            </span>{' '}
-            <span className="speak__word">or</span>{' '}
-            <span className="speak__word">to</span>{' '}
-            <span className="speak__word speak__pole speak__pole--die">
-              die
-              <span className="speak__strike" aria-hidden="true" />
-            </span>
-            <span className="speak__qmark">?</span>
+            {sq.words.map((w, i) => (
+              <span key={i}>
+                {i > 0 && ' '}
+                {i === sq.speak ? (
+                  <span className="speak__word speak__pole speak__pole--speak">
+                    {w}
+                    <span className="speak__underline" aria-hidden="true" />
+                  </span>
+                ) : i === sq.die ? (
+                  <span className="speak__word speak__pole speak__pole--die">
+                    {w}
+                    <span className="speak__strike" aria-hidden="true" />
+                  </span>
+                ) : (
+                  <span className="speak__word">{w}</span>
+                )}
+              </span>
+            ))}
+            <span className="speak__qmark">{sq.qmark}</span>
           </h2>
 
           <p className="speak__source">— {SPEAK.source}</p>
 
-          <p className="speak__admission">{SPEAK.admission}</p>
+          <p className="speak__admission">{copy.speakAdmission}</p>
 
-          <p className="speak__answer">{SPEAK.answer}</p>
-          <p className="speak__reflect">{SPEAK.reflection}</p>
+          <p className="speak__answer">{copy.speakAnswer}</p>
+          <p className="speak__reflect">{copy.speakReflection}</p>
         </div>
       </div>
     </section>

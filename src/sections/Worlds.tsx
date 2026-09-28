@@ -4,11 +4,12 @@
 import { useRef } from 'react'
 import type { CSSProperties } from 'react'
 import { WORLDS, eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
-import { WORLDS_INTRO } from '../lib/site'
+import { useCopy } from '../lib/i18n'
 import { scrollToId } from '../lib/lenis'
 
 export default function Worlds() {
   const ref = useRef<HTMLElement>(null)
+  const copy = useCopy()
 
   useGSAP(
     () => {
@@ -44,8 +45,8 @@ export default function Worlds() {
   return (
     <section className="section section--worlds" data-world="worlds" id="worlds" ref={ref}>
       <p className="section__eyebrow">{eyebrow('worlds')}</p>
-      <h2 className="worlds__head">{WORLDS_INTRO.head}</h2>
-      <p className="worlds__note">{WORLDS_INTRO.note}</p>
+      <h2 className="worlds__head">{copy.worldsHead}</h2>
+      <p className="worlds__note">{copy.worldsNote}</p>
 
       <ul className="worlds__grid">
         {WORLDS.map((w) => (

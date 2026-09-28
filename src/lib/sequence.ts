@@ -72,7 +72,6 @@ export function mountSequence(spec: SequenceSpec): () => void {
     setLoaderFrames(0.35 * (loadedCount / n) + 0.65 * Math.min(1, decodedCount / bootN()))
   }
 
-  const grain: HTMLCanvasElement[] = []
   let n = 0
   let contig = 0
   let idx = 0
@@ -99,46 +98,11 @@ export function mountSequence(spec: SequenceSpec): () => void {
       return
     }
     cover(bmp)
-
-
-
-    const g = grain[target % 2]
-    if (g) {
-      ctx.globalCompositeOperation = 'overlay'
-      ctx.drawImage(g, 0, 0, canvas.width, canvas.height)
-      ctx.globalCompositeOperation = 'source-over'
-    }
   }
 
   const resize = () => {
     if (sizeCanvas(canvas, PERF.canvasDpr)) {
-      paintGrain()
       draw()
-    }
-  }
-
-
-  const paintGrain = () => {
-    for (let k = 0; k < 2; k++) {
-      let g = grain[k]
-      if (!g) {
-        g = document.createElement('canvas')
-        grain[k] = g
-      }
-      g.width = canvas.width
-      g.height = canvas.height
-      const gtx = g.getContext('2d')
-      if (!gtx) continue
-      const img = gtx.createImageData(g.width, g.height)
-      const d = img.data
-      for (let i = 0; i < d.length; i += 4) {
-        const v = (Math.random() * 255) | 0
-        d[i] = v
-        d[i + 1] = v
-        d[i + 2] = v
-        d[i + 3] = 255
-      }
-      gtx.putImageData(img, 0, 0)
     }
   }
 

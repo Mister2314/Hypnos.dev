@@ -3,12 +3,14 @@
 
 import { useEffect, useRef } from 'react'
 import Line from '../components/Line'
-import { COUNTERWEIGHT } from '../lib/site'
 import { ambient, eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
+import { useCopy } from '../lib/i18n'
+import { COUNTERWEIGHT } from '../lib/site'
 import { mountSequence } from '../lib/sequence'
 
 export default function TheCounterweight() {
   const ref = useRef<HTMLElement>(null)
+  const copy = useCopy()
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
 
@@ -103,11 +105,11 @@ export default function TheCounterweight() {
         <div className="cw__inner">
           <p className="section__eyebrow">{eyebrow('counterweight')}</p>
 
-          <Line tag="h2" className="cw__quote" text={COUNTERWEIGHT.quote} />
+          <Line tag="h2" className="cw__quote" text={copy.cwQuote} />
 
           <p className="cw__source">— {COUNTERWEIGHT.source}</p>
 
-          <p className="cw__personal">{COUNTERWEIGHT.personal}</p>
+          <p className="cw__personal">{copy.cwPersonal}</p>
         </div>
       </div>
     </section>

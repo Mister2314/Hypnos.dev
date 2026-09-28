@@ -1,10 +1,12 @@
 import { useRef } from 'react'
 import Line from '../components/Line'
-import { PROJECTS, SIGNATURE, SITE, links } from '../lib/site'
+import { PROJECTS, SITE, links } from '../lib/site'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
+import { useCopy } from '../lib/i18n'
 
 export default function Signature() {
   const ref = useRef<HTMLElement>(null)
+  const copy = useCopy()
   const socials = links()
 
   useGSAP(
@@ -78,11 +80,7 @@ export default function Signature() {
     <section className="section section--signature" data-world="signature" id="signature" ref={ref}>
       <p className="section__eyebrow">{eyebrow('signature')}</p>
 
-      <Line
-        tag="h2"
-        className="signature__close"
-        text={SIGNATURE.close}
-      />
+      <Line tag="h2" className="signature__close" text={copy.signatureClose} />
 
       {socials.length > 0 ? (
         <ul className="socials">
@@ -114,7 +112,7 @@ export default function Signature() {
         ))}
       </ul>
 
-      <p className="signature__colophon">{SIGNATURE.colophon}</p>
+      <p className="signature__colophon">{copy.signatureColophon}</p>
 
       <span className="signature__rule" aria-hidden="true" />
 

@@ -3,14 +3,15 @@
 
 import { Fragment, useEffect, useRef } from 'react'
 import Line from '../components/Line'
-import { LEAP } from '../lib/site'
 import { ambient, eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
+import { LEAP } from '../lib/site'
+import { useCopy } from '../lib/i18n'
 import { mountSequence } from '../lib/sequence'
-
-const NAH_WORDS = LEAP.nah.split(' ')
 
 export default function TheLeap() {
   const ref = useRef<HTMLElement>(null)
+  const copy = useCopy()
+  const nahWords = copy.leapNah.split(' ')
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
 
@@ -124,20 +125,20 @@ export default function TheLeap() {
         <div className="leap__inner">
           <p className="section__eyebrow">{eyebrow('leap')}</p>
 
-          <Line tag="h2" className="leap__quote" text={LEAP.quote} />
+          <Line tag="h2" className="leap__quote" text={copy.leapQuote} />
 
           <p className="leap__source">— {LEAP.source}</p>
 
           {
 
  }
-          <p className="leap__nah" aria-label={LEAP.nah}>
-            {NAH_WORDS.map((w, i) => (
+          <p className="leap__nah" aria-label={copy.leapNah}>
+            {nahWords.map((w, i) => (
               <Fragment key={i}>
                 <span className="leap__nw" aria-hidden="true">
                   {w}
                 </span>
-                {i < NAH_WORDS.length - 1 ? ' ' : ''}
+                {i < nahWords.length - 1 ? ' ' : ''}
               </Fragment>
             ))}
           </p>

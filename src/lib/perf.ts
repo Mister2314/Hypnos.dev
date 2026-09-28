@@ -5,10 +5,6 @@ export const PERF = {
 
   canvasDpr: 1,
 
-  grainDpr: 0.35,
-
-  grainFrameSkip: 3,
-
   narrowBreakpoint: 760,
 
 

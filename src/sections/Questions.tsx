@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { FAQ } from '../lib/site'
+import { useCopy } from '../lib/i18n'
 import { eyebrow, gsap, prefersReducedMotion } from '../lib/scroll'
 
 const N = FAQ.length
@@ -20,6 +21,8 @@ function shortest(from: number, to: number): number {
 }
 
 export default function Questions() {
+  const copy = useCopy()
+  const faq = copy.faq
   const stageRef = useRef<HTMLDivElement>(null)
   const ringRef = useRef<HTMLDivElement>(null)
   const pickRef = useRef<(i: number) => void>(() => {})
@@ -182,7 +185,7 @@ export default function Questions() {
   return (
     <section className="section section--questions" data-world="questions" id="questions">
       <p className="section__eyebrow">{eyebrow('questions')}</p>
-      <h2 className="questions__head">Things people ask me</h2>
+      <h2 className="questions__head">{copy.questionsHead}</h2>
 
       <div className="ring-row">
         <button
@@ -204,7 +207,7 @@ export default function Questions() {
           aria-label="Question ring — use left and right arrow keys to turn it"
         >
           <div className="ring" ref={ringRef}>
-            {FAQ.map((item, i) => (
+            {faq.map((item, i) => (
               <button
                 type="button"
                 className="q-card"
@@ -241,7 +244,7 @@ export default function Questions() {
             {String(N).padStart(2, '0')}
           </span>
           <div className="questions__dots">
-            {FAQ.map((item, i) => (
+            {faq.map((item, i) => (
               <button
                 type="button"
                 key={item.q}
@@ -253,7 +256,7 @@ export default function Questions() {
             ))}
           </div>
           <span className="questions__hint" aria-hidden="true">
-            drag or ← →
+            {copy.questionsHint}
           </span>
         </div>
       </div>

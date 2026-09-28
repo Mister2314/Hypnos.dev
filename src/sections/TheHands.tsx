@@ -3,13 +3,14 @@
 
 import { useRef } from 'react'
 import Line from '../components/Line'
-import { HANDS } from '../lib/site'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
+import { useCopy } from '../lib/i18n'
 
 const BASE = import.meta.env.BASE_URL
 
 export default function TheHands() {
   const ref = useRef<HTMLElement>(null)
+  const copy = useCopy()
 
   useGSAP(
     () => {
@@ -115,8 +116,8 @@ export default function TheHands() {
 
         <div className="hands__inner">
           <p className="section__eyebrow">{eyebrow('hands')}</p>
-          <Line className="section__line hands__line" text={HANDS.line} />
-          <p className="hands__caption">{HANDS.caption}</p>
+          <Line className="section__line hands__line" text={copy.handsLine} />
+          <p className="hands__caption">{copy.handsCaption}</p>
         </div>
       </div>
     </section>

@@ -5,9 +5,11 @@ import { useRef, useState } from 'react'
 import Line from '../components/Line'
 import { SITE, links } from '../lib/site'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
+import { useCopy } from '../lib/i18n'
 
 export default function Contact() {
   const ref = useRef<HTMLElement>(null)
+  const copy = useCopy()
   const [sent, setSent] = useState<'' | 'ok' | 'missing' | 'invalid'>('')
   const socials = links()
 
@@ -63,37 +65,36 @@ export default function Contact() {
   return (
     <section className="section section--contact" data-world="contact" id="contact" ref={ref}>
       <p className="section__eyebrow">{eyebrow('contact')}</p>
-      <Line className="section__line" text="Say something. The worst that happens is a conversation." />
+      <Line className="section__line" text={copy.contactLine} />
 
       <div className="glass">
         <div className="glass__sheen" aria-hidden="true" />
         <form className="glass__form" onSubmit={submit} noValidate>
           <label className="glass__field">
-            <span>Name</span>
+            <span>{copy.nameLabel}</span>
             <input name="name" type="text" autoComplete="name" required />
           </label>
           <label className="glass__field">
-            <span>Email</span>
+            <span>{copy.emailLabel}</span>
             <input name="email" type="email" autoComplete="email" required />
           </label>
           <label className="glass__field glass__field--wide">
-            <span>Message</span>
+            <span>{copy.messageLabel}</span>
             <textarea name="message" rows={4} required />
           </label>
           <button className="glass__submit" type="submit">
-            <span>Send</span>
+            <span>{copy.send}</span>
           </button>
         </form>
 
         <p className="glass__status" data-state={sent} role="status">
-          {sent === 'invalid' && 'Fill in all three fields first.'}
-          {sent === 'missing' &&
-            'This form has no address wired to it yet — so it will not pretend to send. The direct line opens shortly.'}
-          {sent === 'ok' && 'Your mail app should be open with the message ready.'}
+          {sent === 'invalid' && copy.statusInvalid}
+          {sent === 'missing' && copy.statusMissing}
+          {sent === 'ok' && copy.statusOk}
         </p>
 
         <aside className="glass__side">
-          <p className="glass__side-label">Other ways in</p>
+          <p className="glass__side-label">{copy.sideLabel}</p>
           {socials.length > 0 ? (
             <ul className="glass__direct">
               {socials.map((s) => (

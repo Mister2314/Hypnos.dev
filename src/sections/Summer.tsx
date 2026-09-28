@@ -4,11 +4,13 @@
 import { useRef } from 'react'
 import Line from '../components/Line'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
+import { useCopy } from '../lib/i18n'
 
 const BASE = import.meta.env.BASE_URL
 
 export default function Summer() {
   const ref = useRef<HTMLElement>(null)
+  const copy = useCopy()
 
   useGSAP(
     () => {
@@ -100,12 +102,10 @@ export default function Summer() {
       <div className="summer__bloom" aria-hidden="true" />
       <div className="summer__inner">
         <p className="section__eyebrow">{eyebrow('summer')}</p>
-        <Line
-          className="section__line"
-          text="I was born in August. That probably explains everything."
-        />
+        <Line className="section__line" text={copy.summerLine} />
         <p className="summer__caption">
-          <em>Call Me By Your Name</em> — the summer that never really ended.
+          <em>{copy.summerCaptionFilm}</em>
+          {copy.summerCaptionRest}
         </p>
         <div className="summer__plate">
           <img

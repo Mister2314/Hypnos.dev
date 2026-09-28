@@ -5,9 +5,11 @@ import { useRef } from 'react'
 import Line from '../components/Line'
 import { PROJECTS } from '../lib/site'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
+import { useCopy } from '../lib/i18n'
 
 export default function Work() {
   const ref = useRef<HTMLElement>(null)
+  const copy = useCopy()
 
   useGSAP(
     () => {
@@ -52,43 +54,44 @@ export default function Work() {
   return (
     <section className="section section--work" data-world="work" id="work" ref={ref}>
       <p className="section__eyebrow">{eyebrow('work')}</p>
-      <Line className="section__line" text="I would rather show you two real things than ten neat ones." />
+      <Line className="section__line" text={copy.workLine} />
 
       <ul className="work__list">
-        {PROJECTS.map((p, i) => (
-          <li className="work__item" key={p.title}>
-            <span className="work__index">{String(i + 1).padStart(2, '0')}</span>
-            <div className="work__body">
-              <h3 className="work__title">
-                {p.href ? (
-                  <a href={p.href} target="_blank" rel="noreferrer noopener">
-                    {p.title}
-                  </a>
-                ) : (
-                  p.title
-                )}
-              </h3>
-              <p className="work__meta">
-                <span>{p.kind}</span>
-                <span className="work__dot" aria-hidden="true">
-                  ·
-                </span>
-                <span>{p.stack}</span>
-                <span className="work__dot" aria-hidden="true">
-                  ·
-                </span>
-                <span>{p.year}</span>
-              </p>
-              <p className="work__blurb">{p.blurb}</p>
-            </div>
-          </li>
-        ))}
+        {copy.projects.map((p, i) => {
+          const href = PROJECTS[i]?.href ?? ''
+          const year = PROJECTS[i]?.year ?? ''
+          return (
+            <li className="work__item" key={p.title}>
+              <span className="work__index">{String(i + 1).padStart(2, '0')}</span>
+              <div className="work__body">
+                <h3 className="work__title">
+                  {href ? (
+                    <a href={href} target="_blank" rel="noreferrer noopener">
+                      {p.title}
+                    </a>
+                  ) : (
+                    p.title
+                  )}
+                </h3>
+                <p className="work__meta">
+                  <span>{p.kind}</span>
+                  <span className="work__dot" aria-hidden="true">
+                    ·
+                  </span>
+                  <span>{p.stack}</span>
+                  <span className="work__dot" aria-hidden="true">
+                    ·
+                  </span>
+                  <span>{year}</span>
+                </p>
+                <p className="work__blurb">{p.blurb}</p>
+              </div>
+            </li>
+          )
+        })}
       </ul>
 
-      <p className="work__foot">
-        More in progress. The rest of it lives in the chapters above, which is the honest
-        portfolio anyway.
-      </p>
+            <p className="work__foot">{copy.workFoot}</p>
     </section>
   )
 }

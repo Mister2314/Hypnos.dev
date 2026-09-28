@@ -134,14 +134,6 @@ a {
   pointer-events: none;
 }
 
-.backdrop__grain {
-  position: absolute;
-  inset: 0;
-  opacity: 0.045;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
 .backdrop__vignette {
   position: absolute;
   inset: 0;
@@ -446,8 +438,7 @@ a {
   .section--sapere,
   .section--speak,
   .section--counterweight,
-  .section--hands,
-  .section--join {
+  .section--hands {
     padding: 0;
   }
   .summer__hands {
@@ -545,6 +536,9 @@ html.is-loading {
   }
 }
 
+/* TopBar: mix-blend-mode difference YOXDUR — "Khayal" yazısı scroll-dakı
+   məzmunla qarışmır. Əvəzinə hər element öz kiçik blur pill-i içindədir:
+   blur yalnız həmin kiçik sahəyə təsir edir, tam ekran videolar toxunulmaz. */
 .topbar {
   position: fixed;
   top: 0;
@@ -558,22 +552,33 @@ html.is-loading {
 
   padding: max(1.5rem, env(safe-area-inset-top)) max(6vw, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(6vw, env(safe-area-inset-left));
 
-  mix-blend-mode: difference;
   color: #fff;
   pointer-events: none;
+}
+
+.topbar__group {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
 
 .topbar__mark,
 .topbar__cta {
   pointer-events: auto;
-  background: none;
-  border: 0;
-  padding: 0;
+  background: rgba(10, 12, 11, 0.32);
+  border: 1px solid rgba(255, 252, 225, 0.16);
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
   color: inherit;
   font: inherit;
   cursor: pointer;
-  opacity: 0.9;
-  transition: opacity 0.35s var(--ease-out);
+  opacity: 0.95;
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: 0 2px 18px rgba(0, 0, 0, 0.25);
+  transition: opacity 0.35s var(--ease-out), border-color 0.35s var(--ease-out),
+    background 0.35s var(--ease-out);
 }
 
 .topbar__mark {
@@ -587,13 +592,52 @@ html.is-loading {
   font-size: 0.66rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  border-bottom: 1px solid currentColor;
-  padding-bottom: 0.3rem;
 }
 
 .topbar__mark:hover,
 .topbar__cta:hover {
   opacity: 1;
+  border-color: rgba(255, 252, 225, 0.4);
+  background: rgba(10, 12, 11, 0.5);
+}
+
+/* dil düymələri — EN · AZ · TR, həmin pill estetikasında */
+.lang-switch {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  background: rgba(10, 12, 11, 0.32);
+  border: 1px solid rgba(255, 252, 225, 0.16);
+  border-radius: 999px;
+  padding: 0.25rem 0.3rem;
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: 0 2px 18px rgba(0, 0, 0, 0.25);
+}
+
+.lang-switch__btn {
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.28rem 0.55rem;
+  color: inherit;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.3s var(--ease-out), background 0.3s var(--ease-out);
+}
+
+.lang-switch__btn:hover {
+  opacity: 1;
+}
+
+.lang-switch__btn--on {
+  opacity: 1;
+  background: rgba(255, 252, 225, 0.16);
+  color: var(--accent, #fff);
 }
 
 .chapter-nav {
@@ -1258,26 +1302,54 @@ html.has-cursor * {
   margin: 0;
 }
 
+/* əlaqə linkləri — link kimi oxunan pill qutular; glass estetikasında */
 .glass__direct {
   list-style: none;
-  display: grid;
-  gap: 0.65rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
   margin: 0;
   padding: 0;
 }
 
 .glass__direct a {
-  font-family: var(--font-serif);
-  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
-  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: inherit;
   text-decoration: none;
   width: fit-content;
-  transition: color var(--t-snap) var(--ease-snap);
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255, 252, 225, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 252, 225, 0.04);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: color var(--t-snap) var(--ease-snap), border-color var(--t-snap) var(--ease-snap),
+    background var(--t-snap) var(--ease-snap), transform var(--t-snap) var(--ease-snap);
+}
+
+.glass__direct a::after {
+  content: '↗';
+  font-size: 0.8em;
+  opacity: 0.55;
+  transition: opacity var(--t-snap) var(--ease-snap), transform var(--t-snap) var(--ease-snap);
 }
 
 .glass__direct a:hover {
   color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(255, 252, 225, 0.08);
+  transform: translateY(-1px);
+}
+
+.glass__direct a:hover::after {
+  opacity: 1;
+  transform: translate(1px, -1px);
 }
 
 .glass__pending {
@@ -2084,104 +2156,3 @@ html.has-cursor * {
   -webkit-backdrop-filter: blur(10px) saturate(130%);
 }
 
-/* ── 04 — The Join ───────────────────────────────────────────────────────────
-   The Hands-ın cavabı: boşluq bağlanır, qığılcım düşür. Videosuz breather —
-   saf SVG kontur + scrub. Faylın SONUNDA (cascade dərsi: universal media
-   qaydasından sonradır). */
-.section--join {
-  display: block;
-  min-height: 200svh;
-  padding: 0;
-  position: relative;
-}
-
-.join__stage {
-  position: sticky;
-  top: 0;
-  height: 100svh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(1.1rem, 3vh, 2rem);
-  overflow: hidden;
-  padding: 0 max(6vw, env(safe-area-inset-left));
-}
-
-.join__scene-wrap {
-  position: relative;
-  width: min(100%, 1040px);
-}
-
-.join__scene {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.join__bloom-wrap {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-}
-
-.join__bloom {
-  width: min(46vw, 460px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(232, 201, 160, 0.2) 0%,
-    rgba(232, 201, 160, 0.05) 44%,
-    transparent 70%
-  );
-  opacity: 0.55;
-}
-
-.join__stroke {
-  stroke: rgba(255, 252, 225, 0.72);
-  stroke-width: 2;
-  stroke-linecap: round;
-  fill: none;
-}
-
-.join__stroke--fine {
-  stroke: rgba(255, 252, 225, 0.46);
-  stroke-width: 1.4;
-}
-
-.join__tip {
-  fill: var(--accent);
-}
-
-.join__spark {
-  fill: #fff6e2;
-}
-
-.join__ring {
-  fill: none;
-  stroke: rgba(232, 201, 160, 0.8);
-  stroke-width: 1.4;
-  opacity: 0;
-}
-
-.join__line {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 400;
-  font-size: clamp(2rem, 5.4vw, 3.8rem);
-  line-height: 1.12;
-  margin: 0;
-  text-align: center;
-}
-
-.join__sub {
-  max-width: 52ch;
-  margin: 0;
-  text-align: center;
-  font-size: 0.95rem;
-  line-height: 1.7;
-  opacity: 0.6;
-}

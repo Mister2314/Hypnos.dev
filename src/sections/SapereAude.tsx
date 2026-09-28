@@ -4,10 +4,12 @@
 import { useEffect, useRef } from 'react'
 import Line from '../components/Line'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
+import { useCopy } from '../lib/i18n'
 import { mountSequence } from '../lib/sequence'
 
 export default function SapereAude() {
   const ref = useRef<HTMLElement>(null)
+  const copy = useCopy()
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
 
@@ -99,10 +101,7 @@ export default function SapereAude() {
 
         <div className="sapere__inner">
           <p className="section__eyebrow">{eyebrow('sapere')}</p>
-          <Line
-            className="section__line"
-            text="A teacher I never met taught me to question everything, including myself."
-          />
+          <Line className="section__line" text={copy.sapereLine} />
           <svg
             className="sapere__rule"
             viewBox="0 0 400 12"
@@ -121,9 +120,10 @@ export default function SapereAude() {
             />
           </svg>
           <p className="sapere__sub">
-            <em>Sapere aude.</em> I dared. Now I can&rsquo;t stop asking.
+            <em>{copy.sapereSubEm}</em>
+            {copy.sapereSubRest}
           </p>
-          <p className="sapere__caption">Merli · dare to know</p>
+          <p className="sapere__caption">{copy.sapereCaption}</p>
         </div>
       </div>
     </section>

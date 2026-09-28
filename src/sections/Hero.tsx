@@ -1,12 +1,14 @@
 
 
 
-import { useRef } from 'react'
+import { Fragment, useRef } from 'react'
 import { SITE } from '../lib/site'
 import { ambient, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
+import { useCopy } from '../lib/i18n'
 
 export default function Hero() {
   const ref = useRef<HTMLElement>(null)
+  const copy = useCopy()
 
   useGSAP(
     () => {
@@ -84,13 +86,16 @@ export default function Hero() {
       <div className="hero__inner">
         <p className="section__eyebrow hero__eyebrow">Portfolio · 2026</p>
         <h1 className="hero__title">
-          <span className="hero__word">Hi,</span>{' '}
-          <span className="hero__word">I&rsquo;m</span>{' '}
-          <span className="hero__word hero__word--name">Khayal.</span>
+          {copy.heroTitle.map((w, i) => (
+            <Fragment key={i}>
+              {i > 0 && ' '}
+              <span className={i === copy.heroTitle.length - 1 ? 'hero__word hero__word--name' : 'hero__word'}>
+                {w}
+              </span>
+            </Fragment>
+          ))}
         </h1>
-        <p className="hero__sub">
-          I keep more worlds than one head should hold. Scroll — I&rsquo;ll show you a few.
-        </p>
+        <p className="hero__sub">{copy.heroSub}</p>
       </div>
 
       <p className="hero__sign" aria-label={`Signed, ${SITE.name}`}>
@@ -99,7 +104,7 @@ export default function Hero() {
 
       <div className="hero__cue" aria-hidden="true">
         <span className="hero__cue-line" />
-        <span className="hero__cue-text">scroll</span>
+        <span className="hero__cue-text">{copy.heroCue}</span>
       </div>
     </section>
   )
