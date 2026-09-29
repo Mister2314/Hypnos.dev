@@ -8,6 +8,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useSyncExternalStore } from 'react'
+import { ScrollTrigger } from './scroll'
 
 export type Lang = 'en' | 'az' | 'tr'
 
@@ -42,6 +43,9 @@ export function setLang(l: Lang): void {
   }
   document.documentElement.lang = l === 'az' ? 'az' : l
   listeners.forEach((fn) => fn())
+  // v13: key={lang} remount-u getdi — bölmə hündürlükləri dəyişir, ona görə
+  // ölçülər yenilənməlidir (Backdrop 'refresh' event-inə qoşuludur).
+  requestAnimationFrame(() => ScrollTrigger.refresh())
 }
 
 function subscribe(fn: () => void): () => void {

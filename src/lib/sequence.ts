@@ -83,8 +83,8 @@ export function mountSequence(spec: SequenceSpec): () => void {
   let contig = 0
   let idx = 0
 
+  let painted = false
   const draw = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
     const target = Math.min(idx, Math.max(0, contig - 1))
 
 
@@ -101,14 +101,23 @@ export function mountSequence(spec: SequenceSpec): () => void {
       }
     }
     if (!bmp) {
-      if (poster.complete && poster.naturalWidth > 0) cover(poster)
+      // v13: ekrandan qayıtdıqda bitmaps boşdur — son çəkilmiş kadr DONUR
+      // (poster fləşi yoxdur). İlk dəfədirsə (heç nə çəkilməyib) poster.
+      if (painted) return
+      if (poster.complete && poster.naturalWidth > 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        cover(poster)
+      }
       return
     }
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
     cover(bmp)
+    painted = true
   }
 
   const resize = () => {
     if (sizeCanvas(canvas, PERF.canvasDpr)) {
+      painted = false // canvas ölçüsü dəyişdi — məcburi yenidən çək
       draw()
     }
   }
@@ -136,6 +145,12 @@ export function mountSequence(spec: SequenceSpec): () => void {
       bitmapBudget--
       createImageBitmap(blobs[i]!)
         .then((bm) => {
+          if (!running) {
+            // dekod bitdi, amma fəsil artıq ekrandan çıxdı — dərhal burax
+            bm.close()
+            bitmapWip.delete(i)
+            return
+          }
           bitmaps.set(i, bm)
           bitmapWip.delete(i)
           decodedCount++

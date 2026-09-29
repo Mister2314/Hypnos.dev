@@ -74,13 +74,6 @@ export const WORLDS_INTRO = {
 } as const
 
 
-export const SIGNATURE = {
-  close: "Thanks for scrolling. Now go do something you'll remember.",
-
-  colophon:
-    'One page, many worlds. Hand-written WebGL, no 3D library, no page builder. The grain is all code.',
-} as const
-
 export const PROJECTS = [
   {
     title: 'Lunora',
@@ -97,35 +90,7 @@ export const PROJECTS = [
     kind: 'Web',
     stack: 'React · GSAP · hand-written WebGL',
     blurb:
-      'One page, many worlds. No 3D library: the light and the grain are all code.',
+      'One page, many worlds. No 3D library: the light is all code.',
     href: '',
-  },
-] as const
-
-
-export const FAQ = [
-  {
-    q: 'Who are you, exactly?',
-    a: 'Nineteen. Azerbaijani. Second year of an IT degree. I build things and I read too much.',
-  },
-  {
-    q: 'What do you actually do?',
-    a: 'Interface work mostly — the part where a screen starts feeling like something. Some front-end, some mobile, some shaders.',
-  },
-  {
-    q: 'Why so many worlds on one page?',
-    a: 'Because a single tidy summary of a person is a lie. These are the ones that made me, and I refuse to rank them.',
-  },
-  {
-    q: 'Are you available for work?',
-    a: 'For remote, part-time, and anything I can learn from. I will say no to what I cannot do well.',
-  },
-  {
-    q: 'What are you learning right now?',
-    a: 'WebGL properly, and how to finish things instead of only starting them.',
-  },
-  {
-    q: 'What is the deal with the hands?',
-    a: 'Michelangelo put the whole of creation in the space between two fingers. I think he was right about that and wrong about nothing else.',
   },
 ] as const
