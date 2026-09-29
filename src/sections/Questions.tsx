@@ -2,12 +2,8 @@
 
 
 import { useEffect, useRef, useState } from 'react'
-import { FAQ } from '../lib/site'
 import { useCopy } from '../lib/i18n'
 import { eyebrow, gsap, prefersReducedMotion } from '../lib/scroll'
-
-const N = FAQ.length
-const STEP = 360 / N
 
 const DRAG_K = 0.32
 
@@ -23,6 +19,9 @@ function shortest(from: number, to: number): number {
 export default function Questions() {
   const copy = useCopy()
   const faq = copy.faq
+  // v13: N/STEP copy.faq-dan — cavablar da tərcümə olunur (əvvəl EN FAQ sabitindən idi)
+  const N = faq.length
+  const STEP = 360 / N
   const stageRef = useRef<HTMLDivElement>(null)
   const ringRef = useRef<HTMLDivElement>(null)
   const pickRef = useRef<(i: number) => void>(() => {})
@@ -184,7 +183,7 @@ export default function Questions() {
 
   return (
     <section className="section section--questions" data-world="questions" id="questions">
-      <p className="section__eyebrow">{eyebrow('questions')}</p>
+      <p className="section__eyebrow">{eyebrow('questions', copy.titles.questions)}</p>
       <h2 className="questions__head">{copy.questionsHead}</h2>
 
       <div className="ring-row">
@@ -236,7 +235,7 @@ export default function Questions() {
       </div>
 
       <div className="questions__answer" key={active}>
-        <p className="questions__a-text">{FAQ[active].a}</p>
+        <p className="questions__a-text">{faq[active].a}</p>
         <div className="questions__controls">
           <span className="questions__count">
             {String(active + 1).padStart(2, '0')}

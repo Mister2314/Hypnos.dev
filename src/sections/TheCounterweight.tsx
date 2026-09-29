@@ -103,7 +103,7 @@ export default function TheCounterweight() {
         <div className="cw__scrim" aria-hidden="true" />
 
         <div className="cw__inner">
-          <p className="section__eyebrow">{eyebrow('counterweight')}</p>
+          <p className="section__eyebrow">{eyebrow('counterweight', copy.titles.counterweight)}</p>
 
           <Line tag="h2" className="cw__quote" text={copy.cwQuote} />
 

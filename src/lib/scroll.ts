@@ -69,10 +69,11 @@ export function getWorld(id: string): World | undefined {
 }
 
 
-export function eyebrow(id: string): string {
+export function eyebrow(id: string, titleOverride?: string): string {
   const w = getWorld(id)
   if (!w) return ''
-  return w.n ? `${w.n} — ${w.title}` : w.title
+  const title = titleOverride ?? w.title
+  return w.n ? `${w.n} — ${title}` : title
 }
 
 

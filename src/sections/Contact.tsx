@@ -64,7 +64,7 @@ export default function Contact() {
 
   return (
     <section className="section section--contact" data-world="contact" id="contact" ref={ref}>
-      <p className="section__eyebrow">{eyebrow('contact')}</p>
+      <p className="section__eyebrow">{eyebrow('contact', copy.titles.contact)}</p>
       <Line className="section__line" text={copy.contactLine} />
 
       <div className="glass">

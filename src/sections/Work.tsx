@@ -53,7 +53,7 @@ export default function Work() {
 
   return (
     <section className="section section--work" data-world="work" id="work" ref={ref}>
-      <p className="section__eyebrow">{eyebrow('work')}</p>
+      <p className="section__eyebrow">{eyebrow('work', copy.titles.work)}</p>
       <Line className="section__line" text={copy.workLine} />
 
       <ul className="work__list">

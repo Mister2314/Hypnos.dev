@@ -1,9 +1,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // i18n — üç dilli məzmun: EN (orijinal) · AZ · TR.
 //
-// Qayda: baxılan mətn burada; **sitat mənbələri** və **bölüm başlıqları**
-// (The Hands, Sapere aude…) orijinal saxlanılır — onlar saytın imzasıdır.
-// Dil seçimi localStorage-da saxlanılır; yoxdursa brauzer dilinə baxır.
+// Qayda: baxılan mətn burada; **sitat mənbələri** orijinal saxlanılır.
+// Fəsil başlıqları da tərcümə olunur (v13 — onun istəyi); yalnız
+// "Sapere aude" Latin mottodur — hər üç dildə eyni qalır.
+// Dil seçimi localStorage-da saxlanılır; yoxdursa **EN** (onun qərarı).
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useSyncExternalStore } from 'react'
@@ -19,11 +20,8 @@ function detect(): Lang {
     const saved = localStorage.getItem(KEY)
     if (saved === 'en' || saved === 'az' || saved === 'tr') return saved
   } catch {
-    /* storage bloklanıb — brauzer dili ilə davam et */
+    /* storage bloklanıb — EN ilə davam et */
   }
-  const nav = typeof navigator !== 'undefined' ? navigator.language.slice(0, 2) : ''
-  if (nav === 'az') return 'az'
-  if (nav === 'tr') return 'tr'
   return 'en'
 }
 
@@ -113,7 +111,8 @@ export type Copy = {
   statusOk: string
   sideLabel: string
   signatureClose: string
-  signatureColophon: string
+  /** fəsil başlıqları — eyebrow + ChapterNav üçün (v13: tərcümə olunur) */
+  titles: Record<string, string>
 }
 
 // ── EN — orijinal mətn ───────────────────────────────────────────────────────
@@ -202,8 +201,19 @@ const EN: Copy = {
   statusOk: 'Your mail app should be open with the message ready.',
   sideLabel: 'Other ways in',
   signatureClose: 'Thanks for scrolling. Now go do something you’ll remember.',
-  signatureColophon:
-    'One page, many worlds. Hand-written WebGL, no 3D library, no page builder. The light is all code.',
+  titles: {
+    hero: 'Overture',
+    leap: 'The Leap',
+    summer: 'Summer',
+    hands: 'The Hands',
+    counterweight: 'The Counterweight',
+    sapere: 'Sapere aude',
+    speak: 'Speak or die',
+    work: 'Work',
+    questions: 'Questions',
+    contact: 'Contact',
+    signature: 'Signature',
+  },
 }
 
 // ── AZ ───────────────────────────────────────────────────────────────────────
@@ -292,8 +302,19 @@ const AZ: Copy = {
   statusOk: 'Poçt tətbiqin açılmalıdır — mesaj hazırdır.',
   sideLabel: 'Başqa yollarla',
   signatureClose: 'Sürüşdürdiyin üçün təşəkkür. İndi gedib xatırlayacağın bir şey et.',
-  signatureColophon:
-    'Bir səhifə, çox dünya. Əl ilə yazılmış WebGL, 3D kitabxanası yoxdur, sayt qurucu yoxdur. İşıq tamamilə koddur.',
+  titles: {
+    hero: 'Uvertüra',
+    leap: 'Tullanış',
+    summer: 'Yay',
+    hands: 'Əllər',
+    counterweight: 'Əks çəki',
+    sapere: 'Sapere aude',
+    speak: 'Danış və ya öl',
+    work: 'İşlər',
+    questions: 'Suallar',
+    contact: 'Əlaqə',
+    signature: 'İmza',
+  },
 }
 
 // ── TR ───────────────────────────────────────────────────────────────────────
@@ -382,8 +403,19 @@ const TR: Copy = {
   statusOk: 'Posta uygulaman açılmış olmalı — mesaj hazır.',
   sideLabel: 'Diğer yollarla',
   signatureClose: 'Kaydırdığın için teşekkürler. Şimdi gidip hatırlayacağın bir şey yap.',
-  signatureColophon:
-    'Tek sayfa, çok dünya. Elle yazılmış WebGL, 3D kütüphanesi yok, sayfa kurucu yok. Işık tamamen kod.',
+  titles: {
+    hero: 'Uvertür',
+    leap: 'Atılım',
+    summer: 'Yaz',
+    hands: 'Eller',
+    counterweight: 'Karşı ağırlık',
+    sapere: 'Sapere aude',
+    speak: 'Konuş ya da öl',
+    work: 'İşler',
+    questions: 'Sorular',
+    contact: 'İletişim',
+    signature: 'İmza',
+  },
 }
 
 const DICT: Record<Lang, Copy> = { en: EN, az: AZ, tr: TR }

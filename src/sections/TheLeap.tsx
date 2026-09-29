@@ -123,7 +123,7 @@ export default function TheLeap() {
         <div className="leap__scrim" aria-hidden="true" />
 
         <div className="leap__inner">
-          <p className="section__eyebrow">{eyebrow('leap')}</p>
+          <p className="section__eyebrow">{eyebrow('leap', copy.titles.leap)}</p>
 
           <Line tag="h2" className="leap__quote" text={copy.leapQuote} />
 

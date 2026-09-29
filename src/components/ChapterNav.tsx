@@ -4,10 +4,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { WORLDS, gsap, prefersReducedMotion } from '../lib/scroll'
 import { scrollToId } from '../lib/lenis'
+import { useCopy } from '../lib/i18n'
 
 const CHAPTERS = WORLDS.filter((w) => w.n !== '')
 
 export default function ChapterNav() {
+  const copy = useCopy()
   const [active, setActive] = useState<string>('')
   const ref = useRef<HTMLElement>(null)
 
@@ -51,11 +53,11 @@ export default function ChapterNav() {
               data-active={active === w.id ? '1' : '0'}
               onClick={() => scrollToId(w.id)}
               aria-current={active === w.id ? 'true' : undefined}
-              aria-label={`Chapter ${w.n} — ${w.title}`}
+              aria-label={`Chapter ${w.n} — ${copy.titles[w.id] ?? w.title}`}
             >
               <span className="chapter-nav__label">
                 <span className="chapter-nav__num">{w.n}</span>
-                <span className="chapter-nav__title">{w.title}</span>
+                <span className="chapter-nav__title">{copy.titles[w.id] ?? w.title}</span>
               </span>
               <span className="chapter-nav__dot" aria-hidden="true" />
             </button>

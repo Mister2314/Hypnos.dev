@@ -101,7 +101,7 @@ export default function Summer() {
     <section className="section section--summer" data-world="summer" id="summer" ref={ref}>
       <div className="summer__bloom" aria-hidden="true" />
       <div className="summer__inner">
-        <p className="section__eyebrow">{eyebrow('summer')}</p>
+        <p className="section__eyebrow">{eyebrow('summer', copy.titles.summer)}</p>
         <Line className="section__line" text={copy.summerLine} />
         <p className="summer__caption">
           <em>{copy.summerCaptionFilm}</em>

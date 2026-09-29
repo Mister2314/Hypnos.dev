@@ -15,7 +15,7 @@ export default function Signature() {
 
       if (prefersReducedMotion) {
         gsap.set(
-          q('.signature__close .rv, .socials li, .signature__work li, .signature__title, .signature__colophon'),
+          q('.signature__close .rv, .socials li, .signature__work li, .signature__title'),
           { opacity: 1, y: 0, yPercent: 0 },
         )
         return
@@ -64,13 +64,12 @@ export default function Signature() {
         scrollTrigger: { trigger: q('.signature__title-mask')[0], start: 'top 94%' },
       })
 
-      gsap.from(q('.signature__colophon, .signature__mark'), {
+      gsap.from(q('.signature__mark'), {
         opacity: 0,
         y: 14,
         duration: 0.8,
-        stagger: 0.1,
         ease: 'power3.out',
-        scrollTrigger: { trigger: q('.signature__colophon')[0], start: 'top 96%' },
+        scrollTrigger: { trigger: q('.signature__mark')[0], start: 'top 96%' },
       })
     },
     { scope: ref },
@@ -78,7 +77,7 @@ export default function Signature() {
 
   return (
     <section className="section section--signature" data-world="signature" id="signature" ref={ref}>
-      <p className="section__eyebrow">{eyebrow('signature')}</p>
+      <p className="section__eyebrow">{eyebrow('signature', copy.titles.signature)}</p>
 
       <Line tag="h2" className="signature__close" text={copy.signatureClose} />
 
@@ -111,8 +110,6 @@ export default function Signature() {
           </li>
         ))}
       </ul>
-
-      <p className="signature__colophon">{copy.signatureColophon}</p>
 
       <span className="signature__rule" aria-hidden="true" />
 

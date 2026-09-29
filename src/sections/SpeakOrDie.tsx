@@ -131,7 +131,7 @@ export default function SpeakOrDie() {
         <div className="speak__rim" aria-hidden="true" />
 
         <div className="speak__inner">
-          <p className="section__eyebrow">{eyebrow('speak')}</p>
+          <p className="section__eyebrow">{eyebrow('speak', copy.titles.speak)}</p>
 
           <h2 className="speak__question">
             {sq.words.map((w, i) => (

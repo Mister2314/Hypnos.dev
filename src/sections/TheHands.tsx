@@ -115,7 +115,7 @@ export default function TheHands() {
         </div>
 
         <div className="hands__inner">
-          <p className="section__eyebrow">{eyebrow('hands')}</p>
+          <p className="section__eyebrow">{eyebrow('hands', copy.titles.hands)}</p>
           <Line className="section__line hands__line" text={copy.handsLine} />
           <p className="hands__caption">{copy.handsCaption}</p>
         </div>

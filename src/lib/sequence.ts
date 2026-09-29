@@ -62,7 +62,10 @@ export function mountSequence(spec: SequenceSpec): () => void {
   }
 
 
-  const imgs: (HTMLImageElement | null)[] = []
+  // v13: Image elementləri ƏVƏZLƏNMƏDİ blob ilə — yaddaşda yalnız SIXILMIŞ
+  // baytlar qalır (~19 MB hamısı); dekod edilmiş kadr yalnız bitmaps pəncərəsində.
+  // 521 HTMLImageElement + onların dekod keşi rendererdə ~1 GB tuturdu.
+  const blobs: (Blob | null)[] = []
 
   const bitmaps = new Map<number, ImageBitmap>()
   const bitmapWip = new Set<number>()
@@ -111,7 +114,7 @@ export function mountSequence(spec: SequenceSpec): () => void {
   }
 
   const bumpContig = () => {
-    while (contig < n && imgs[contig]) contig++
+    while (contig < n && blobs[contig]) contig++
   }
 
 
@@ -128,11 +131,10 @@ export function mountSequence(spec: SequenceSpec): () => void {
     const lo = forward ? Math.max(0, center - 2) : Math.max(0, center - 1 - AHEAD)
     const hi = forward ? Math.min(n - 1, center + 1 + AHEAD) : Math.min(n - 1, center + 2)
     for (let i = lo; i <= hi && bitmapBudget > 0; i++) {
-      if (bitmaps.has(i) || bitmapWip.has(i) || !imgs[i]) continue
+      if (bitmaps.has(i) || bitmapWip.has(i) || !blobs[i]) continue
       bitmapWip.add(i)
       bitmapBudget--
-      const img = imgs[i]!
-      createImageBitmap(img)
+      createImageBitmap(blobs[i]!)
         .then((bm) => {
           bitmaps.set(i, bm)
           bitmapWip.delete(i)
@@ -145,9 +147,9 @@ export function mountSequence(spec: SequenceSpec): () => void {
         })
     }
 
-    if (bitmaps.size > AHEAD + 10) {
+    if (bitmaps.size > AHEAD + 4) {
       for (const key of [...bitmaps.keys()]) {
-        if (key < center - AHEAD - 6 || key > center + AHEAD + 6) {
+        if (key < center - AHEAD - 3 || key > center + AHEAD + 3) {
           bitmaps.get(key)?.close()
           bitmaps.delete(key)
         }
@@ -159,22 +161,23 @@ export function mountSequence(spec: SequenceSpec): () => void {
     let pending = 0
     for (let i = from; i < Math.min(n, from + PARALLEL); i++) {
       pending++
-      const img = new Image()
-      img.decoding = 'async'
-      img.onload = () => {
-        imgs[i] = img
-        loadedCount++
-        reportProgress()
-        bumpContig()
-        if (--pending === 0 && Math.min(n, from + PARALLEL) < n) loadChunk(from + PARALLEL)
-      }
-      img.onerror = () => {
-        loadedCount++
-        reportProgress()
-
-        if (--pending === 0 && Math.min(n, from + PARALLEL) < n) loadChunk(from + PARALLEL)
-      }
-      img.src = `${BASE}${dir}/s_${String(i + 1).padStart(3, '0')}.webp`
+      fetch(`${BASE}${dir}/s_${String(i + 1).padStart(3, '0')}.webp`)
+        .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
+        .then((b) => {
+          blobs[i] = b
+          loadedCount++
+          reportProgress()
+          bumpContig()
+        })
+        .catch(() => {
+          // səhv kadr pərdəni bloklamır — draw() poster fallback-ına düşür
+          loadedCount++
+          reportProgress()
+          bumpContig()
+        })
+        .finally(() => {
+          if (--pending === 0 && Math.min(n, from + PARALLEL) < n) loadChunk(from + PARALLEL)
+        })
     }
   }
 
@@ -194,7 +197,7 @@ export function mountSequence(spec: SequenceSpec): () => void {
       })
       .then((m: { n: number }) => {
         n = m.n
-        imgs.length = n
+        blobs.length = n
         loadChunk(0)
 
         // loader-gated fəsil (leap): pərdə açılmamışdan əvvəl scroll pompası
@@ -245,6 +248,14 @@ export function mountSequence(spec: SequenceSpec): () => void {
   const io = new IntersectionObserver(
     ([entry]) => {
       running = entry.isIntersecting
+      if (!running) {
+        // v13: fəsil ekrandan çıxdı — dekod edilmiş bitmaps BURAXILIR (bloblar
+        // qalır). RAM yalnız görünən seqsiyalarla miqyaslanır; geri girişdə
+        // lokal bloblardan 1-2 tick-ə yenidən dekod olunur (smoothluq eyni).
+        for (const bm of bitmaps.values()) bm.close()
+        bitmaps.clear()
+        bitmapWip.clear()
+      }
     },
     { rootMargin: '25% 0px' },
   )

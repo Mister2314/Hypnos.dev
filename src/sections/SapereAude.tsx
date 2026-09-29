@@ -100,7 +100,7 @@ export default function SapereAude() {
         <div className="sapere__scrim" aria-hidden="true" />
 
         <div className="sapere__inner">
-          <p className="section__eyebrow">{eyebrow('sapere')}</p>
+          <p className="section__eyebrow">{eyebrow('sapere', copy.titles.sapere)}</p>
           <Line className="section__line" text={copy.sapereLine} />
           <svg
             className="sapere__rule"

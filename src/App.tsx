@@ -27,10 +27,8 @@ import Work from './sections/Work'
 import Questions from './sections/Questions'
 import Contact from './sections/Contact'
 import Signature from './sections/Signature'
-import { useLang } from './lib/i18n'
 
 export default function App() {
-  const lang = useLang()
   return (
     <>
       <Preloader />
@@ -39,7 +37,10 @@ export default function App() {
       <ChapterNav />
       <Cursor />
 
-      <main key={lang}>
+      {/* key={lang} YOXDUR (v13): dil dəyişəndə main remount olmUR —
+          canvas-lar yerində qalır, video scroll pozisiyasını itirmir.
+          Hər section özü useCopy() ilə re-render olur. */}
+      <main>
         <Hero />
         <TheLeap />
         <Summer />
