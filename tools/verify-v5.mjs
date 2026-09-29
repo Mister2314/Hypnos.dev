@@ -326,7 +326,16 @@ check(
 // Tarix: keşlənmiş kadr settle()-i sinxron çağırırdı → dil dəyişimi (hamısı
 // keşli) eksponensial rekursiya ilə əsas thread-i kilidləyirdi.
 const errsBeforeLang = pageErrors.length
-await evalJs(`(() => {
+// v15 (bugbot tapıntı 2): əsas thread kilidlənərsə evalJs SONSUZ gözləyir —
+// race + timeout ilə donma = FAIL (dondurulmuş CI yox)
+const evalHardened = async (expr) =>
+  Promise.race([
+    evalJs(expr),
+    sleep(8000).then(() => {
+      throw new Error('MAIN THREAD BLOCKED (> 8s) — dil dəyişimi dondurur')
+    }),
+  ])
+await evalHardened(`(() => {
   window.__v15errs = [];
   window.addEventListener('error', (e) => window.__v15errs.push(String(e.message)));
   window.addEventListener('unhandledrejection', (e) => window.__v15errs.push('rej: ' + String(e.reason)));
@@ -336,7 +345,7 @@ await evalJs(`(() => {
   return true;
 })()`)
 await sleep(3000)
-const langCheck = await evalJs(`(() => {
+const langCheck = await evalHardened(`(() => {
   const btns = [...document.querySelectorAll('.lang-switch__btn')];
   const en = btns.find((b) => b.textContent.trim() === 'EN');
   if (en) en.click();
@@ -346,13 +355,20 @@ const langCheck = await evalJs(`(() => {
     h1: document.querySelector('h1')?.textContent ?? null,
   };
 })()`)
+await sleep(1500)
+const langCheck2 = await evalJs(`(() => ({
+  worlds: document.querySelectorAll('[data-world]').length,
+  v15errs: window.__v15errs,
+  h1: document.querySelector('h1')?.textContent ?? null,
+}))()`)
 check(
   'dil dəyişimi — səhifə canlı, xətasız (regressiya yoxlaması)',
   langCheck.worlds === 11 &&
-    (langCheck.v15errs || []).length === 0 &&
+    langCheck2.worlds === 11 &&
+    (langCheck2.v15errs || []).length === 0 &&
     pageErrors.length === errsBeforeLang &&
-    !!langCheck.h1,
-  JSON.stringify({ worlds: langCheck.worlds, errs: langCheck.v15errs, pageErrs: pageErrors.length - errsBeforeLang, h1: (langCheck.h1 || '').slice(0, 40) }),
+    !!langCheck2.h1,
+  JSON.stringify({ worlds: langCheck2.worlds, errs: langCheck2.v15errs, pageErrs: pageErrors.length - errsBeforeLang, h1: (langCheck2.h1 || '').slice(0, 40) }),
 )
 
 // ── Nəticə ──────────────────────────────────────────────────────────────────

@@ -51,6 +51,15 @@ export function markSequenceSkipped(id: number): void {
   setSequenceFraction(id, 1)
 }
 
+/** v15 (bugbot): remount-da köhnə seqsiya qeydləri registry-dən çıxarılır */
+export function unregisterSequence(id: number): void {
+  if (!seqFractions.delete(id)) return
+  let sum = 0
+  for (const x of seqFractions.values()) sum += x
+  framesFraction = seqFractions.size ? sum / seqFractions.size : framesFraction
+  emit()
+}
+
 export function setLoaderFontsReady(): void {
   fontsReady = true
   emit()

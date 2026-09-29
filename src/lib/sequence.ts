@@ -3,7 +3,7 @@
 
 import { gsap, prefersReducedMotion, ScrollTrigger } from './scroll'
 import { PERF, isNarrow, pickTierDir } from './perf'
-import { registerSequence, setSequenceFraction, markSequenceSkipped, isLoaderDone } from './loader'
+import { registerSequence, setSequenceFraction, markSequenceSkipped, isLoaderDone, unregisterSequence } from './loader'
 import { sizeCanvas } from './webgl'
 
 const BASE = import.meta.env.BASE_URL
@@ -15,6 +15,9 @@ const PARALLEL = 8
 // yüklənmir (keşdən dərhal dekod → video 1-2 kadrda bərpa olunur).
 // Blob obyektləri paylaşılır — RAM əlavə yemir.
 const blobCache = new Map<string, Blob>()
+// v15: uçuşda olan fetch-lərin keşi — sürətli ikiqat dil dəyişimində
+// eyni URL iki dəfə çəkilmir (bugbot tapıntı 4)
+const inflight = new Map<string, Promise<Blob>>()
 
 export type SequenceSpec = {
   canvas: HTMLCanvasElement
@@ -189,9 +192,22 @@ export function mountSequence(spec: SequenceSpec): () => void {
     let b = blobCache.get(url)
     if (!b) {
       try {
-        const blob = await fetch(url).then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
-        blobCache.set(url, blob)
-        b = blob
+        let p = inflight.get(url)
+        if (!p) {
+          p = fetch(url)
+            .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
+            .then((blob) => {
+              blobCache.set(url, blob)
+              inflight.delete(url)
+              return blob
+            })
+            .catch((err) => {
+              inflight.delete(url)
+              throw err
+            })
+          inflight.set(url, p)
+        }
+        b = await p
       } catch {
         /* səhv kadr pərdəni bloklamır — draw() poster fallback-ına düşür */
       }
@@ -214,17 +230,23 @@ export function mountSequence(spec: SequenceSpec): () => void {
 
 
   let downloadStarted = false
+  // v15 (bugbot tapıntı 1): unmount-dan SONRA gecikmiş manifest retry-isi
+  // işə düşsə, yaradılan bootTimer heç kim təmizləmədiyi üçün əbədi
+  // dekod pompası olur — alive bayrağı bütün asinxron davamları kəsir.
+  let alive = true
   const startDownload = (attempt = 0) => {
     if (attempt === 0) {
       if (downloadStarted) return
       downloadStarted = true
     }
+    if (!alive) return
     fetch(`${BASE}${highDir.split('/')[0]}/manifest.json`)
       .then((r) => {
         if (!r.ok) throw new Error(String(r.status))
         return r.json()
       })
       .then((m: { n: number }) => {
+        if (!alive) return
         n = m.n
         blobs.length = n
         loadChunk(0)
@@ -233,6 +255,11 @@ export function mountSequence(spec: SequenceSpec): () => void {
         // işləmir — ilk dekod pəncərəsini müstəqil pompala
         if (spec.trackProgress && !prefersReducedMotion) {
           bootTimer = setInterval(() => {
+            if (!alive) {
+              clearInterval(bootTimer!)
+              bootTimer = null
+              return
+            }
             pumpBitmaps(0)
             if (decodedCount >= AHEAD + 2 && bootTimer) {
               clearInterval(bootTimer)
@@ -243,8 +270,8 @@ export function mountSequence(spec: SequenceSpec): () => void {
       })
       .catch(() => {
         // keçici şəbəkə xətası: poster fallback var, 2 dəfəyə qədər yenidən cəhd
-        if (attempt < 2) setTimeout(() => startDownload(attempt + 1), 1200 * (attempt + 1))
-        else setSequenceFraction(seqId, 1)
+        if (attempt < 2 && alive) setTimeout(() => startDownload(attempt + 1), 1200 * (attempt + 1))
+        else if (alive) setSequenceFraction(seqId, 1)
       })
   }
   // v9: hamısı dərhal yüklənməyə başlayır — IO-gated lazy start onu yaradırdı
@@ -310,6 +337,7 @@ export function mountSequence(spec: SequenceSpec): () => void {
   let tick: (() => void) | null = null
 
   const cleanup = () => {
+    alive = false
     if (tick) gsap.ticker.remove(tick)
     if (bootTimer) clearInterval(bootTimer)
     if (waitIv) clearInterval(waitIv)
@@ -318,6 +346,7 @@ export function mountSequence(spec: SequenceSpec): () => void {
     st.kill()
     for (const bm of bitmaps.values()) bm.close()
     bitmaps.clear()
+    unregisterSequence(seqId)
   }
 
 
