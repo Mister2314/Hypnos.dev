@@ -322,6 +322,39 @@ check(
   `${JSON.stringify(pre)} · gözlədi ${waitedMs}ms · kadrlar ${JSON.stringify(preDiag)}`,
 )
 
+// ── v15 — dil dəyişimi saytı ÇÖKDÜRMƏMƏLİDİR (blob-keş rekursiya regresiyası)
+// Tarix: keşlənmiş kadr settle()-i sinxron çağırırdı → dil dəyişimi (hamısı
+// keşli) eksponensial rekursiya ilə əsas thread-i kilidləyirdi.
+const errsBeforeLang = pageErrors.length
+await evalJs(`(() => {
+  window.__v15errs = [];
+  window.addEventListener('error', (e) => window.__v15errs.push(String(e.message)));
+  window.addEventListener('unhandledrejection', (e) => window.__v15errs.push('rej: ' + String(e.reason)));
+  const btns = [...document.querySelectorAll('.lang-switch__btn')];
+  const az = btns.find((b) => b.textContent.trim() === 'AZ');
+  az.click();
+  return true;
+})()`)
+await sleep(3000)
+const langCheck = await evalJs(`(() => {
+  const btns = [...document.querySelectorAll('.lang-switch__btn')];
+  const en = btns.find((b) => b.textContent.trim() === 'EN');
+  if (en) en.click();
+  return {
+    worlds: document.querySelectorAll('[data-world]').length,
+    v15errs: window.__v15errs,
+    h1: document.querySelector('h1')?.textContent ?? null,
+  };
+})()`)
+check(
+  'dil dəyişimi — səhifə canlı, xətasız (regressiya yoxlaması)',
+  langCheck.worlds === 11 &&
+    (langCheck.v15errs || []).length === 0 &&
+    pageErrors.length === errsBeforeLang &&
+    !!langCheck.h1,
+  JSON.stringify({ worlds: langCheck.worlds, errs: langCheck.v15errs, pageErrs: pageErrors.length - errsBeforeLang, h1: (langCheck.h1 || '').slice(0, 40) }),
+)
+
 // ── Nəticə ──────────────────────────────────────────────────────────────────
 const failed = results.filter((r) => !r.ok)
 console.log('')

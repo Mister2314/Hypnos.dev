@@ -179,40 +179,35 @@ export function mountSequence(spec: SequenceSpec): () => void {
     }
   }
 
-  const loadChunk = (from: number) => {
-    let pending = 0
-    const settle = () => {
-      if (--pending === 0 && Math.min(n, from + PARALLEL) < n) loadChunk(from + PARALLEL)
-    }
-    for (let i = from; i < Math.min(n, from + PARALLEL); i++) {
-      pending++
-      const url = `${BASE}${dir}/s_${String(i + 1).padStart(3, '0')}.webp`
-      const cached = blobCache.get(url)
-      if (cached) {
-        blobs[i] = cached
-        loadedCount++
-        reportProgress()
-        bumpContig()
-        settle()
-        continue
+  // v15: chunk yükləməsi İTERATIVDIR (rekursiya yoxdur). Səbəb: keşlənmiş
+  // kadr settle()-i SINXRON çağırırdı → növbəti chunk for-loop içində
+  // rekursiv başlayır → dil dəyişimi (hamısı keşli) eksponensial yenidən
+  // gəzinti ilə əsas thread-i KİLİDLƏYİRDİ ("sayt çökur"). Promise.all +
+  // await — keşli kadrlar mikrotask-da həll olunur, zəncir sinxron deyil.
+  const loadFrame = async (i: number): Promise<void> => {
+    const url = `${BASE}${dir}/s_${String(i + 1).padStart(3, '0')}.webp`
+    let b = blobCache.get(url)
+    if (!b) {
+      try {
+        const blob = await fetch(url).then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
+        blobCache.set(url, blob)
+        b = blob
+      } catch {
+        /* səhv kadr pərdəni bloklamır — draw() poster fallback-ına düşür */
       }
-      fetch(url)
-        .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
-        .then((b) => {
-          blobCache.set(url, b)
-          blobs[i] = b
-          loadedCount++
-          reportProgress()
-          bumpContig()
-        })
-        .catch(() => {
-          // səhv kadr pərdəni bloklamır — draw() poster fallback-ına düşür
-          loadedCount++
-          reportProgress()
-          bumpContig()
-        })
-        .finally(settle)
     }
+    if (b) blobs[i] = b
+    loadedCount++
+    reportProgress()
+    bumpContig()
+  }
+
+  const loadChunk = async (from: number): Promise<void> => {
+    const end = Math.min(n, from + PARALLEL)
+    const batch: Promise<void>[] = []
+    for (let i = from; i < end; i++) batch.push(loadFrame(i))
+    await Promise.all(batch)
+    if (end < n) await loadChunk(end)
   }
 
 
