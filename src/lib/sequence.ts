@@ -11,6 +11,11 @@ const BASE = import.meta.env.BASE_URL
 
 const PARALLEL = 8
 
+// v14: blob keşi — dil dəyişimi remount-da kadrlar ŞƏBƏKƏDƏN yenidən
+// yüklənmir (keşdən dərhal dekod → video 1-2 kadrda bərpa olunur).
+// Blob obyektləri paylaşılır — RAM əlavə yemir.
+const blobCache = new Map<string, Blob>()
+
 export type SequenceSpec = {
   canvas: HTMLCanvasElement
 
@@ -176,11 +181,25 @@ export function mountSequence(spec: SequenceSpec): () => void {
 
   const loadChunk = (from: number) => {
     let pending = 0
+    const settle = () => {
+      if (--pending === 0 && Math.min(n, from + PARALLEL) < n) loadChunk(from + PARALLEL)
+    }
     for (let i = from; i < Math.min(n, from + PARALLEL); i++) {
       pending++
-      fetch(`${BASE}${dir}/s_${String(i + 1).padStart(3, '0')}.webp`)
+      const url = `${BASE}${dir}/s_${String(i + 1).padStart(3, '0')}.webp`
+      const cached = blobCache.get(url)
+      if (cached) {
+        blobs[i] = cached
+        loadedCount++
+        reportProgress()
+        bumpContig()
+        settle()
+        continue
+      }
+      fetch(url)
         .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
         .then((b) => {
+          blobCache.set(url, b)
           blobs[i] = b
           loadedCount++
           reportProgress()
@@ -192,9 +211,7 @@ export function mountSequence(spec: SequenceSpec): () => void {
           reportProgress()
           bumpContig()
         })
-        .finally(() => {
-          if (--pending === 0 && Math.min(n, from + PARALLEL) < n) loadChunk(from + PARALLEL)
-        })
+        .finally(settle)
     }
   }
 
@@ -290,7 +307,11 @@ export function mountSequence(spec: SequenceSpec): () => void {
   )
   io.observe(canvas)
 
-  let smooth = 0
+  // v14: remount (dil dəyişimi) səhifənin MÖVCUD mövqeyində baş verir —
+  // smooth hazırki scrub progressindən başlayır ki, video birinci kadrdan
+  // oynayıb "geri qayıtmağa çalışmasın" (onun orijinal şikayəti)
+  let smooth = st.progress
+  progressRef.v = st.progress
   let tick: (() => void) | null = null
 
   const cleanup = () => {

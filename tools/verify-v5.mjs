@@ -296,7 +296,7 @@ let pre = await evalJs(`({
   loading: document.documentElement.classList.contains('is-loading'),
 })`)
 let waitedMs = 0
-while (pre.loading && waitedMs < 30000) {
+while ((pre.loading || pre.el) && waitedMs < 30000) {
   await sleep(1000)
   waitedMs += 1000
   pre = await evalJs(`({
