@@ -290,11 +290,37 @@ check('mobil — admission oxunaqlıdır (≥15px)',
   parseFloat(mob.admissionSize || '0') >= 15, mob.admissionSize)
 
 // ── v6.11 — preloader bağlanmalıdır (yükləmə bitib) ─────────────────────────
-const pre = await evalJs(`({
+// v14: 30s-ə qədər gözlə + hansı seqsiyanın yüklənmədiyini göstər (diaqnoz)
+let pre = await evalJs(`({
   el: !!document.querySelector('.preloader'),
   loading: document.documentElement.classList.contains('is-loading'),
 })`)
-check('preloader bağlanıb (yükləmə bitib)', !pre.el && !pre.loading, JSON.stringify(pre))
+let waitedMs = 0
+while (pre.loading && waitedMs < 30000) {
+  await sleep(1000)
+  waitedMs += 1000
+  pre = await evalJs(`({
+    el: !!document.querySelector('.preloader'),
+    loading: document.documentElement.classList.contains('is-loading'),
+  })`)
+}
+const preDiag = await evalJs(`(() => {
+  performance.setResourceTimingBufferSize(2000) // 521 kadr — default 250 çatmır
+  const rs = performance.getEntriesByType('resource').map((r) => r.name)
+  const count = (s) => rs.filter((n) => n.includes(s)).length
+  return {
+    leap: count('leap/frames-'),
+    sapere: count('sapere/frames-'),
+    cw: count('counterweight/frames-'),
+    speak: count('speak/frames-'),
+    manifests: count('manifest'),
+  }
+})()`)
+check(
+  'preloader bağlanıb (yükləmə bitib)',
+  !pre.el && !pre.loading,
+  `${JSON.stringify(pre)} · gözlədi ${waitedMs}ms · kadrlar ${JSON.stringify(preDiag)}`,
+)
 
 // ── Nəticə ──────────────────────────────────────────────────────────────────
 const failed = results.filter((r) => !r.ok)

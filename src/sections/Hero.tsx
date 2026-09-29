@@ -78,7 +78,8 @@ export default function Hero() {
 
       ambient(q('.hero__cue-text'), { y: 3, opacity: 0.55 }, 4.5)
     },
-    { scope: ref },
+    // v14: dil dəyişəndə animasiyalar yeni elementlərə qurulur — köhnələrinə yox
+    { scope: ref, dependencies: [copy] },
   )
 
   return (

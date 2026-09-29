@@ -38,7 +38,7 @@ export default function Contact() {
         scrollTrigger: { trigger: q('.glass')[0], start: 'top 88%' },
       })
     },
-    { scope: ref },
+    { scope: ref, dependencies: [copy] },
   )
 
   const submit = (e: React.FormEvent<HTMLFormElement>) => {

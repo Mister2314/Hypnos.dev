@@ -48,7 +48,7 @@ export default function Work() {
         scrollTrigger: { trigger: q('.work__foot')[0], start: 'top 94%' },
       })
     },
-    { scope: ref },
+    { scope: ref, dependencies: [copy] },
   )
 
   return (

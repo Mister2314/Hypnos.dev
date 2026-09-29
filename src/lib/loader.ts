@@ -35,7 +35,9 @@ export function registerSequence(): number {
 export function setSequenceFraction(id: number, f: number): void {
   if (!seqFractions.has(id)) return
   const v = Math.min(1, Math.max(0, f))
-  if (v === seqFractions.get(id)) return
+  // monoton: v14 mobildə gecikən seqsiyalar pərdə üçün 1 qeyd olunur —
+  // arxa plan yükləməsi başlayanda real progress sayçını geri aparmasın
+  if (v <= (seqFractions.get(id) ?? 0)) return
   seqFractions.set(id, v)
   let sum = 0
   for (const x of seqFractions.values()) sum += x

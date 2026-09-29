@@ -77,7 +77,7 @@ export default function TheHands() {
         scrollTrigger: { trigger: q('.hands__line')[0], start: 'top 72%' },
       })
     },
-    { scope: ref },
+    { scope: ref, dependencies: [copy] },
   )
 
   return (

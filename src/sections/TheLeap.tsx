@@ -112,7 +112,7 @@ export default function TheLeap() {
 
       ambient(q('.leap__source'), { y: -2 }, 9)
     },
-    { scope: ref },
+    { scope: ref, dependencies: [copy] },
   )
 
   return (

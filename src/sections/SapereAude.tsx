@@ -90,7 +90,7 @@ export default function SapereAude() {
 
       tl.from(q('.sapere__caption'), { opacity: 0, duration: 0.07 }, 0.42)
     },
-    { scope: ref },
+    { scope: ref, dependencies: [copy] },
   )
 
   return (

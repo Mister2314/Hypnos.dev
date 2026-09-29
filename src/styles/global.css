@@ -799,6 +799,9 @@ html.has-cursor * {
   align-items: center;
   width: 100%;
   height: 100svh;
+  /* v14: dvh fallback — mobilde URL bar gizlənəndə svh kiçik qalır və
+     növbəti bölmənin kənarı sticky stage-in içində görünürdü */
+  height: 100dvh;
   overflow: hidden;
 }
 

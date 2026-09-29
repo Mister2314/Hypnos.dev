@@ -3,7 +3,7 @@
 
 import { gsap, prefersReducedMotion, ScrollTrigger } from './scroll'
 import { PERF, isNarrow, pickTierDir } from './perf'
-import { registerSequence, setSequenceFraction, markSequenceSkipped } from './loader'
+import { registerSequence, setSequenceFraction, markSequenceSkipped, isLoaderDone } from './loader'
 import { sizeCanvas } from './webgl'
 
 const BASE = import.meta.env.BASE_URL
@@ -74,6 +74,8 @@ export function mountSequence(spec: SequenceSpec): () => void {
 
   // loader pərdəsi üçün real progress: seqsiyanın yüklənmiş kadr payı
   let bootTimer: ReturnType<typeof setInterval> | null = null
+  // v14: mobildə pərdədən sonrakı yükləmə gözləyicisi
+  let waitIv: ReturnType<typeof setInterval> | null = null
   const reportProgress = () => {
     if (!n) return
     setSequenceFraction(seqId, loadedCount / n)
@@ -233,11 +235,23 @@ export function mountSequence(spec: SequenceSpec): () => void {
         else setSequenceFraction(seqId, 1)
       })
   }
-  // v9: hamısı DƏRHAL yüklənməyə başlayır — IO-gated lazy start onu yaradırdı
+  // v9: hamısı dərhal yüklənməyə başlayır — IO-gated lazy start onu yaradırdı
   // ki, scroll seqsiyanın üstünə çatanda kadrlar hələ şəbəkədə olurdu.
+  // v14 mobil istisna: telefonda yalnız İLK video (leap) pərdədə yüklənir —
+  // mobile data + ilk yükləmə donması; qalanları pərdə qalxandan sonra
+  // arxa planda çəkirik (fraksiya monoton olduğundan sayçı geri düşmür).
   if (prefersReducedMotion) {
     // kadr oynamayacaq — bayt yükləməsini də synchronically keç
     markSequenceSkipped(seqId)
+  } else if (isNarrow() && !spec.trackProgress) {
+    setSequenceFraction(seqId, 1)
+    waitIv = setInterval(() => {
+      if (isLoaderDone()) {
+        clearInterval(waitIv!)
+        waitIv = null
+        startDownload()
+      }
+    }, 400)
   } else {
     startDownload()
   }
@@ -282,6 +296,7 @@ export function mountSequence(spec: SequenceSpec): () => void {
   const cleanup = () => {
     if (tick) gsap.ticker.remove(tick)
     if (bootTimer) clearInterval(bootTimer)
+    if (waitIv) clearInterval(waitIv)
     window.removeEventListener('resize', resize)
     io.disconnect()
     st.kill()

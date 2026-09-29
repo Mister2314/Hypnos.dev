@@ -120,7 +120,7 @@ export default function SpeakOrDie() {
 
       ambient(q('.speak__qmark'), { scale: 1.14, opacity: 0.9 }, 4.5)
     },
-    { scope: ref },
+    { scope: ref, dependencies: [copy] },
   )
 
   return (

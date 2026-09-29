@@ -87,7 +87,7 @@ export default function TheCounterweight() {
 
       ambient(q('.cw__source'), { y: -2 }, 9)
     },
-    { scope: ref },
+    { scope: ref, dependencies: [copy] },
   )
 
   return (

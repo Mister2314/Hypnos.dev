@@ -94,7 +94,7 @@ export default function Summer() {
         },
       )
     },
-    { scope: ref },
+    { scope: ref, dependencies: [copy] },
   )
 
   return (

@@ -210,7 +210,9 @@ export default function Questions() {
               <button
                 type="button"
                 className="q-card"
-                key={item.q}
+                // v14: key = indeks (mətn yox) — dil dəyişəndə elementlər
+                // yerində qalır, paint() qoyduğu blur/opacity inline stilləri İTİMİR
+                key={i}
                 data-front={active === i ? '1' : '0'}
                 onClick={() => pickRef.current(i)}
                 aria-label={`Question ${i + 1} of ${N}: ${item.q}`}
@@ -243,10 +245,10 @@ export default function Questions() {
             {String(N).padStart(2, '0')}
           </span>
           <div className="questions__dots">
-            {faq.map((item, i) => (
+            {faq.map((_, i) => (
               <button
                 type="button"
-                key={item.q}
+                key={i}
                 className="questions__dot"
                 data-active={active === i ? '1' : '0'}
                 onClick={() => pickRef.current(i)}

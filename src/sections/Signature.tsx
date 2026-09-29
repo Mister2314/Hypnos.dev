@@ -72,7 +72,7 @@ export default function Signature() {
         scrollTrigger: { trigger: q('.signature__mark')[0], start: 'top 96%' },
       })
     },
-    { scope: ref },
+    { scope: ref, dependencies: [copy] },
   )
 
   return (
