@@ -1347,14 +1347,6 @@ html.has-cursor * {
   outline-offset: 2px;
 }
 
-.glass__pending {
-  margin: 0;
-  font-size: 0.92rem;
-  line-height: 1.6;
-  opacity: 0.65;
-  max-width: 30ch;
-}
-
 .glass__status {
   position: relative;
   margin: 1.2rem 0 0;

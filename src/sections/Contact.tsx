@@ -95,21 +95,15 @@ export default function Contact() {
 
         <aside className="glass__side">
           <p className="glass__side-label">{copy.sideLabel}</p>
-          {socials.length > 0 ? (
-            <ul className="glass__direct">
-              {socials.map((s) => (
-                <li key={s.label}>
-                  <a href={s.href} target="_blank" rel="noreferrer noopener">
-                    {s.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="glass__pending">
-              The handles go here. Instagram, GitHub, LinkedIn. Until they are wired up, this form is the honest way in.
-            </p>
-          )}
+          <ul className="glass__direct">
+            {socials.map((s) => (
+              <li key={s.label}>
+                <a href={s.href} target="_blank" rel="noreferrer noopener">
+                  {s.label}
+                </a>
+              </li>
+            ))}
+          </ul>
         </aside>
       </div>
     </section>
