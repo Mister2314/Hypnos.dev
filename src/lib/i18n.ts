@@ -9,6 +9,7 @@
 
 import { useSyncExternalStore } from 'react'
 import { ScrollTrigger } from './scroll'
+import type { MailIssue } from './email'
 
 export type Lang = 'en' | 'az' | 'tr'
 
@@ -114,6 +115,8 @@ export type Copy = {
   statusSending: string
   statusError: string
   statusOk: string
+  /** mail format səhvləri — hər case üçün saytın səsində cavab ({d}/{fix} yerinə yetirilir) */
+  mailErrors: Record<MailIssue, string>
   sideLabel: string
   signatureClose: string
   /** fəsil başlıqları — eyebrow + ChapterNav üçün (v13: tərcümə olunur) */
@@ -209,6 +212,15 @@ const EN: Copy = {
   statusSending: 'Sending…',
   statusError: 'Something broke on the way — email me directly instead.',
   statusOk: 'Message sent — talk soon.',
+  mailErrors: {
+    space: 'Spaces don’t live inside email addresses.',
+    noAt: 'No @ in there — emails are kind of attached to it.',
+    doubleAt: 'Two @ signs? One is plenty.',
+    noDomain: 'Everything after the @ went missing.',
+    noTld: 'A domain without a dot is just a word.',
+    dots: 'Those dots aren’t where dots go.',
+    typo: '«{d}»? Pretty sure you meant «{fix}».',
+  },
   sideLabel: 'Other ways in',
   signatureClose: 'That’s all from me — if you ever want to talk, you know where to find me.',
   titles: {
@@ -315,6 +327,15 @@ const AZ: Copy = {
   statusSending: 'Göndərilir…',
   statusError: 'Yolda bir şey pozuldu — birbaşa poçtla yaz.',
   statusOk: 'Mesaj göndərildi — danışarıq.',
+  mailErrors: {
+    space: 'Mail ünvanının içinə boşluq sığmır.',
+    noAt: 'Burda @ yoxdur — maillar onsuz işləmir.',
+    doubleAt: 'İki dənə @? Biri bəs edir.',
+    noDomain: '@-dan sonrası itib gedib.',
+    noTld: 'Nöqtəsiz domain sadəcə sözdür.',
+    dots: 'Bu nöqtələr öz yerində deyil.',
+    typo: '«{d}»? Əminəm ki «{fix}» istəyirdin.',
+  },
   sideLabel: 'Başqa yollarla',
   signatureClose: 'Məndən bu qədər — danışmaq istəsən, harda olduğumu bilirsən.',
   titles: {
@@ -421,6 +442,15 @@ const TR: Copy = {
   statusSending: 'Gönderiliyor…',
   statusError: 'Yolda bir şey bozuldu — doğrudan e-posta yaz.',
   statusOk: 'Mesaj gönderildi — yakında konuşuruz.',
+  mailErrors: {
+    space: 'E-posta adresinin içine boşluk sığmaz.',
+    noAt: 'Burda @ yok — maillar onsuz çalışmaz.',
+    doubleAt: 'İki tane @? Biri yeter.',
+    noDomain: '@-dan sonrası kayıp gidiyor.',
+    noTld: 'Noktasız domain sadece bir kelime.',
+    dots: 'Bu noktalar kendi yerinde değil.',
+    typo: '«{d}»? Eminim «{fix}» demek istedin.',
+  },
   sideLabel: 'Diğer yollarla',
   signatureClose: 'Benden bu kadar — konuşmak istersen nerede olduğumu biliyorsun.',
   titles: {

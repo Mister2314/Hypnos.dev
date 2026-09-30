@@ -6,11 +6,15 @@ import Line from '../components/Line'
 import { links } from '../lib/site'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
 import { useCopy } from '../lib/i18n'
+import { validateEmail, type MailIssue } from '../lib/email'
 
 export default function Contact() {
   const ref = useRef<HTMLElement>(null)
   const copy = useCopy()
-  const [sent, setSent] = useState<'' | 'ok' | 'sending' | 'error' | 'invalid'>('')
+  const [sent, setSent] = useState<'' | 'ok' | 'sending' | 'error' | 'invalid' | 'mail'>('')
+  const [mailIssue, setMailIssue] = useState<MailIssue | null>(null)
+  const [mailDomain, setMailDomain] = useState('')
+  const [mailFix, setMailFix] = useState('')
   const socials = links()
 
   useGSAP(
@@ -43,15 +47,34 @@ export default function Contact() {
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const fd = new FormData(e.currentTarget)
+    const form = e.currentTarget
+    const fd = new FormData(form)
     const name = String(fd.get('name') ?? '').trim()
     const from = String(fd.get('email') ?? '').trim()
     const msg = String(fd.get('message') ?? '').trim()
 
     if (!name || !from || !msg) {
+      setMailIssue(null)
       setSent('invalid')
       return
     }
+    // v23: mail formatı — hər səhvə xas cavab (boşluq, @, typo təklifi...)
+    const mail = validateEmail(from)
+    if (!mail.ok) {
+      setMailIssue(mail.issue)
+      if (mail.issue === 'typo' && mail.fix) {
+        setMailDomain(from.split('@')[1] ?? '')
+        setMailFix(mail.fix)
+      } else {
+        setMailDomain('')
+        setMailFix('')
+      }
+      setSent('mail')
+      return
+    }
+    setMailIssue(null)
+    setMailDomain('')
+    setMailFix('')
     // v21: kendi server funksiyamiz (api/contact) — Resend ile birbaşa poçta:
     // pulsuz, səhifədən kənar heç nə açılmır, üçüncü tərəf form servisi yoxdur
     setSent('sending')
@@ -100,6 +123,11 @@ export default function Contact() {
 
         <p className="glass__status" data-state={sent} role="status">
           {sent === 'invalid' && copy.statusInvalid}
+          {sent === 'mail' &&
+            mailIssue &&
+            copy.mailErrors[mailIssue]
+              .replace('{d}', mailDomain ?? '')
+              .replace('{fix}', mailFix ?? '')}
           {sent === 'sending' && copy.statusSending}
           {sent === 'error' && copy.statusError}
           {sent === 'ok' && copy.statusOk}
