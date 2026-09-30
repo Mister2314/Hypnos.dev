@@ -146,7 +146,7 @@ const EN: Copy = {
     die: 7,
     qmark: '?',
   },
-  speakAdmission: "I don't think I'll ever be the kind of person who could ask a question like that.",
+  speakAdmission: "I don't believe I'll ever be the kind of person who could ask a question like that.",
   speakAnswer: 'Better to speak.',
   speakReflection: 'I spent years picking the other one. This page is the answer I kept not giving.',
   workLine: 'I would rather show you two real things than ten neat ones.',
@@ -176,11 +176,11 @@ const EN: Copy = {
   faq: [
     {
       q: 'Who are you, exactly?',
-      a: 'Nineteen. Azerbaijani. Second year of an IT degree. I build things and I read too much.',
+      a: 'Nineteen. Azerbaijani. Second year of an IT degree. I try to build things and I read as much as I can.',
     },
     {
       q: 'What do you actually do?',
-      a: 'Interface work mostly — the part where a screen starts feeling like something. Some front-end, some mobile, some shaders.',
+      a: 'Interface work mostly — the part where a screen starts feeling like something. Some front-end, some mobile.',
     },
     {
       q: 'Why so many worlds on one page?',
@@ -188,7 +188,7 @@ const EN: Copy = {
     },
     {
       q: 'Are you available for work?',
-      a: 'For remote, part-time, and anything I can learn from.',
+      a: 'Available for remote and part-time work — and open to anything I can learn from.',
     },
     {
       q: 'What are you learning right now?',
@@ -196,7 +196,7 @@ const EN: Copy = {
     },
     {
       q: 'What is the deal with the hands?',
-      a: 'Michelangelo put the whole of creation in the space between two fingers. I think he was right about that and wrong about nothing else.',
+      a: 'Michelangelo put the whole of creation in the space between two fingers.',
     },
   ],
   questionsHint: 'drag or ← →',
@@ -210,7 +210,7 @@ const EN: Copy = {
   statusError: 'Something broke on the way — email me directly instead.',
   statusOk: 'Message sent — talk soon.',
   sideLabel: 'Other ways in',
-  signatureClose: 'Thanks for scrolling. Now go do something you’ll remember.',
+  signatureClose: 'That’s all from me — if you ever want to talk, you know where to find me.',
   titles: {
     hero: 'Overture',
     leap: 'The Leap',
@@ -282,11 +282,11 @@ const AZ: Copy = {
   faq: [
     {
       q: 'Dəqiq kiməsən?',
-      a: 'On doqquz yaşım var. Azərbaycanlıyam. İT ixtisasının 2-ci kursunda oxuyuram. Şeylər qururam və çox oxuyuram.',
+      a: 'On doqquz yaşım var. Azərbaycanlıyam. İT ixtisasının 2-ci kursunda oxuyuram. Bir şeylər etməyə çalışıram və bacardığım qədər çox oxumağa çalışıram.',
     },
     {
       q: 'Əslində nə edirsən?',
-      a: 'Əsasən interfeys işləri — ekranın nəsə hiss etdirməyə başladığı hissə. Bir az front-end, bir az mobil, bir az şader.',
+      a: 'Əsasən interfeys işləri — ekranın nəsə hiss etdirməyə başladığı hissə. Bir az front-end, bir az mobil.',
     },
     {
       q: 'Bir səhifədə bu qədər dünya nə üçündür?',
@@ -294,7 +294,7 @@ const AZ: Copy = {
     },
     {
       q: 'İş üçün mövcudsan?',
-      a: 'Remote, yarımştat, öyrənə biləcəyim hər şey üçün.',
+      a: 'Remote və yarımştat işlər üçün uyğunam — öyrənə biləcəyim hər şeyə açığam.',
     },
     {
       q: 'İndi nə öyrənirsən?',
@@ -302,7 +302,7 @@ const AZ: Copy = {
     },
     {
       q: 'Əllərin məsələsi nədir?',
-      a: 'Michelangelo bütün yaradılışı iki barmağın arasındakı məsafəyə sığışdırdı. Bu məsələdə haqlı olduğunu, başqa heç nədə haqlı olmadığını düşünürəm.',
+      a: 'Michelangelo bütün yaradılışı iki barmağın arasındakı məsafəyə sığışdırdı.',
     },
   ],
   questionsHint: 'çək və ya ← →',
@@ -316,7 +316,7 @@ const AZ: Copy = {
   statusError: 'Yolda bir şey pozuldu — birbaşa poçtla yaz.',
   statusOk: 'Mesaj göndərildi — danışarıq.',
   sideLabel: 'Başqa yollarla',
-  signatureClose: 'Sürüşdürdiyin üçün təşəkkür. İndi gedib xatırlayacağın bir şey et.',
+  signatureClose: 'Məndən bu qədər — danışmaq istəsən, harda olduğumu bilirsən.',
   titles: {
     hero: 'Uvertüra',
     leap: 'Tullanış',
@@ -388,11 +388,11 @@ const TR: Copy = {
   faq: [
     {
       q: 'Tam olarak kimsin?',
-      a: 'On dokuz yaşındayım. Azerbaycanlıyım. BT bölümünün ikinci yılında okuyorum. Şeyler inşa ediyorum ve çok fazla okuyorum.',
+      a: 'On dokuz yaşındayım. Azerbaycanlıyım. BT bölümünün ikinci yılında okuyorum. Bir şeyler yapmaya çalışıyorum ve yapabildiğim kadar çok okumaya çalışıyorum.',
     },
     {
       q: 'Aslında ne yapıyorsun?',
-      a: 'Çoğunlukla arayüz işi — ekranın bir şey hissettirmeye başladığı kısım. Biraz front-end, biraz mobil, biraz shader.',
+      a: 'Çoğunlukla arayüz işi — ekranın bir şey hissettirmeye başladığı kısım. Biraz front-end, biraz mobil.',
     },
     {
       q: 'Tek sayfada bu kadar dünya neden?',
@@ -400,7 +400,7 @@ const TR: Copy = {
     },
     {
       q: 'İşe müsait misin?',
-      a: 'Uzaktan, yarı zamanlı ve öğrenebileceğim her şeye.',
+      a: 'Uzaktan ve yarı zamanlı işler için uygünüm — öğrenebileceğim her şeye açığım.',
     },
     {
       q: 'Şu anda ne öğreniyorsun?',
@@ -408,7 +408,7 @@ const TR: Copy = {
     },
     {
       q: 'Eller meselesi ne?',
-      a: 'Michelangelo bütün yaratılışı iki parmağın arasındaki boşluğa yerleştirdi. O konuda haklı olduğunu, başka hiçbir konuda haklı olmadığını düşünüyorum.',
+      a: 'Michelangelo bütün yaratılışı iki parmağın arasındaki boşluğa yerleştirdi.',
     },
   ],
   questionsHint: 'sürükle ya da ← →',
@@ -422,7 +422,7 @@ const TR: Copy = {
   statusError: 'Yolda bir şey bozuldu — doğrudan e-posta yaz.',
   statusOk: 'Mesaj gönderildi — yakında konuşuruz.',
   sideLabel: 'Diğer yollarla',
-  signatureClose: 'Kaydırdığın için teşekkürler. Şimdi gidip hatırlayacağın bir şey yap.',
+  signatureClose: 'Benden bu kadar — konuşmak istersen nerede olduğumu biliyorsun.',
   titles: {
     hero: 'Uvertür',
     leap: 'Atılım',
