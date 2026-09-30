@@ -172,7 +172,7 @@ const probe = await evalJs(`(() => {
   }
 })()`)
 
-check('11 dünya render olunur (interlude + worlds silinib)', probe.worlds === 11, `${probe.worlds} dünya`)
+check('12 dünya render olunur (cmbyn əlavə, interlude+worlds silinib)', probe.worlds === 12, `${probe.worlds} dünya`)
 check('interlude tamamilə GETDİ', probe.interludeGone === true, `interlude: ${probe.interludeGone}`)
 check('worlds bölməsi tamamilə GETDİ', probe.worldsGone === true, `worlds: ${probe.worldsGone}`)
 check(
@@ -197,7 +197,7 @@ check(
 )
 check(
   '05 — Elio-nun qeydi render olunur',
-  /courage/i.test(probe.speakAdmission || ''),
+  /kind of person/i.test(probe.speakAdmission || ''),
   JSON.stringify(probe.speakAdmission),
 )
 check('06 — sual yerindədir', /speak/i.test(probe.speakQuestion || '') && /die/i.test(probe.speakQuestion || ''))
@@ -380,8 +380,8 @@ const langCheck2 = await evalJs(`(() => ({
 }))()`)
 check(
   'dil dəyişimi — səhifə canlı, xətasız (regressiya yoxlaması)',
-  langCheck.worlds === 11 &&
-    langCheck2.worlds === 11 &&
+  langCheck.worlds === 12 &&
+    langCheck2.worlds === 12 &&
     (langCheck2.v15errs || []).length === 0 &&
     pageErrors.length === errsBeforeLang &&
     !!langCheck2.h1,

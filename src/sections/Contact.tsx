@@ -3,14 +3,14 @@
 
 import { useRef, useState } from 'react'
 import Line from '../components/Line'
-import { SITE, links } from '../lib/site'
+import { links } from '../lib/site'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
 import { useCopy } from '../lib/i18n'
 
 export default function Contact() {
   const ref = useRef<HTMLElement>(null)
   const copy = useCopy()
-  const [sent, setSent] = useState<'' | 'ok' | 'missing' | 'invalid'>('')
+  const [sent, setSent] = useState<'' | 'ok' | 'sending' | 'error' | 'invalid'>('')
   const socials = links()
 
   useGSAP(
@@ -41,7 +41,7 @@ export default function Contact() {
     { scope: ref, dependencies: [copy] },
   )
 
-  const submit = (e: React.FormEvent<HTMLFormElement>) => {
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const fd = new FormData(e.currentTarget)
     const name = String(fd.get('name') ?? '').trim()
@@ -52,14 +52,27 @@ export default function Contact() {
       setSent('invalid')
       return
     }
-    if (!SITE.email) {
-      setSent('missing')
-      return
+    // v19: FormSubmit AJAX — tamamilə pulsuz, səhifədən kənar heç nə açılmır:
+    // mesaj birbaşa poçta düşür (ilk göndərişdə aktivasiya məktubu gəlir)
+    setSent('sending')
+    try {
+      const r = await fetch('https://formsubmit.co/ajax/xeyalhuseynli06@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          name,
+          email: from,
+          message: msg,
+          _subject: `Hello from ${name}`,
+          _template: 'table',
+          _captcha: 'false',
+        }),
+      })
+      const data = (await r.json()) as { success?: string }
+      setSent(data.success === 'true' ? 'ok' : 'error')
+    } catch {
+      setSent('error')
     }
-    const subject = `Hello from ${name}`
-    const body = `${msg}\n\n— ${name}\n${from}`
-    window.location.href = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    setSent('ok')
   }
 
   return (
@@ -89,7 +102,8 @@ export default function Contact() {
 
         <p className="glass__status" data-state={sent} role="status">
           {sent === 'invalid' && copy.statusInvalid}
-          {sent === 'missing' && copy.statusMissing}
+          {sent === 'sending' && copy.statusSending}
+          {sent === 'error' && copy.statusError}
           {sent === 'ok' && copy.statusOk}
         </p>
 

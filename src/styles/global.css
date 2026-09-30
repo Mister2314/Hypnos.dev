@@ -760,7 +760,14 @@ html.has-cursor * {
   pointer-events: none;
 }
 
-.summer__plate {
+.section--cmbyn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100svh;
+}
+
+.cmbyn__plate {
   position: relative;
   width: min(72vw, 900px);
   margin-top: 3.4rem;
@@ -768,14 +775,14 @@ html.has-cursor * {
   border-radius: 2px;
 }
 
-.summer__plate-img {
+.cmbyn__plate-img {
   display: block;
   width: 100%;
   height: auto;
   will-change: transform;
 }
 
-.summer__halftone {
+.cmbyn__halftone {
   position: absolute;
   inset: -2%;
   background-image: radial-gradient(circle, var(--summer-bg) 40%, transparent 41%);
@@ -1458,7 +1465,7 @@ html.has-cursor * {
     right: 7vw;
     bottom: 4vh;
   }
-  .summer__plate {
+  .cmbyn__plate {
     width: 100%;
   }
   .signature__mark {
@@ -1478,7 +1485,7 @@ html.has-cursor * {
     opacity: 1;
     transform: none;
   }
-  .summer__halftone {
+  .cmbyn__halftone {
     opacity: 0;
   }
   .questions__a-text {

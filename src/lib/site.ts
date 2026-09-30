@@ -76,12 +76,19 @@ export const WORLDS_INTRO = {
 
 export const PROJECTS = [
   {
+    title: 'Portfolio',
+    year: '2026',
+    kind: 'Web',
+    stack: 'React · TypeScript',
+    blurb: 'My second portfolio — mostly a design playground while I tested layouts. A template of sorts.',
+    href: 'https://github.com/Mister2314/Portfolio-2',
+  },
+  {
     title: 'Lunora',
     year: '2026',
     kind: 'Mobile app',
     stack: 'React Native · TypeScript · Supabase',
-    blurb:
-      'A habit tracker built around the idea that missing one day should not cost you the streak. Offline-first, dark only.',
+    blurb: 'Coming soon.',
     href: '',
   },
   {
@@ -89,8 +96,7 @@ export const PROJECTS = [
     year: '2026',
     kind: 'Web',
     stack: 'React · GSAP · hand-written WebGL',
-    blurb:
-      'One page, many worlds. No 3D library: the light is all code.',
+    blurb: 'One page, many worlds. No 3D library: the light is all code.',
     href: '',
   },
 ] as const

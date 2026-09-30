@@ -19,8 +19,7 @@ export default function Summer() {
       if (prefersReducedMotion) {
 
 
-        gsap.set(q('.rv, .summer__plate-img, .summer__caption'), { opacity: 1 })
-        gsap.set(q('.summer__halftone'), { opacity: 0 })
+        gsap.set(q('.rv, .summer__caption'), { opacity: 1 })
         return
       }
 
@@ -42,40 +41,6 @@ export default function Summer() {
         ease: 'power3.out',
         scrollTrigger: { trigger: q('.summer__caption')[0], start: 'top 88%' },
       })
-
-
-      gsap.fromTo(
-        q('.summer__plate-img'),
-        { y: 46, scale: 1.12 },
-        {
-          y: -46,
-          scale: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: ref.current,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 0.6,
-          },
-        },
-      )
-
-
-      gsap.fromTo(
-        q('.summer__halftone'),
-        { opacity: 1, scale: 1 },
-        {
-          opacity: 0,
-          scale: 1.18,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: q('.summer__plate')[0],
-            start: 'top 92%',
-            end: 'top 34%',
-            scrub: 0.9,
-          },
-        },
-      )
 
 
       gsap.fromTo(

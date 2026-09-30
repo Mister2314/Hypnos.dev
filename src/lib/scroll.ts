@@ -29,16 +29,17 @@ export const WORLDS: World[] = [
 
   { id: 'leap', n: '01', title: 'The Leap', bg: '#0a0e1e', text: '#fbfbfc', accent: '#00fcfd' },
   { id: 'summer', n: '02', title: 'Summer', bg: '#30312d', text: '#f1f1ea', accent: '#ffc2ae' },
-  { id: 'hands', n: '03', title: 'The Hands', bg: '#12100c', text: '#fffce1', accent: '#e0c9a6' },
+  { id: 'cmbyn', n: '03', title: 'Call Me By Your Name', bg: '#2a2b27', text: '#f1f1ea', accent: '#ffc2ae' },
+  { id: 'hands', n: '04', title: 'The Hands', bg: '#12100c', text: '#fffce1', accent: '#e0c9a6' },
 
-  { id: 'counterweight', n: '04', title: 'The Counterweight', bg: '#0f0a16', text: '#fffce1', accent: '#cfa9e8' },
-  { id: 'sapere', n: '05', title: 'Sapere aude', bg: '#0e100f', text: '#fffce1', accent: '#b08d57' },
-  { id: 'speak', n: '06', title: 'Speak or die', bg: '#0c1512', text: '#f1f1ea', accent: '#c9c3a4' },
+  { id: 'counterweight', n: '05', title: 'The Counterweight', bg: '#0f0a16', text: '#fffce1', accent: '#cfa9e8' },
+  { id: 'sapere', n: '06', title: 'Sapere aude', bg: '#0e100f', text: '#fffce1', accent: '#b08d57' },
+  { id: 'speak', n: '07', title: 'Speak or die', bg: '#0c1512', text: '#f1f1ea', accent: '#c9c3a4' },
 
-  { id: 'work', n: '07', title: 'Work', bg: '#14150f', text: '#fffce1', accent: '#b08d57' },
-  { id: 'questions', n: '08', title: 'Questions', bg: '#101210', text: '#fffce1', accent: '#b08d57' },
-  { id: 'contact', n: '09', title: 'Contact', bg: '#0b0c0b', text: '#fffce1', accent: '#b08d57' },
-  { id: 'signature', n: '10', title: 'Signature', bg: '#0e100f', text: '#fffce1', accent: '#b08d57' },
+  { id: 'work', n: '08', title: 'Work', bg: '#14150f', text: '#fffce1', accent: '#b08d57' },
+  { id: 'questions', n: '09', title: 'Questions', bg: '#101210', text: '#fffce1', accent: '#b08d57' },
+  { id: 'contact', n: '10', title: 'Contact', bg: '#0b0c0b', text: '#fffce1', accent: '#b08d57' },
+  { id: 'signature', n: '11', title: 'Signature', bg: '#0e100f', text: '#fffce1', accent: '#b08d57' },
 ]
 
 

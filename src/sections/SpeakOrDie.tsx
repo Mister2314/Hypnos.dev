@@ -34,7 +34,7 @@ export default function SpeakOrDie() {
       if (prefersReducedMotion) {
         gsap.set(
           q(
-            '.speak__word, .speak__source, .speak__admission, .speak__answer, .speak__reflect, .speak__strike, .speak__underline',
+            '.speak__word, .speak__qmark, .speak__source, .speak__admission, .speak__answer, .speak__reflect, .speak__strike, .speak__underline',
           ),
           { opacity: 1, scaleX: 1 },
         )
@@ -42,7 +42,9 @@ export default function SpeakOrDie() {
       }
 
 
-      gsap.from(q('.speak__word'), {
+      // v19: "?" də söz qrupunun giriş effektinə daxildir (əvvəl effektsiz
+      // dayanırdı — ambient onun opacity-sini üstələyirdi)
+      gsap.from(q('.speak__word, .speak__qmark'), {
         yPercent: 70,
         opacity: 0,
         filter: 'blur(12px)',
@@ -118,7 +120,8 @@ export default function SpeakOrDie() {
 
 
 
-      ambient(q('.speak__qmark'), { scale: 1.14, opacity: 0.9 }, 4.5)
+      // v19: ambient yalnız scale float — opacity giriş effektinə qarışmır
+      ambient(q('.speak__qmark'), { scale: 1.14 }, 4.5)
     },
     { scope: ref, dependencies: [copy] },
   )

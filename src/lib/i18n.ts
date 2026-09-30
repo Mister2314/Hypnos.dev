@@ -111,7 +111,8 @@ export type Copy = {
   messageLabel: string
   send: string
   statusInvalid: string
-  statusMissing: string
+  statusSending: string
+  statusError: string
   statusOk: string
   sideLabel: string
   signatureClose: string
@@ -145,7 +146,7 @@ const EN: Copy = {
     die: 7,
     qmark: '?',
   },
-  speakAdmission: 'I’ll never have the courage to ask a question like that.',
+  speakAdmission: "I don't think I'll ever be the kind of person who could ask a question like that.",
   speakAnswer: 'Better to speak.',
   speakReflection: 'I spent years picking the other one. This page is the answer I kept not giving.',
   workLine: 'I would rather show you two real things than ten neat ones.',
@@ -153,17 +154,22 @@ const EN: Copy = {
     'More in progress. The rest of it lives in the chapters above, which is the honest portfolio anyway.',
   projects: [
     {
+      title: 'Portfolio',
+      kind: 'Web',
+      stack: 'React · TypeScript',
+      blurb: 'My second portfolio — mostly a design playground while I tested layouts. A template of sorts.',
+    },
+    {
       title: 'Lunora',
       kind: 'Mobile app',
       stack: 'React Native · TypeScript · Supabase',
-      blurb:
-        'A habit tracker built around the idea that missing one day should not cost you the streak. Offline-first, dark only.',
+      blurb: 'Coming soon.',
     },
     {
       title: 'This site',
       kind: 'Web',
       stack: 'React · GSAP · hand-written WebGL',
-      blurb: 'One page, many worlds. No 3D library: the light is all code.',
+      blurb: 'Not built to show off — the first site that is entirely me.',
     },
   ],
   questionsHead: 'Things people ask me',
@@ -182,11 +188,11 @@ const EN: Copy = {
     },
     {
       q: 'Are you available for work?',
-      a: 'For remote, part-time, and anything I can learn from. I will say no to what I cannot do well.',
+      a: 'For remote, part-time, and anything I can learn from.',
     },
     {
       q: 'What are you learning right now?',
-      a: 'WebGL properly, and how to finish things instead of only starting them.',
+      a: 'Front-end properly, working with AI, and vibe coding. AI genuinely pulls me in.',
     },
     {
       q: 'What is the deal with the hands?',
@@ -194,21 +200,22 @@ const EN: Copy = {
     },
   ],
   questionsHint: 'drag or ← →',
-  contactLine: 'Say something. The worst that happens is a conversation.',
+  contactLine: 'Say something. At best, we get to know each other.',
   nameLabel: 'Name',
   emailLabel: 'Email',
   messageLabel: 'Message',
   send: 'Send',
   statusInvalid: 'Fill in all three fields first.',
-  statusMissing:
-    'This form has no address wired to it yet — so it will not pretend to send. The direct line opens shortly.',
-  statusOk: 'Your mail app should be open with the message ready.',
+  statusSending: 'Sending…',
+  statusError: 'Something broke on the way — email me directly instead.',
+  statusOk: 'Message sent — talk soon.',
   sideLabel: 'Other ways in',
   signatureClose: 'Thanks for scrolling. Now go do something you’ll remember.',
   titles: {
     hero: 'Overture',
     leap: 'The Leap',
     summer: 'Summer',
+    cmbyn: 'Call Me By Your Name',
     hands: 'The Hands',
     counterweight: 'The Counterweight',
     sapere: 'Sapere aude',
@@ -238,15 +245,15 @@ const AZ: Copy = {
   sapereSubEm: 'Sapere aude.',
   sapereSubRest: ' Cəsarət etdim. Artıq soruşmağı dayandıra bilmirəm.',
   sapereCaption: 'Merli · bilməyə cəsarət et',
-  leapQuote: 'Hər kəs danışır ki, hekayəm necə olmalıdır.',
-  leapNah: 'Yox. Öz yolumla gedəcəyəm.',
+  leapQuote: 'Ağzı olan hekayəmin necə olmalı olduğunu deyir.',
+  leapNah: 'Yox! Mən öz bildiyimi edəcəyəm.',
   speakQ: {
     words: ['Danışmaq', 'yaxşıdır,', 'yoxsa', 'ölmək'],
     speak: 0,
     die: 3,
     qmark: '?',
   },
-  speakAdmission: 'Belə bir sual verməyə heç vaxt cəsarətim olmayacaq.',
+  speakAdmission: 'Belə bir sual verməyə uyğun bir insan olacağıma inanmıram.',
   speakAnswer: 'Danışmaq daha yaxşıdır.',
   speakReflection: 'İllər boyu digərini seçdim. Bu səhifə, vermədiyim cavabdır.',
   workLine: 'On səliqəli şey yerinə sizə iki real şey göstərmək istəyirəm.',
@@ -254,24 +261,29 @@ const AZ: Copy = {
     'Daha çoxu yoldadır. Qalanı yuxarıdakı fəsillərdə yaşayır — ən səmimi portfolyo onsuz da odur.',
   projects: [
     {
+      title: 'Portfolio',
+      kind: 'Veb',
+      stack: 'React · TypeScript',
+      blurb: 'İkinci portfoliom — əsasən dizayn ideyalarını sınağım yer. Bir növ şablon.',
+    },
+    {
       title: 'Lunora',
       kind: 'Mobil tətbiq',
       stack: 'React Native · TypeScript · Supabase',
-      blurb:
-        'Bir günü buraxmaq seriyani itirməməli ideyası ətrafında qurulmuş vərdiş izləyicisi. Offline-first, yalnız tünd rejim.',
+      blurb: 'Tezliklə.',
     },
     {
       title: 'Bu sayt',
-      kind: 'Web',
+      kind: 'Veb',
       stack: 'React · GSAP · əl ilə yazılmış WebGL',
-      blurb: 'Bir səhifə, çox dünya. 3D kitabxanası yoxdur: işıq tamamilə koddur.',
+      blurb: 'Nümayiş üçün deyil — ürəyimə ilk dəfə “mən budam” dedirən saytdır: tamamilə məni əks etdirir.',
     },
   ],
   questionsHead: 'Məndən soruşulanlar',
   faq: [
     {
       q: 'Dəqiq kiməsən?',
-      a: 'On doqquz yaşım var. Azərbaycanlıam. İT ixtisasının 2-ci kursunda oxuyuram. Şeylər qururam və çox oxuyuram.',
+      a: 'On doqquz yaşım var. Azərbaycanlıyam. İT ixtisasının 2-ci kursunda oxuyuram. Şeylər qururam və çox oxuyuram.',
     },
     {
       q: 'Əslində nə edirsən?',
@@ -283,11 +295,11 @@ const AZ: Copy = {
     },
     {
       q: 'İş üçün mövcudsan?',
-      a: 'Remote, yarımştat, öyrənə biləcəyim hər şey üçün. Yaxşı edə bilməyəcəyim şeyə “xeyr” deyərəm.',
+      a: 'Remote, yarımştat, öyrənə biləcəyim hər şey üçün.',
     },
     {
       q: 'İndi nə öyrənirsən?',
-      a: 'WebGL-i düzgün şəkildə, və şeyləri yalnız başlamağı deyil, bitirməyi.',
+      a: 'Front-end-i düzgün öyrənirəm, AI ilə işləməyi və vibe coding-i öyrənirəm — AI-a ciddi marağım var.',
     },
     {
       q: 'Əllərin məsələsi nədir?',
@@ -295,15 +307,15 @@ const AZ: Copy = {
     },
   ],
   questionsHint: 'çək və ya ← →',
-  contactLine: 'Bir şey de. Ən pis halda bu, söhbətə çevrilir.',
+  contactLine: 'Bir şey de. Ən yaxşı halda bir-birimizi tanıyarıq.',
   nameLabel: 'Ad',
   emailLabel: 'Email',
   messageLabel: 'Mesaj',
   send: 'Göndər',
   statusInvalid: 'Əvvəl üç sahəni də doldur.',
-  statusMissing:
-    'Bu forma hələ ünvana qoşulmayıb — ona görə göndərildiyini yalandan göstərməyəcək. Birbaşa xətt tezliklə açılacaq.',
-  statusOk: 'Poçt tətbiqin açılmalıdır — mesaj hazırdır.',
+  statusSending: 'Göndərilir…',
+  statusError: 'Yolda bir şey pozuldu — birbaşa poçtla yaz.',
+  statusOk: 'Mesaj göndərildi — danışarıq.',
   sideLabel: 'Başqa yollarla',
   signatureClose: 'Sürüşdürdiyin üçün təşəkkür. İndi gedib xatırlayacağın bir şey et.',
   titles: {
@@ -339,15 +351,15 @@ const TR: Copy = {
   sapereSubEm: 'Sapere aude.',
   sapereSubRest: ' Cesaret ettim. Artık sormayı bırakamıyorum.',
   sapereCaption: 'Merli · bilmeye cesaret et',
-  leapQuote: 'Herkes hikayemin nasıl olması gerektiğini anlatıp duruyor.',
-  leapNah: 'Hayır. Kendi yolumda gideceğim.',
+  leapQuote: 'Herkes bana hikayemin nasıl olması gerektiğini söyleyip duruyor.',
+  leapNah: 'Yok ya. Ben kendi bildiğimi yapacağım.',
   speakQ: {
     words: ['Konuşmak', 'mı', 'iyi,', 'yoksa', 'ölmek', 'mi'],
     speak: 0,
     die: 4,
     qmark: '?',
   },
-  speakAdmission: 'Böyle bir soru sormaya asla cesaretim olmayacak.',
+  speakAdmission: 'Böyle bir soru sormaya uygun bir insan olacağıma inanmıyorum.',
   speakAnswer: 'Konuşmak daha iyi.',
   speakReflection: 'Yıllarca diğerini seçtim. Bu sayfa, vermediğim cevaptır.',
   workLine: 'On düzgün şey yerine size iki gerçek şey göstermeyi tercih ederim.',
@@ -355,17 +367,22 @@ const TR: Copy = {
     'Dahası yolda. Gerisi yukarıdaki bölümlerde yaşıyor — en dürüst portfolyo zaten o.',
   projects: [
     {
+      title: 'Portfolio',
+      kind: 'Web',
+      stack: 'React · TypeScript',
+      blurb: 'İkinci portfolyom — ağırlıklı olarak tasarım fikirlerini denediğim yer. Bir nevi şablon.',
+    },
+    {
       title: 'Lunora',
       kind: 'Mobil uygulama',
       stack: 'React Native · TypeScript · Supabase',
-      blurb:
-        'Bir günü kaçırmak seriyi kaybettirmemeli fikri üzerine kurulu alışkanlık takipçisi. Offline-first, sadece koyu tema.',
+      blurb: 'Yakında.',
     },
     {
       title: 'Bu site',
       kind: 'Web',
       stack: 'React · GSAP · elle yazılmış WebGL',
-      blurb: 'Tek sayfa, çok dünya. 3D kütüphanesi yok: ışık tamamen kod.',
+      blurb: 'Gösteriş için değil — kalbime ilk defa “ben budum” dedirtiren site: tamamen beni yansıtıyor.',
     },
   ],
   questionsHead: 'Bana sorulanlar',
@@ -384,11 +401,11 @@ const TR: Copy = {
     },
     {
       q: 'İşe müsait misin?',
-      a: 'Uzaktan, yarı zamanlı ve öğrenebileceğim her şeye. İyi yapamayacağım şeye hayır derim.',
+      a: 'Uzaktan, yarı zamanlı ve öğrenebileceğim her şeye.',
     },
     {
       q: 'Şu anda ne öğreniyorsun?',
-      a: 'WebGL’i düzgün öğrenmeyi ve şeyleri sadece başlamak değil, bitirmeyi.',
+      a: 'Front-end’i düzgün öğreniyorum, AI ile çalışmayı ve vibe coding’i öğreniyorum — AI’ya gerçekten ilgi duyuyorum.',
     },
     {
       q: 'Eller meselesi ne?',
@@ -396,15 +413,15 @@ const TR: Copy = {
     },
   ],
   questionsHint: 'sürükle ya da ← →',
-  contactLine: 'Bir şey söyle. En kötü ihtimalle bu, bir sohbete dönüşür.',
+  contactLine: 'Bir şey söyle. En iyi ihtimalle birbirimizi tanırız.',
   nameLabel: 'İsim',
   emailLabel: 'E-posta',
   messageLabel: 'Mesaj',
   send: 'Gönder',
   statusInvalid: 'Önce üç alanı da doldur.',
-  statusMissing:
-    'Bu forma henüz bir adrese bağlı değil — bu yüzden gönderilmiş gibi yapmayacak. Doğrudan hat yakında açılacak.',
-  statusOk: 'Posta uygulaman açılmış olmalı — mesaj hazır.',
+  statusSending: 'Gönderiliyor…',
+  statusError: 'Yolda bir şey bozuldu — doğrudan e-posta yaz.',
+  statusOk: 'Mesaj gönderildi — yakında konuşuruz.',
   sideLabel: 'Diğer yollarla',
   signatureClose: 'Kaydırdığın için teşekkürler. Şimdi gidip hatırlayacağın bir şey yap.',
   titles: {
