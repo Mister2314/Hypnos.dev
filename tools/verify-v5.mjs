@@ -289,6 +289,23 @@ check('mobil — üfüqi sürüşmə yoxdur', mob.scrollWidth <= mob.innerWidth,
 check('mobil — admission oxunaqlıdır (≥15px)',
   parseFloat(mob.admissionSize || '0') >= 15, mob.admissionSize)
 
+// ── v16 — mobil: bütün seqsiyalar DƏRHAL yüklənməlidir (defer qadağandır) ──
+// Tarix: mobildə yalnız leap pərdədə yüklənirdi, qalanları arxa planda —
+// scroll videoyu keçirdi ("TikTok-da video donur"). Bütün seqsiyalar mount-da
+// başlamalıdır.
+await send('Page.navigate', { url: URL })
+await sleep(6000)
+const mobSeq = await evalJs(`(() => {
+  const rs = performance.getEntriesByType('resource').map((r) => r.name)
+  const dirs = [...new Set(rs.filter((n) => n.includes('/frames-')).map((n) => n.split('/frames-')[0]))]
+  return { dirs, frames: rs.filter((n) => n.includes('/frames-')).length }
+})()`)
+check(
+  'mobil — bütün seqsiyalar dərhal yüklənir (defer yoxdur)',
+  mobSeq.dirs.length >= 4 && mobSeq.frames > 40,
+  JSON.stringify(mobSeq),
+)
+
 // ── v6.11 — preloader bağlanmalıdır (yükləmə bitib) ─────────────────────────
 // v14: 30s-ə qədər gözlə + hansı seqsiyanın yüklənmədiyini göstər (diaqnoz)
 let pre = await evalJs(`({

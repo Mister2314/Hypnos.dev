@@ -3,7 +3,7 @@
 
 import { gsap, prefersReducedMotion, ScrollTrigger } from './scroll'
 import { PERF, isNarrow, pickTierDir } from './perf'
-import { registerSequence, setSequenceFraction, markSequenceSkipped, isLoaderDone, unregisterSequence } from './loader'
+import { registerSequence, setSequenceFraction, markSequenceSkipped, unregisterSequence } from './loader'
 import { sizeCanvas } from './webgl'
 
 const BASE = import.meta.env.BASE_URL
@@ -49,8 +49,8 @@ export function mountSequence(spec: SequenceSpec): () => void {
 
   const dir = pickTierDir(highDir, lowDir)
   const progressRef = { v: 0 }
-  // mobil: daha kiçik dekod pəncərəsi — giriş burstlarını endirir
-  const AHEAD = isNarrow() ? 10 : PERF.decodeAhead
+  // mobil: AHEAD 14 — smoothluq prioritetidir (v16), dekod pəncərəsi geniş
+  const AHEAD = isNarrow() ? 14 : PERF.decodeAhead
   // v9: seqsiya pərdəyə qeydiyyatdadır — pərdə onun BÜTÜN kadrları yüklənənə
   // qədər gözləyir (scroll videoyu keçə bilməz, çünki yükləmə pərdədə bitir)
   const seqId = registerSequence()
@@ -82,8 +82,6 @@ export function mountSequence(spec: SequenceSpec): () => void {
 
   // loader pərdəsi üçün real progress: seqsiyanın yüklənmiş kadr payı
   let bootTimer: ReturnType<typeof setInterval> | null = null
-  // v14: mobildə pərdədən sonrakı yükləmə gözləyicisi
-  let waitIv: ReturnType<typeof setInterval> | null = null
   const reportProgress = () => {
     if (!n) return
     setSequenceFraction(seqId, loadedCount / n)
@@ -146,7 +144,7 @@ export function mountSequence(spec: SequenceSpec): () => void {
     // yuxarı qayıtda geriyə — hər iki istiqamətdə video hazırdır
     const forward = center >= prevCenter
     prevCenter = center
-    bitmapBudget = isNarrow() ? 1 : 3
+    bitmapBudget = isNarrow() ? 2 : 3
     const lo = forward ? Math.max(0, center - 2) : Math.max(0, center - 1 - AHEAD)
     const hi = forward ? Math.min(n - 1, center + 1 + AHEAD) : Math.min(n - 1, center + 2)
     for (let i = lo; i <= hi && bitmapBudget > 0; i++) {
@@ -274,23 +272,14 @@ export function mountSequence(spec: SequenceSpec): () => void {
         else if (alive) setSequenceFraction(seqId, 1)
       })
   }
-  // v9: hamısı dərhal yüklənməyə başlayır — IO-gated lazy start onu yaradırdı
-  // ki, scroll seqsiyanın üstünə çatanda kadrlar hələ şəbəkədə olurdu.
-  // v14 mobil istisna: telefonda yalnız İLK video (leap) pərdədə yüklənir —
-  // mobile data + ilk yükləmə donması; qalanları pərdə qalxandan sonra
-  // arxa planda çəkirik (fraksiya monoton olduğundan sayçı geri düşmür).
+  // v9/v16: bütün seqsiyalar mount-da DƏRHAL yüklənməyə başlayır — İSTƏR
+  // desktop, İSTƏR mobil. v14-dəki mobil gecikmə "video donur, scroll gedir"
+  // şikayətinə səbəb oldu (TikTok-dan təsdiq) — smoothluq data qənaətindən
+  // üstündür (onun qərarı). Blob keşi təkrar ziyarəti pulsuz edir; adaptiv
+  // tier zəif şəbəkəni örtür.
   if (prefersReducedMotion) {
     // kadr oynamayacaq — bayt yükləməsini də synchronically keç
     markSequenceSkipped(seqId)
-  } else if (isNarrow() && !spec.trackProgress) {
-    setSequenceFraction(seqId, 1)
-    waitIv = setInterval(() => {
-      if (isLoaderDone()) {
-        clearInterval(waitIv!)
-        waitIv = null
-        startDownload()
-      }
-    }, 400)
   } else {
     startDownload()
   }
@@ -340,7 +329,6 @@ export function mountSequence(spec: SequenceSpec): () => void {
     alive = false
     if (tick) gsap.ticker.remove(tick)
     if (bootTimer) clearInterval(bootTimer)
-    if (waitIv) clearInterval(waitIv)
     window.removeEventListener('resize', resize)
     io.disconnect()
     st.kill()
