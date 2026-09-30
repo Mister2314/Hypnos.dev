@@ -35,6 +35,9 @@ export type SequenceSpec = {
 
   focusX?: number
 
+  /** yalnız dar (mobil) görünüş üçün kadro mərkəzi — üzlərin kəsilməməsi üçün */
+  focusXMobile?: number
+
   trackProgress?: boolean
 }
 
@@ -65,7 +68,8 @@ export function mountSequence(spec: SequenceSpec): () => void {
     const s = Math.max(canvas.width / img.width, canvas.height / img.height)
     const dw = img.width * s
     const dh = img.height * s
-    const fx = spec.focusX ?? 0.5
+    // v20: mobil üçün ayrıca kadro mərkəzi — portret kəsimində üzlər itməsin
+    const fx = (isNarrow() && spec.focusXMobile !== undefined ? spec.focusXMobile : spec.focusX) ?? 0.5
     ctx.drawImage(img, (canvas.width - dw) * fx, (canvas.height - dh) / 2, dw, dh)
   }
 

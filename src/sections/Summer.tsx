@@ -6,8 +6,6 @@ import Line from '../components/Line'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
 import { useCopy } from '../lib/i18n'
 
-const BASE = import.meta.env.BASE_URL
-
 export default function Summer() {
   const ref = useRef<HTMLElement>(null)
   const copy = useCopy()
@@ -17,8 +15,6 @@ export default function Summer() {
       const q = gsap.utils.selector(ref)
 
       if (prefersReducedMotion) {
-
-
         gsap.set(q('.rv, .summer__caption'), { opacity: 1 })
         return
       }
@@ -72,19 +68,8 @@ export default function Summer() {
           <em>{copy.summerCaptionFilm}</em>
           {copy.summerCaptionRest}
         </p>
-        <div className="summer__plate">
-          <img
-            className="summer__plate-img"
-            src={`${BASE}scenes/summer-apricots.webp`}
-            width={1500}
-            height={1000}
-            alt="Ripe apricots and a halved peach on a stone table in a sunlit garden."
-            loading="lazy"
-            decoding="async"
-          />
-          <span className="summer__halftone" aria-hidden="true" />
-        </div>
       </div>
     </section>
   )
 }
+

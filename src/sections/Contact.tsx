@@ -55,24 +55,29 @@ export default function Contact() {
     // v19: FormSubmit AJAX — tamamilə pulsuz, səhifədən kənar heç nə açılmır:
     // mesaj birbaşa poçta düşür (ilk göndərişdə aktivasiya məktubu gəlir)
     setSent('sending')
-    try {
-      const r = await fetch('https://formsubmit.co/ajax/xeyalhuseynli06@gmail.com', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          name,
-          email: from,
-          message: msg,
-          _subject: `Hello from ${name}`,
-          _template: 'table',
-          _captcha: 'false',
-        }),
-      })
-      const data = (await r.json()) as { success?: string }
-      setSent(data.success === 'true' ? 'ok' : 'error')
-    } catch {
-      setSent('error')
+    const sendOnce = async (): Promise<'ok' | 'error'> => {
+      try {
+        const r = await fetch('https://formsubmit.co/ajax/xeyalhuseynli06@gmail.com', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            name,
+            email: from,
+            message: msg,
+            _subject: `Hello from ${name}`,
+            _template: 'table',
+            _captcha: 'false',
+          }),
+        })
+        const data = (await r.json()) as { success?: string }
+        return data.success === 'true' ? 'ok' : 'error'
+      } catch {
+        return 'error'
+      }
     }
+    // v20: 500 bəzən keçici olur — bir dəfə təkrar cəhd
+    const first = await sendOnce()
+    setSent(first === 'ok' ? 'ok' : first === 'error' ? await sendOnce() : first)
   }
 
   return (

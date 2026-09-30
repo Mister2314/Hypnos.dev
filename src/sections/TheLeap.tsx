@@ -23,6 +23,9 @@ export default function TheLeap() {
         highDir: 'leap/frames-1440',
         lowDir: 'leap/frames-960',
         poster: 'leap/poster-1920.webp',
+        // v20: mobil portret kəsimdə Miles-in üzü sağ-mərkəzdədir (~0.68) —
+        // kadro onu mərkəzə alır (şəkilə özüm baxıb təyin etdim)
+        focusXMobile: 0.72,
         ease: 0.07,
         trackProgress: true,
       }),
