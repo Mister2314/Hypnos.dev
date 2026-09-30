@@ -52,30 +52,30 @@ export default function Contact() {
       setSent('invalid')
       return
     }
-    // v19: FormSubmit AJAX — tamamilə pulsuz, səhifədən kənar heç nə açılmır:
-    // mesaj birbaşa poçta düşür (ilk göndərişdə aktivasiya məktubu gəlir)
+    // v19/v21: Web3Forms — tamamilə pulsuz (250/mo), səhifədən kənar heç nə
+    // açılmır: mesaj birbaşa poçta düşür. Açar public-dir (klient-side üçün).
     setSent('sending')
     const sendOnce = async (): Promise<'ok' | 'error'> => {
       try {
-        const r = await fetch('https://formsubmit.co/ajax/xeyalhuseynli06@gmail.com', {
+        const r = await fetch('https://api.web3forms.com/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify({
+            access_key: '5a177b75-4a3d-4204-b102-6339dd948ac5',
             name,
             email: from,
             message: msg,
-            _subject: `Hello from ${name}`,
-            _template: 'table',
-            _captcha: 'false',
+            subject: `Hello from ${name}`,
+            from_name: 'Portfolio',
           }),
         })
-        const data = (await r.json()) as { success?: string }
-        return data.success === 'true' ? 'ok' : 'error'
+        const data = (await r.json()) as { success?: boolean | string }
+        return data.success === true || data.success === 'true' ? 'ok' : 'error'
       } catch {
         return 'error'
       }
     }
-    // v20: 500 bəzən keçici olur — bir dəfə təkrar cəhd
+    // v20: keçici xəta olarsa — bir dəfə təkrar cəhd
     const first = await sendOnce()
     setSent(first === 'ok' ? 'ok' : first === 'error' ? await sendOnce() : first)
   }
