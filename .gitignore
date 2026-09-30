@@ -17,3 +17,6 @@ Thumbs.db
 KONSEPT.md
 QERARLAR.md
 research/
+
+.vercel
+.env*
