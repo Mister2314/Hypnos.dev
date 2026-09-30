@@ -172,7 +172,7 @@ const probe = await evalJs(`(() => {
   }
 })()`)
 
-check('12 dünya render olunur (cmbyn əlavə, interlude+worlds silinib)', probe.worlds === 12, `${probe.worlds} dünya`)
+check('11 dünya render olunur (speak 03-də, cmbyn yoxdur)', probe.worlds === 11, `${probe.worlds} dünya`)
 check('interlude tamamilə GETDİ', probe.interludeGone === true, `interlude: ${probe.interludeGone}`)
 check('worlds bölməsi tamamilə GETDİ', probe.worldsGone === true, `worlds: ${probe.worldsGone}`)
 check(
@@ -380,8 +380,8 @@ const langCheck2 = await evalJs(`(() => ({
 }))()`)
 check(
   'dil dəyişimi — səhifə canlı, xətasız (regressiya yoxlaması)',
-  langCheck.worlds === 12 &&
-    langCheck2.worlds === 12 &&
+  langCheck.worlds === 11 &&
+    langCheck2.worlds === 11 &&
     (langCheck2.v15errs || []).length === 0 &&
     pageErrors.length === errsBeforeLang &&
     !!langCheck2.h1,

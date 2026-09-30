@@ -1,8 +1,8 @@
 /**
  * App — səhifə quruluşu.
  *
- * Sıra **məcburidir** və `WORLDS` ilə 1:1 üst-üstə düşür (`lib/scroll.ts`) — 12 səhnə:
- *   hero · leap · summer · cmbyn · hands · counterweight · sapere · speak ·
+ * Sıra **məcburidir** və `WORLDS` ilə 1:1 üst-üstə düşür (`lib/scroll.ts`) — 11 səhnə:
+ *   hero · leap · summer · speak · hands · counterweight · sapere ·
  *   work · questions · contact · signature
  *
  * ⚠️ `<Backdrop />` ən sonda: ScrollTrigger-ləri bölmələrdən SONRA yaranır → refresh düzgün.
@@ -19,11 +19,10 @@ import TopBar from './components/TopBar'
 import Hero from './sections/Hero'
 import TheLeap from './sections/TheLeap'
 import Summer from './sections/Summer'
-import Cmbyn from './sections/Cmbyn'
+import SpeakOrDie from './sections/SpeakOrDie'
 import TheHands from './sections/TheHands'
 import TheCounterweight from './sections/TheCounterweight'
 import SapereAude from './sections/SapereAude'
-import SpeakOrDie from './sections/SpeakOrDie'
 import Work from './sections/Work'
 import Questions from './sections/Questions'
 import Contact from './sections/Contact'
@@ -48,11 +47,10 @@ export default function App() {
         <Hero />
         <TheLeap />
         <Summer />
-        <Cmbyn />
+        <SpeakOrDie />
         <TheHands />
         <TheCounterweight />
         <SapereAude />
-        <SpeakOrDie />
         <Work />
         <Questions />
         <Contact />

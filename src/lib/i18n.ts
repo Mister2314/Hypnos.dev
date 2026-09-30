@@ -215,7 +215,6 @@ const EN: Copy = {
     hero: 'Overture',
     leap: 'The Leap',
     summer: 'Summer',
-    cmbyn: 'Call Me By Your Name',
     hands: 'The Hands',
     counterweight: 'The Counterweight',
     sapere: 'Sapere aude',
