@@ -18,16 +18,7 @@ export default async function handler(req: any, res: any) {
     }
     const key = process.env.RESEND_API_KEY
     if (!key) {
-      // DEBUG-v22: temp — silinəcək
-      res.status(500).json({
-        ok: false,
-        error: 'nokey',
-        debug: {
-          hasKey: 'RESEND_API_KEY' in process.env,
-          envKeys: Object.keys(process.env).filter((k) => /RESEND|KEY|API/i.test(k)).slice(0, 10),
-          node: process.version,
-        },
-      })
+      res.status(500).json({ ok: false, error: 'nokey' })
       return
     }
     const r = await fetch('https://api.resend.com/emails', {

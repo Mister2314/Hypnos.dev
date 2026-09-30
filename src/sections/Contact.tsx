@@ -52,25 +52,18 @@ export default function Contact() {
       setSent('invalid')
       return
     }
-    // v19/v21: Web3Forms — tamamilə pulsuz (250/mo), səhifədən kənar heç nə
-    // açılmır: mesaj birbaşa poçta düşür. Açar public-dir (klient-side üçün).
+    // v21: kendi server funksiyamiz (api/contact) — Resend ile birbaşa poçta:
+    // pulsuz, səhifədən kənar heç nə açılmır, üçüncü tərəf form servisi yoxdur
     setSent('sending')
     const sendOnce = async (): Promise<'ok' | 'error'> => {
       try {
-        const r = await fetch('https://api.web3forms.com/submit', {
+        const r = await fetch('/api/contact', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({
-            access_key: '5a177b75-4a3d-4204-b102-6339dd948ac5',
-            name,
-            email: from,
-            message: msg,
-            subject: `Hello from ${name}`,
-            from_name: 'Portfolio',
-          }),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email: from, message: msg }),
         })
-        const data = (await r.json()) as { success?: boolean | string }
-        return data.success === true || data.success === 'true' ? 'ok' : 'error'
+        const data = (await r.json()) as { ok?: boolean }
+        return data.ok ? 'ok' : 'error'
       } catch {
         return 'error'
       }
