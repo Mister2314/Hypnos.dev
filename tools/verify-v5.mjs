@@ -339,6 +339,25 @@ check(
   `${JSON.stringify(pre)} · gözlədi ${waitedMs}ms · kadrlar ${JSON.stringify(preDiag)}`,
 )
 
+// ── v25 — OG şəkli: WhatsApp / X / Facebook / LinkedIn WebP GÖSTƏRMİR ───────
+// Tarix: og:image `.webp` idi → link atılanda önizləmə kartı boş qalırdı.
+const ogMeta = await evalJs(`(() => {
+  const c = (p) => document.querySelector('meta[property="' + p + '"], meta[name="' + p + '"]')?.getAttribute('content') ?? null
+  return { image: c('og:image'), tw: c('twitter:image'), w: c('og:image:width'), h: c('og:image:height') }
+})()`)
+check(
+  'OG — og:image .webp DEYİL (JPEG)',
+  !!ogMeta.image && /\.jpe?g($|\?)/i.test(ogMeta.image) && ogMeta.tw === ogMeta.image,
+  `${JSON.stringify(ogMeta.image)} · twitter: ${JSON.stringify(ogMeta.tw)} · meta ${ogMeta.w}×${ogMeta.h}`,
+)
+const ogDims = await evalJs(`(async () => {
+  const img = new Image()
+  img.src = '/og.jpg'
+  try { await img.decode() } catch { return null }
+  return { w: img.naturalWidth, h: img.naturalHeight }
+})()`)
+check('OG — şəkil 1200×630 yüklənir', ogDims?.w === 1200 && ogDims?.h === 630, JSON.stringify(ogDims))
+
 // ── v15 — dil dəyişimi saytı ÇÖKDÜRMƏMƏLİDİR (blob-keş rekursiya regresiyası)
 // Tarix: keşlənmiş kadr settle()-i sinxron çağırırdı → dil dəyişimi (hamısı
 // keşli) eksponensial rekursiya ilə əsas thread-i kilidləyirdi.
@@ -362,6 +381,27 @@ await evalHardened(`(() => {
   return true;
 })()`)
 await sleep(3000)
+
+// v25 — P1: `<main key={lang}>` dil dəyişəndə bütün bölmələri YENİDƏN yaradır.
+// ChapterNav observer-i `[]` ilə bağlananda köhnə (DOM-dan çıxmış) elementlərə
+// baxırdı → fəsil göstəricisi donurdu. Bu yoxlama həmin regressiyanı tutur:
+// AZ-da signature-a scroll → nav "10" göstərməlidir.
+await evalHardened(`(() => {
+  const el = document.getElementById('signature')
+  window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY + 200)
+  return true
+})()`)
+await sleep(1600)
+const navAfterLang = await evalHardened(`(() => ({
+  active: document.querySelector('.chapter-nav__link[data-active="1"]')?.closest('li')?.querySelector('.chapter-nav__num')?.textContent ?? null,
+  navLabel: document.querySelector('.chapter-nav')?.getAttribute('aria-label') ?? null,
+}))()`)
+check(
+  'dil dəyişimi — ChapterNav göstəricisi İZLƏYİR (v25 P1)',
+  navAfterLang.active === '10' && navAfterLang.navLabel === 'Fəsillər',
+  `aktiv: ${JSON.stringify(navAfterLang.active)} · nav: ${JSON.stringify(navAfterLang.navLabel)}`,
+)
+
 const langCheck = await evalHardened(`(() => {
   const btns = [...document.querySelectorAll('.lang-switch__btn')];
   const en = btns.find((b) => b.textContent.trim() === 'EN');
