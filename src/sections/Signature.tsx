@@ -81,21 +81,15 @@ export default function Signature() {
 
       <Line tag="h2" className="signature__close" text={copy.signatureClose} />
 
-      {socials.length > 0 ? (
-        <ul className="socials">
-          {socials.map((s) => (
-            <li key={s.label}>
-              <a href={s.href} target="_blank" rel="noreferrer noopener">
-                {s.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="socials--pending">
-          The direct lines are still being wired up. The questions above are the honest way in for now.
-        </p>
-      )}
+      <ul className="socials">
+        {socials.map((s) => (
+          <li key={s.label}>
+            <a href={s.href} target="_blank" rel="noreferrer noopener">
+              {s.label}
+            </a>
+          </li>
+        ))}
+      </ul>
 
       <ul className="signature__work">
         {PROJECTS.map((p) => (

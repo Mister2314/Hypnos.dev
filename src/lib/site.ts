@@ -1,7 +1,4 @@
 
-
-
-
 export const SITE = {
   name: 'Khayal',
   email: 'xeyalhuseynli06@gmail.com',
@@ -25,62 +22,16 @@ export function links(): Social[] {
 }
 
 
-
-
-export const HANDS = {
-  line: 'Nothing ever happened in the touch. Everything happened in the gap.',
-  caption: 'After Michelangelo — the spark never lands, it only almost does.',
-
-  sparkLabel: 'the gap',
-} as const
-
-
-export const COUNTERWEIGHT = {
-  quote: 'You were never broken.',
-  source: 'Arcane · Jayce, Season 2',
-
-
-
-  personal: 'So I keep the flaws. They are the only proof the work is mine.',
-} as const
-
-
-export const SPEAK = {
-  question: 'Is it better to speak or to die?',
-
-
-
-  source: 'The Heptaméron · Marguerite de Navarre, 1558',
-
-
-
-  admission: 'I’ll never have the courage to ask a question like that.',
-  answer: 'Better to speak.',
-
-  reflection: 'I spent years picking the other one. This page is the answer I kept not giving.',
-} as const
-
-
-export const LEAP = {
-  quote: 'Everyone keeps telling me how my story is supposed to go.',
-  nah: 'Nah. I’m gonna do my own thing.',
-  source: 'Miles Morales · Across the Spider-Verse',
-} as const
-
-
-export const WORLDS_INTRO = {
-  head: 'Every version of me, none of them cancelled',
-  note: 'In one of them I never left. In one of them I never started. This is the one where I did both — and I refuse to rank them.',
-} as const
-
-
+// v24: HANDS, WORLDS_INTRO və SPEAK/COUNTERWEIGHT/LEAP-in mətn sahələri
+// silindi — məzmun i18n.ts-də yaşayır (3 dil), burada yalnız dil-bağsız
+// source sitatları + linklər qalır. Href/year üçün PROJECTS Work + Signature-da
+// i18n.projects ilə İNDEKS ilə üst-üstə düşür — sirrı dəyişmə.
 export const PROJECTS = [
   {
     title: 'Portfolio',
     year: '2026',
     kind: 'Web',
     stack: 'React · TypeScript',
-    blurb: 'My second portfolio — mostly a design playground while I tested layouts. A template of sorts.',
     href: 'https://github.com/Mister2314/Portfolio-2',
   },
   {
@@ -88,7 +39,6 @@ export const PROJECTS = [
     year: '2026',
     kind: 'Mobile app',
     stack: 'React Native · TypeScript · Supabase',
-    blurb: 'Coming soon.',
     href: '',
   },
   {
@@ -96,7 +46,18 @@ export const PROJECTS = [
     year: '2026',
     kind: 'Web',
     stack: 'React · GSAP · hand-written WebGL',
-    blurb: 'One page, many worlds. No 3D library: the light is all code.',
     href: '',
   },
 ] as const
+
+export const LEAP = {
+  source: 'Miles Morales · Across the Spider-Verse',
+} as const
+
+export const COUNTERWEIGHT = {
+  source: 'Arcane · Jayce, Season 2',
+} as const
+
+export const SPEAK = {
+  source: 'The Heptaméron · Marguerite de Navarre, 1558',
+} as const

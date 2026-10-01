@@ -20,3 +20,6 @@ research/
 
 .vercel
 .env*
+
+# original media — local only (repo weight; recoverable from vault brief pipeline)
+source/

@@ -132,9 +132,6 @@ export default function TheLeap() {
 
           <p className="leap__source">— {LEAP.source}</p>
 
-          {
-
- }
           <p className="leap__nah" aria-label={copy.leapNah}>
             {nahWords.map((w, i) => (
               <Fragment key={i}>
