@@ -566,6 +566,45 @@ html.is-loading {
   gap: 0.6rem;
 }
 
+/* v27 — səs düyməsi: topbar pill estetikasında, ikon-only */
+.sound-btn {
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  width: 2.15rem;
+  height: 2.15rem;
+  padding: 0;
+  background: rgba(10, 12, 11, 0.32);
+  border: 1px solid rgba(255, 252, 225, 0.16);
+  border-radius: 999px;
+  color: inherit;
+  cursor: pointer;
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: 0 2px 18px rgba(0, 0, 0, 0.25);
+  transition: opacity 0.35s var(--ease-out), border-color 0.35s var(--ease-out),
+    background 0.35s var(--ease-out);
+}
+
+.sound-btn svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sound-btn:hover {
+  border-color: rgba(255, 252, 225, 0.4);
+  background: rgba(10, 12, 11, 0.5);
+}
+
+.sound-btn[aria-pressed='false'] {
+  opacity: 0.55;
+}
+
 .topbar__mark,
 .topbar__cta {
   pointer-events: auto;
@@ -959,6 +998,39 @@ html.has-cursor * {
   max-width: 52ch;
   font-size: 0.98rem;
   opacity: 0.78;
+}
+
+/* v26 — "Now" bloku: işlər siyahısının altında, köhnəlməyən qeyd */
+.work__now {
+  margin: 3.2rem 0 0;
+  padding-top: 1.3rem;
+  border-top: 1px solid color-mix(in oklab, var(--text) 13%, transparent);
+  max-width: 46ch;
+}
+
+.work__now-head {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin: 0 0 0.9rem;
+}
+
+.work__now-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+  font-size: clamp(0.95rem, 1.25vw, 1.08rem);
+  opacity: 0.82;
+}
+
+.work__now-list a {
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+  text-decoration-color: color-mix(in oklab, var(--accent) 60%, transparent);
 }
 
 .work__foot {
@@ -1440,7 +1512,13 @@ html.has-cursor * {
 
 @media (max-width: 900px) {
   .topbar {
-    padding: 1.1rem 7vw;
+    padding: 1.1rem 5vw;
+  }
+  .topbar__group {
+    gap: 0.35rem;
+  }
+  .topbar__cta {
+    padding: 0.45rem 0.7rem;
   }
   .chapter-nav {
     right: 0.7rem;

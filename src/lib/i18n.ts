@@ -102,6 +102,11 @@ export type Copy = {
   speakReflection: string
   workLine: string
   workFoot: string
+  /** "Now" bloku — işlər siyahısının altında */
+  nowHead: string
+  nowLines: string[]
+  /** hansı sətir playlist linkinə çevrilir (SITE.playlist boşdursa mətn qalır) */
+  nowPlaylistIndex: number
   projects: ProjectCopy[]
   questionsHead: string
   faq: FaqItem[]
@@ -143,6 +148,8 @@ export type A11y = {
   signed: string
   handsReach: string
   handsOpen: string
+  soundOff: string
+  soundOn: string
 }
 
 /** şablonu doldurur: `fmt('{a} — {b}', { a: 'x', b: 'y' })` */
@@ -176,12 +183,19 @@ const EN: Copy = {
     die: 7,
     qmark: '?',
   },
-  speakAdmission: "I don't believe I'll ever be the kind of person who could ask a question like that.",
+  speakAdmission: "I don't believe there will be anyone who could ask a question like that.",
   speakAnswer: 'Better to speak.',
   speakReflection: 'I spent years picking the other one. This page is the answer I kept not giving.',
-  workLine: 'I would rather show you two real things than ten neat ones.',
+  workLine: "I'd rather show you a few real things than ten neat ones.",
   workFoot:
     'More in progress. The rest of it lives in the chapters above, which are the honest portfolio anyway.',
+  nowHead: 'Now',
+  nowLines: [
+    'Working on Lunora',
+    'Reading Qaraqan’s «İkinci addım»',
+    'Listening to the same playlist, always',
+  ],
+  nowPlaylistIndex: 2,
   projects: [
     {
       title: 'Portfolio',
@@ -226,11 +240,11 @@ const EN: Copy = {
     },
     {
       q: 'What is the deal with the hands?',
-      a: 'Michelangelo put the whole of creation in the space between two fingers.',
+      a: "This is Michelangelo's «The Creation of Adam». God's and Adam's fingers almost touch, but they don't. All of creation is in that gap.",
     },
   ],
   questionsHint: 'drag or ← →',
-  contactLine: 'Say something. At best, we get to know each other.',
+  contactLine: 'Say something. Knowing each other starts with one sentence.',
   nameLabel: 'Name',
   emailLabel: 'Email',
   messageLabel: 'Message',
@@ -264,6 +278,8 @@ const EN: Copy = {
     signed: 'Signed, {name}',
     handsReach: 'A marble hand reaching in from the left, index finger extended.',
     handsOpen: 'A marble hand reaching in from the right, index finger relaxed.',
+    soundOff: 'Turn the sound off',
+    soundOn: 'Turn the sound on',
   },
   titles: {
     hero: 'Overture',
@@ -306,12 +322,19 @@ const AZ: Copy = {
     die: 3,
     qmark: '?',
   },
-  speakAdmission: 'Belə bir sual verməyə uyğun bir insan olacağıma inanmıram.',
+  speakAdmission: 'Belə bir sualı soruşa biləcək birinin olacağına inanmıram.',
   speakAnswer: 'Danışmaq daha yaxşıdır.',
   speakReflection: 'İllər boyu digərini seçdim. Bu səhifə vermədiyim cavabdır.',
-  workLine: 'On səliqəli şey yerinə sənə iki real şey göstərmək istəyirəm.',
+  workLine: 'On səliqəli şey yerinə sənə bir neçə real şey göstərmək istəyirəm.',
   workFoot:
     'Daha çoxu yoldadır. Qalanı yuxarıdakı fəsillərdə yaşayır — ən səmimi portfolyo onsuz da odur.',
+  nowHead: 'İndi',
+  nowLines: [
+    'Lunora üstündə işləyirəm',
+    'Qaraqanın «İkinci addım»ını oxuyuram',
+    'Həmişə dinlədiyim playlist-i dinləyirəm',
+  ],
+  nowPlaylistIndex: 2,
   projects: [
     {
       title: 'Portfolio',
@@ -356,11 +379,11 @@ const AZ: Copy = {
     },
     {
       q: 'Əllərin məsələsi nədir?',
-      a: 'Michelangelo bütün yaradılışı iki barmağın arasındakı məsafəyə sığışdırdı.',
+      a: 'Bu, Mikelancelonun «Adəmin yaradılışı» əsəridir. Tanrı ilə Adəmin barmaqları toxunmağa az qalır, amma toxunmur. Bütün yaradılış o toxunmayan yerdədir.',
     },
   ],
   questionsHint: 'çək və ya ← →',
-  contactLine: 'Bir şey de. Ən yaxşı halda bir-birimizi tanıyarıq.',
+  contactLine: 'Bir şey de. Tanışlıq bir cümlədən başlayır.',
   nameLabel: 'Ad',
   emailLabel: 'Email',
   messageLabel: 'Mesaj',
@@ -394,6 +417,8 @@ const AZ: Copy = {
     signed: 'İmza: {name}',
     handsReach: 'Soldan uzanan mərmər əl, şəhadət barmağı açıq.',
     handsOpen: 'Sağdan uzanan mərmər əl, şəhadət barmağı rahat.',
+    soundOff: 'Səsi söndür',
+    soundOn: 'Səsi yandır',
   },
   titles: {
     hero: 'Uvertüra',
@@ -436,12 +461,19 @@ const TR: Copy = {
     die: 4,
     qmark: '?',
   },
-  speakAdmission: 'Böyle bir soru sormaya uygun bir insan olacağıma inanmıyorum.',
+  speakAdmission: 'Böyle bir soruyu sorabilecek birinin olacağına inanmıyorum.',
   speakAnswer: 'Konuşmak daha iyi.',
   speakReflection: 'Yıllarca diğerini seçtim. Bu sayfa, vermediğim cevaptır.',
-  workLine: 'On düzgün şey yerine sana iki gerçek şey göstermeyi tercih ederim.',
+  workLine: 'On düzgün şey yerine sana birkaç gerçek şey göstermeyi tercih ederim.',
   workFoot:
     'Dahası yolda. Gerisi yukarıdaki bölümlerde yaşıyor — en dürüst portfolyo zaten o.',
+  nowHead: 'Şimdi',
+  nowLines: [
+    'Lunora üzerinde çalışıyorum',
+    'Qaraqan’ın «İkinci Addım»ını okuyorum',
+    'Her zaman dinlediğim playlist’i dinliyorum',
+  ],
+  nowPlaylistIndex: 2,
   projects: [
     {
       title: 'Portfolio',
@@ -486,11 +518,11 @@ const TR: Copy = {
     },
     {
       q: 'Eller meselesi ne?',
-      a: 'Michelangelo bütün yaratılışı iki parmağın arasındaki boşluğa yerleştirdi.',
+      a: 'Bu, Michelangelo’nun «Adem’in Yaratılışı» eseridir. Tanrı ile Adem’in parmakları dokunmaya az kalır, ama dokunmaz. Bütün yaratılış o dokunmayan yerdedir.',
     },
   ],
   questionsHint: 'sürükle ya da ← →',
-  contactLine: 'Bir şey söyle. En iyi ihtimalle birbirimizi tanırız.',
+  contactLine: 'Bir şey söyle. Tanışmak bir cümleyle başlar.',
   nameLabel: 'İsim',
   emailLabel: 'E-posta',
   messageLabel: 'Mesaj',
@@ -524,6 +556,8 @@ const TR: Copy = {
     signed: 'İmza: {name}',
     handsReach: 'Soldan uzanan mermer el, işaret parmağı açık.',
     handsOpen: 'Sağdan uzanan mermer el, işaret parmağı gevşek.',
+    soundOff: 'Sesi kapat',
+    soundOn: 'Sesi aç',
   },
   titles: {
     hero: 'Uvertür',

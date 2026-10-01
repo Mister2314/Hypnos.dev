@@ -3,6 +3,7 @@
 import { SITE } from '../lib/site'
 import { scrollToId } from '../lib/lenis'
 import { LANGS, setLang, useCopy, useLang } from '../lib/i18n'
+import Sound from './Sound'
 
 export default function TopBar() {
   const copy = useCopy()
@@ -19,6 +20,7 @@ export default function TopBar() {
         {SITE.name}
       </button>
       <div className="topbar__group">
+        <Sound />
         <div className="lang-switch" role="group" aria-label={copy.a11y.language}>
           {LANGS.map((l) => (
             <button

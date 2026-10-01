@@ -2,7 +2,7 @@
 
 import { useRef } from 'react'
 import Line from '../components/Line'
-import { PROJECTS } from '../lib/site'
+import { PROJECTS, SITE } from '../lib/site'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
 import { useCopy } from '../lib/i18n'
 
@@ -88,6 +88,26 @@ export default function Work() {
           )
         })}
       </ul>
+
+      <div className="work__now">
+        <p className="work__now-head">{copy.nowHead}</p>
+        <ul className="work__now-list">
+          {copy.nowLines.map((line, i) => {
+            const href = i === copy.nowPlaylistIndex ? SITE.playlist : ''
+            return (
+              <li key={line}>
+                {href ? (
+                  <a href={href} target="_blank" rel="noreferrer noopener">
+                    {line}
+                  </a>
+                ) : (
+                  line
+                )}
+              </li>
+            )
+          })}
+        </ul>
+      </div>
 
       <p className="work__foot">{copy.workFoot}</p>
     </section>

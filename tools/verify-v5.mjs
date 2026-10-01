@@ -197,7 +197,7 @@ check(
 )
 check(
   '05 — Elio-nun qeydi render olunur',
-  /kind of person/i.test(probe.speakAdmission || ''),
+  /anyone who could ask/i.test(probe.speakAdmission || ''),
   JSON.stringify(probe.speakAdmission),
 )
 check('06 — sual yerindədir', /speak/i.test(probe.speakQuestion || '') && /die/i.test(probe.speakQuestion || ''))
@@ -338,6 +338,17 @@ check(
   !pre.el && !pre.loading,
   `${JSON.stringify(pre)} · gözlədi ${waitedMs}ms · kadrlar ${JSON.stringify(preDiag)}`,
 )
+
+// ── v26 — "Now" bloku + Threads ─────────────────────────────────────────────
+const v26 = await evalJs(`(() => ({
+  nowHead: document.querySelector('.work__now-head')?.textContent ?? null,
+  nowCount: document.querySelectorAll('.work__now-list li').length,
+  socials: [...document.querySelectorAll('.socials a, .glass__direct a')].map((a) => a.textContent.trim()),
+  sound: document.querySelector('.sound-btn')?.getAttribute('aria-pressed') ?? null,
+}))()`)
+check('v26 — "Now" bloku render olunur', v26.nowCount === 3 && !!v26.nowHead, JSON.stringify(v26))
+check('v26 — Threads siyahıda var', v26.socials.includes('Threads'), JSON.stringify(v26.socials))
+check('v27 — səs düyməsi var', v26.sound === 'true' || v26.sound === 'false', JSON.stringify(v26.sound))
 
 // ── v25 — OG şəkli: WhatsApp / X / Facebook / LinkedIn WebP GÖSTƏRMİR ───────
 // Tarix: og:image `.webp` idi → link atılanda önizləmə kartı boş qalırdı.
