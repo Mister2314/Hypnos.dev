@@ -1,10 +1,9 @@
 
 
-
 import { Fragment, useRef } from 'react'
 import { SITE } from '../lib/site'
 import { ambient, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
-import { useCopy } from '../lib/i18n'
+import { fmt, useCopy } from '../lib/i18n'
 
 export default function Hero() {
   const ref = useRef<HTMLElement>(null)
@@ -15,7 +14,6 @@ export default function Hero() {
       const q = gsap.utils.selector(ref)
 
       if (prefersReducedMotion) {
-
 
         gsap.set(q('.hero__eyebrow, .hero__title, .hero__sub, .hero__sign, .hero__cue'), {
           opacity: 1,
@@ -34,7 +32,6 @@ export default function Hero() {
         .from(q('.hero__sign'), { opacity: 0, y: 14, duration: 0.9 }, '-=0.5')
         .from(q('.hero__cue'), { opacity: 0, duration: 0.6 }, '-=0.35')
 
-
       gsap.to(q('.hero__inner'), {
         yPercent: -12,
         scale: 0.94,
@@ -48,7 +45,6 @@ export default function Hero() {
         },
       })
 
-
       gsap.to(q('.hero__sign'), {
         xPercent: 6,
         opacity: 0,
@@ -61,20 +57,7 @@ export default function Hero() {
         },
       })
 
-
-
-
-
-
-
-
-
-
-
       ambient(q('.hero__sign'), { y: -6, rotate: -0.9 }, 7)
-
-
-
 
       ambient(q('.hero__cue-text'), { y: 3, opacity: 0.55 }, 4.5)
     },
@@ -99,7 +82,7 @@ export default function Hero() {
         <p className="hero__sub">{copy.heroSub}</p>
       </div>
 
-      <p className="hero__sign" aria-label={`Signed, ${SITE.name}`}>
+      <p className="hero__sign" aria-label={fmt(copy.a11y.signed, { name: SITE.name })}>
         {SITE.name}
       </p>
 

@@ -42,9 +42,9 @@ export function setLang(l: Lang): void {
   } catch {
     /* storage yazıla bilmir — sessiya daxilində yenə də işləyir */
   }
-  document.documentElement.lang = l === 'az' ? 'az' : l
+  document.documentElement.lang = l
   listeners.forEach((fn) => fn())
-  // v13: key={lang} remount-u getdi — bölmə hündürlükləri dəyişir, ona görə
+  // v14: key={lang} remount VAR — bölmə hündürlükləri dəyişir, ona görə
   // ölçülər yenilənməlidir (Backdrop 'refresh' event-inə qoşuludur).
   requestAnimationFrame(() => ScrollTrigger.refresh())
 }
@@ -121,6 +121,33 @@ export type Copy = {
   signatureClose: string
   /** fəsil başlıqları — eyebrow + ChapterNav üçün (v13: tərcümə olunur) */
   titles: Record<string, string>
+  /** gözlə görünməyən mətn — aria-label + alt (v25: 3 dilə tərcümə olunur) */
+  a11y: A11y
+}
+
+export type A11y = {
+  chapters: string
+  /** `{n}` · `{title}` */
+  chapter: string
+  backToTop: string
+  language: string
+  loading: string
+  prevQuestion: string
+  nextQuestion: string
+  ring: string
+  /** `{i}` · `{total}` · `{q}` */
+  questionOf: string
+  /** `{i}` */
+  goToQuestion: string
+  /** `{name}` */
+  signed: string
+  handsReach: string
+  handsOpen: string
+}
+
+/** şablonu doldurur: `fmt('{a} — {b}', { a: 'x', b: 'y' })` */
+export function fmt(t: string, v: Record<string, string | number>): string {
+  return t.replace(/\{(\w+)\}/g, (_, k: string) => String(v[k] ?? ''))
 }
 
 // ── EN — orijinal mətn ───────────────────────────────────────────────────────
@@ -223,6 +250,21 @@ const EN: Copy = {
   },
   sideLabel: 'Other ways in',
   signatureClose: 'That’s all from me — if you ever want to talk, you know where to find me.',
+  a11y: {
+    chapters: 'Chapters',
+    chapter: 'Chapter {n} — {title}',
+    backToTop: 'Back to top',
+    language: 'Language',
+    loading: 'Loading',
+    prevQuestion: 'Previous question',
+    nextQuestion: 'Next question',
+    ring: 'Question ring — use the left and right arrow keys to turn it',
+    questionOf: 'Question {i} of {total}: {q}',
+    goToQuestion: 'Go to question {i}',
+    signed: 'Signed, {name}',
+    handsReach: 'A marble hand reaching in from the left, index finger extended.',
+    handsOpen: 'A marble hand reaching in from the right, index finger relaxed.',
+  },
   titles: {
     hero: 'Overture',
     leap: 'The Leap',
@@ -249,14 +291,14 @@ const AZ: Copy = {
   summerCaptionFilm: 'Call Me By Your Name',
   summerCaptionRest: ' — heç bitməyən yay.',
   handsLine: 'Toxunuşda heç nə baş vermədi. Hər şey boşluqda baş verdi.',
-  handsCaption: 'Michelangelo-dan sonra — qığılcım heç vaxt düşmür, düşməyə az qalır.',
+  handsCaption: 'Michelangelo-dan sonra — qığılcım heç vaxt düşmür, sadəcə az qalır ki, düşsün.',
   cwQuote: 'Sən heç vaxt qırılmamışdın.',
-  cwPersonal: 'Ona görə qüsurlarımı saxlayıram. Onlar işin mənim olduğunun yeganə sübutudur.',
+  cwPersonal: 'Ona görə qüsurlarımı saxlayıram. Onlar işin mənə aid olduğunun yeganə sübutudur.',
   sapereLine: 'Heç görüşmədiyim bir müəllim mənə hər şeyi — özümü də — sorğulamağı öyrətdi.',
   sapereSubEm: 'Sapere aude.',
   sapereSubRest: ' Cəsarət etdim. Artıq soruşmağı dayandıra bilmirəm.',
   sapereCaption: 'Merli · bilməyə cəsarət et',
-  leapQuote: 'Ağzı olan hekayəmin necə olmalı olduğunu deyir.',
+  leapQuote: 'Ağzı olan hekayəmin necə olması lazım olduğunu deyir.',
   leapNah: 'Yox! Mən öz bildiyimi edəcəyəm.',
   speakQ: {
     words: ['Danışmaq', 'yaxşıdır,', 'yoxsa', 'ölmək'],
@@ -267,7 +309,7 @@ const AZ: Copy = {
   speakAdmission: 'Belə bir sual verməyə uyğun bir insan olacağıma inanmıram.',
   speakAnswer: 'Danışmaq daha yaxşıdır.',
   speakReflection: 'İllər boyu digərini seçdim. Bu səhifə vermədiyim cavabdır.',
-  workLine: 'On səliqəli şey yerinə sizə iki real şey göstərmək istəyirəm.',
+  workLine: 'On səliqəli şey yerinə sənə iki real şey göstərmək istəyirəm.',
   workFoot:
     'Daha çoxu yoldadır. Qalanı yuxarıdakı fəsillərdə yaşayır — ən səmimi portfolyo onsuz da odur.',
   projects: [
@@ -287,14 +329,14 @@ const AZ: Copy = {
       title: 'Bu sayt',
       kind: 'Veb',
       stack: 'React · GSAP · əl ilə yazılmış WebGL',
-      blurb: 'Nümayiş üçün deyil — ürəyimə ilk dəfə “mən budam” dedirən saytdır: tamamilə məni əks etdirir.',
+      blurb: 'Nümayiş üçün deyil — ürəyimə ilk dəfə “mən buyam” dedirən saytdır: tamamilə məni əks etdirir.',
     },
   ],
   questionsHead: 'Məndən soruşulanlar',
   faq: [
     {
-      q: 'Dəqiq kiməsən?',
-      a: 'On doqquz yaşım var. Azərbaycanlıyam. İT ixtisasının 2-ci kursunda oxuyuram. Bir şeylər etməyə çalışıram və bacardığım qədər çox oxumağa çalışıram.',
+      q: 'Dəqiq kimsən?',
+      a: 'On doqquz yaşım var. Azərbaycanlıyam. İT ixtisası üzrə 2-ci kursda oxuyuram. Bir şeylər etməyə çalışıram və bacardığım qədər çox oxumağa çalışıram.',
     },
     {
       q: 'Əslində nə edirsən?',
@@ -305,7 +347,7 @@ const AZ: Copy = {
       a: 'Çünki insanın tək səliqəli xülasəsi yalandır. Bunlar məni meydana gətirənlərdir və onları dərəcələməkdən imtina edirəm.',
     },
     {
-      q: 'İşə müsaitdinsən?',
+      q: 'İşə müsaitsən?',
       a: 'Remote və yarımştat işlər üçün uyğunam — öyrənə biləcəyim hər şeyə açığam.',
     },
     {
@@ -329,15 +371,30 @@ const AZ: Copy = {
   statusOk: 'Mesaj göndərildi — danışarıq.',
   mailErrors: {
     space: 'Mail ünvanının içinə boşluq sığmır.',
-    noAt: 'Burda @ yoxdur — maillar onsuz işləmir.',
+    noAt: 'Burada @ yoxdur — maillər onsuz işləmir.',
     doubleAt: 'İki dənə @? Biri bəs edir.',
-    noDomain: '@-dan sonrası itib gedib.',
+    noDomain: '@ işarəsindən sonrası itib gedib.',
     noTld: 'Nöqtəsiz domain sadəcə sözdür.',
     dots: 'Bu nöqtələr öz yerində deyil.',
     typo: '«{d}»? Əminəm ki «{fix}» istəyirdin.',
   },
   sideLabel: 'Başqa yollarla',
-  signatureClose: 'Məndən bu qədər — danışmaq istəsən, harda olduğumu bilirsən.',
+  signatureClose: 'Məndən bu qədər — danışmaq istəsən, harada olduğumu bilirsən.',
+  a11y: {
+    chapters: 'Fəsillər',
+    chapter: 'Fəsil {n} — {title}',
+    backToTop: 'Başa qayıt',
+    language: 'Dil',
+    loading: 'Yüklənir',
+    prevQuestion: 'Əvvəlki sual',
+    nextQuestion: 'Növbəti sual',
+    ring: 'Sual halqası — çevirmək üçün sola və sağa ox düymələrini işlət',
+    questionOf: '{total} sualdan {i}-si: {q}',
+    goToQuestion: '{i}-ci suala keç',
+    signed: 'İmza: {name}',
+    handsReach: 'Soldan uzanan mərmər əl, şəhadət barmağı açıq.',
+    handsOpen: 'Sağdan uzanan mərmər əl, şəhadət barmağı rahat.',
+  },
   titles: {
     hero: 'Uvertüra',
     leap: 'Tullanış',
@@ -364,7 +421,7 @@ const TR: Copy = {
   summerCaptionFilm: 'Call Me By Your Name',
   summerCaptionRest: ' — hiç bitmeyen yaz.',
   handsLine: 'Dokunuşta hiçbir şey olmadı. Her şey boşlukta oldu.',
-  handsCaption: 'Michelangelo’dan sonra — kıvılcım asla düşmez, sadece düşmeye yaklaştır.',
+  handsCaption: 'Michelangelo’dan sonra — kıvılcım asla düşmez, sadece düşmeye yaklaşır.',
   cwQuote: 'Sen hiçbir zaman kırılmadın.',
   cwPersonal: 'Bu yüzden kusurları tutuyorum. Onlar işin bana ait olduğunun tek kanıtı.',
   sapereLine: 'Hiç tanışmadığım bir öğretmen bana her şeyi — kendimi de — sorgulamayı öğretti.',
@@ -382,7 +439,7 @@ const TR: Copy = {
   speakAdmission: 'Böyle bir soru sormaya uygun bir insan olacağıma inanmıyorum.',
   speakAnswer: 'Konuşmak daha iyi.',
   speakReflection: 'Yıllarca diğerini seçtim. Bu sayfa, vermediğim cevaptır.',
-  workLine: 'On düzgün şey yerine size iki gerçek şey göstermeyi tercih ederim.',
+  workLine: 'On düzgün şey yerine sana iki gerçek şey göstermeyi tercih ederim.',
   workFoot:
     'Dahası yolda. Gerisi yukarıdaki bölümlerde yaşıyor — en dürüst portfolyo zaten o.',
   projects: [
@@ -402,7 +459,7 @@ const TR: Copy = {
       title: 'Bu site',
       kind: 'Web',
       stack: 'React · GSAP · elle yazılmış WebGL',
-      blurb: 'Gösteriş için değil — kalbime ilk defa “ben budum” dedirtiren site: tamamen beni yansıtıyor.',
+      blurb: 'Gösteriş için değil — kalbime ilk defa “ben buyum” dedirten site: tamamen beni yansıtıyor.',
     },
   ],
   questionsHead: 'Bana sorulanlar',
@@ -421,7 +478,7 @@ const TR: Copy = {
     },
     {
       q: 'İşe müsait misin?',
-      a: 'Uzaktan ve yarı zamanlı işler için uygünüm — öğrenebileceğim her şeye açığım.',
+      a: 'Uzaktan ve yarı zamanlı işler için uygunum — öğrenebileceğim her şeye açığım.',
     },
     {
       q: 'Şu anda ne öğreniyorsun?',
@@ -444,18 +501,33 @@ const TR: Copy = {
   statusOk: 'Mesaj gönderildi — yakında konuşuruz.',
   mailErrors: {
     space: 'E-posta adresinin içine boşluk sığmaz.',
-    noAt: 'Burda @ yok — maillar onsuz çalışmaz.',
+    noAt: 'Burada @ yok — mailler onsuz çalışmaz.',
     doubleAt: 'İki tane @? Biri yeter.',
-    noDomain: '@-dan sonrası kayıp gidiyor.',
+    noDomain: '@ işaretinden sonrası kayboluyor.',
     noTld: 'Noktasız domain sadece bir kelime.',
     dots: 'Bu noktalar kendi yerinde değil.',
     typo: '«{d}»? Eminim «{fix}» demek istedin.',
   },
   sideLabel: 'Diğer yollarla',
   signatureClose: 'Benden bu kadar — konuşmak istersen nerede olduğumu biliyorsun.',
+  a11y: {
+    chapters: 'Bölümler',
+    chapter: 'Bölüm {n} — {title}',
+    backToTop: 'Başa dön',
+    language: 'Dil',
+    loading: 'Yükleniyor',
+    prevQuestion: 'Önceki soru',
+    nextQuestion: 'Sonraki soru',
+    ring: 'Soru halkası — çevirmek için sol ve sağ ok tuşlarını kullan',
+    questionOf: '{total} sorudan {i}.: {q}',
+    goToQuestion: '{i}. soruya git',
+    signed: 'İmza: {name}',
+    handsReach: 'Soldan uzanan mermer el, işaret parmağı açık.',
+    handsOpen: 'Sağdan uzanan mermer el, işaret parmağı gevşek.',
+  },
   titles: {
     hero: 'Uvertür',
-    leap: 'Atılım',
+    leap: 'Sıçrayış',
     summer: 'Yaz',
     hands: 'Eller',
     counterweight: 'Karşı ağırlık',

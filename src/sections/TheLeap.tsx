@@ -1,6 +1,5 @@
 
 
-
 import { Fragment, useEffect, useRef } from 'react'
 import Line from '../components/Line'
 import { ambient, eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
@@ -13,7 +12,6 @@ export default function TheLeap() {
   const copy = useCopy()
   const nahWords = copy.leapNah.split(' ')
   const canvasRef = useRef<HTMLCanvasElement>(null)
-
 
   useEffect(
     () =>
@@ -47,8 +45,6 @@ export default function TheLeap() {
         return
       }
 
-
-
       gsap.set(words, {
         opacity: 0,
         x: () => gsap.utils.random(-14, 14),
@@ -65,13 +61,10 @@ export default function TheLeap() {
         },
       })
 
-
       tl.fromTo(q('.leap__video'), { opacity: 0.4 }, { opacity: 1, duration: 1 }, 0)
-
 
       tl.fromTo(q('.leap__halftone'), { opacity: 0 }, { opacity: 0.4, duration: 0.25 }, 0.05)
       tl.to(q('.leap__halftone'), { opacity: 0.26, duration: 0.2 }, 0.78)
-
 
       tl.from(
         q('.leap__quote .rv'),
@@ -80,8 +73,6 @@ export default function TheLeap() {
       )
 
       tl.from(q('.leap__source'), { opacity: 0, y: 10, duration: 0.07 }, 0.24)
-
-
 
       tl.to(
         words,
@@ -96,7 +87,6 @@ export default function TheLeap() {
         0.5,
       )
 
-
       tl.to(
         words,
         { textShadow: '4px 0 rgba(0,252,253,0.7), -4px 0 rgba(255,0,254,0.7)', duration: 0.015 },
@@ -108,10 +98,8 @@ export default function TheLeap() {
         0.745,
       )
 
-
       const riseTargets = [canvasRef.current, q('.leap__inner')[0]].filter(Boolean)
       tl.to(riseTargets, { yPercent: -3.5, duration: 0.16, ease: 'power2.inOut' }, 0.8)
-
 
       ambient(q('.leap__source'), { y: -2 }, 9)
     },

@@ -1,13 +1,11 @@
 
 
-
 import { gsap, prefersReducedMotion, ScrollTrigger } from './scroll'
 import { PERF, isNarrow, pickTierDir } from './perf'
 import { registerSequence, setSequenceFraction, markSequenceSkipped, unregisterSequence } from './loader'
 import { sizeCanvas } from './webgl'
 
 const BASE = import.meta.env.BASE_URL
-
 
 const PARALLEL = 8
 
@@ -31,7 +29,6 @@ export type SequenceSpec = {
   poster: string
 
   ease?: number
-
 
   focusX?: number
 
@@ -73,7 +70,6 @@ export function mountSequence(spec: SequenceSpec): () => void {
     ctx.drawImage(img, (canvas.width - dw) * fx, (canvas.height - dh) / 2, dw, dh)
   }
 
-
   // v13: Image elementləri ƏVƏZLƏNMƏDİ blob ilə — yaddaşda yalnız SIXILMIŞ
   // baytlar qalır (~19 MB hamısı); dekod edilmiş kadr yalnız bitmaps pəncərəsində.
   // 521 HTMLImageElement + onların dekod keşi rendererdə ~1 GB tuturdu.
@@ -98,8 +94,6 @@ export function mountSequence(spec: SequenceSpec): () => void {
   let painted = false
   const draw = () => {
     const target = Math.min(idx, Math.max(0, contig - 1))
-
-
 
     // ən yaxın hazır bitmap — HƏR İKİ istiqamətdə: yuxarı scroll-da da video
     // davam edir (əvvəl axtarış yalnız geriyə idi → geri gələndə posterə düşürdü)
@@ -137,9 +131,6 @@ export function mountSequence(spec: SequenceSpec): () => void {
   const bumpContig = () => {
     while (contig < n && blobs[contig]) contig++
   }
-
-
-
 
   let bitmapBudget = 0
   let prevCenter = 0
@@ -184,11 +175,12 @@ export function mountSequence(spec: SequenceSpec): () => void {
     }
   }
 
-  // v15: chunk yükləməsi İTERATIVDIR (rekursiya yoxdur). Səbəb: keşlənmiş
-  // kadr settle()-i SINXRON çağırırdı → növbəti chunk for-loop içində
-  // rekursiv başlayır → dil dəyişimi (hamısı keşli) eksponensial yenidən
-  // gəzinti ilə əsas thread-i KİLİDLƏYİRDİ ("sayt çökur"). Promise.all +
-  // await — keşli kadrlar mikrotask-da həll olunur, zəncir sinxron deyil.
+  // v15: chunk zənciri ASİNXRONDUR — `loadChunk` özünü çağırır, amma `await`-
+  // dən SONRA, yəni çağırış yığını böyümür. Səbəb: keşlənmiş kadr settle()-i
+  // SINXRON çağırırdı → növbəti chunk for-loop içində rekursiv başlayır →
+  // dil dəyişimi (hamısı keşli) eksponensial yenidən gəzinti ilə əsas
+  // thread-i KİLİDLƏYİRDİ ("sayt çökur"). Promise.all + await — keşli kadrlar
+  // mikrotask-da həll olunur.
   const loadFrame = async (i: number): Promise<void> => {
     const url = `${BASE}${dir}/s_${String(i + 1).padStart(3, '0')}.webp`
     let b = blobCache.get(url)
@@ -227,9 +219,6 @@ export function mountSequence(spec: SequenceSpec): () => void {
     await Promise.all(batch)
     if (end < n) await loadChunk(end)
   }
-
-
-
 
   let downloadStarted = false
   // v15 (bugbot tapıntı 1): unmount-dan SONRA gecikmiş manifest retry-isi
@@ -288,7 +277,6 @@ export function mountSequence(spec: SequenceSpec): () => void {
     startDownload()
   }
 
-
   poster.onload = () => {
     if (contig === 0) draw()
   }
@@ -340,7 +328,6 @@ export function mountSequence(spec: SequenceSpec): () => void {
     bitmaps.clear()
     unregisterSequence(seqId)
   }
-
 
   if (prefersReducedMotion) {
     if (poster.complete && poster.naturalWidth > 0) draw()

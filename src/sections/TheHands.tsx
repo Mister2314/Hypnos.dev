@@ -1,6 +1,5 @@
 
 
-
 import { useRef } from 'react'
 import Line from '../components/Line'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
@@ -19,16 +18,12 @@ export default function TheHands() {
       const reach = q('.hands__hand--reach')
       const open = q('.hands__hand--open')
 
-
-
       if (prefersReducedMotion) {
         gsap.set(q('.rv, .hands__caption'), { opacity: 1 })
         gsap.set(reach, { xPercent: -2, rotate: -0.5 })
         gsap.set(open, { xPercent: 2, rotate: 0.5 })
         return
       }
-
-
 
       const tl = gsap.timeline({
         defaults: { ease: 'none', duration: 1 },
@@ -40,12 +35,10 @@ export default function TheHands() {
         },
       })
 
-
       tl.fromTo(reach, { xPercent: -26, rotate: -3 }, { xPercent: -2, rotate: -0.5, duration: 0.28 }, 0)
       tl.fromTo(open, { xPercent: 26, rotate: 3 }, { xPercent: 2, rotate: 0.5, duration: 0.28 }, 0)
       tl.fromTo(reach, { y: -18 }, { y: 0, duration: 0.28 }, 0)
       tl.fromTo(open, { y: 18 }, { y: 0, duration: 0.28 }, 0)
-
 
       tl.fromTo(
         q('.hands__spark'),
@@ -57,15 +50,10 @@ export default function TheHands() {
       tl.to(q('.hands__hairline'), { opacity: 1, duration: 0.08 }, 0.26)
       tl.to(q('.hands__hairline'), { opacity: 0, duration: 0.1 }, 0.4)
 
-
       tl.to(reach, { xPercent: -34, y: -5, rotate: -6, duration: 0.5 }, 0.38)
       tl.to(open, { xPercent: 34, y: 5, rotate: 6, duration: 0.5 }, 0.38)
 
-
-
-
       tl.fromTo(q('.hands__caption'), { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.2 }, 0.5)
-
 
       gsap.from(q('.hands__line .rv'), {
         yPercent: 70,
@@ -83,9 +71,6 @@ export default function TheHands() {
   return (
     <section className="section section--hands" data-world="hands" id="hands" ref={ref}>
       <div className="hands__stage">
-        {
-
- }
         <div className="hands__zoom">
           <div className="hands__layer hands__layer--reach">
             <img
@@ -93,7 +78,7 @@ export default function TheHands() {
               src={`${BASE}hands/hand-reach.webp`}
               width={1200}
               height={800}
-              alt="A marble hand reaching in from the left, index finger extended."
+              alt={copy.a11y.handsReach}
               decoding="async"
             />
           </div>
@@ -104,12 +89,11 @@ export default function TheHands() {
               src={`${BASE}hands/hand-open.webp`}
               width={1200}
               height={742}
-              alt="A marble hand reaching in from the right, index finger relaxed."
+              alt={copy.a11y.handsOpen}
               decoding="async"
             />
           </div>
 
-          { }
           <span className="hands__spark" aria-hidden="true" />
           <span className="hands__hairline" aria-hidden="true" />
         </div>

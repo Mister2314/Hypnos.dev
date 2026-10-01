@@ -1,6 +1,5 @@
 
 
-
 import { useRef, useState } from 'react'
 import Line from '../components/Line'
 import { links } from '../lib/site'
@@ -93,7 +92,10 @@ export default function Contact() {
     }
     // v20: keçici xəta olarsa — bir dəfə təkrar cəhd
     const first = await sendOnce()
-    setSent(first === 'ok' ? 'ok' : first === 'error' ? await sendOnce() : first)
+    const result = first === 'ok' ? 'ok' : first === 'error' ? await sendOnce() : first
+    // v25: uğurlu göndərişdən sonra sahələr boşalır — təkrar göndərmə riski qalmasın
+    if (result === 'ok') form.reset()
+    setSent(result)
   }
 
   return (

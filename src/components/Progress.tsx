@@ -1,6 +1,5 @@
 
 
-
 import { useRef } from 'react'
 import { gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
 

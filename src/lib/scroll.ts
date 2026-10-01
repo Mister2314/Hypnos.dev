@@ -1,6 +1,5 @@
 
 
-
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
@@ -11,7 +10,6 @@ export const prefersReducedMotion =
   typeof window !== 'undefined' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-
 export type World = {
   id: string
   n: string
@@ -21,11 +19,8 @@ export type World = {
   accent: string
 }
 
-
 export const WORLDS: World[] = [
   { id: 'hero', n: '', title: 'Overture', bg: '#0e100f', text: '#fffce1', accent: '#b08d57' },
-
-
 
   { id: 'leap', n: '01', title: 'The Leap', bg: '#0a0e1e', text: '#fbfbfc', accent: '#00fcfd' },
   { id: 'summer', n: '02', title: 'Summer', bg: '#30312d', text: '#f1f1ea', accent: '#ffc2ae' },
@@ -41,7 +36,6 @@ export const WORLDS: World[] = [
   { id: 'signature', n: '10', title: 'Signature', bg: '#0e100f', text: '#fffce1', accent: '#b08d57' },
 ]
 
-
 type ColorKey = 'bg' | 'text' | 'accent'
 
 const VARS: [ColorKey, string][] = [
@@ -50,7 +44,6 @@ const VARS: [ColorKey, string][] = [
   ['accent', '--accent'],
 ]
 
-
 export function applyWorld(a: World, b: World, t: number): void {
   const root = document.documentElement.style
   for (const [key, cssVar] of VARS) {
@@ -58,16 +51,13 @@ export function applyWorld(a: World, b: World, t: number): void {
   }
 }
 
-
 export function setWorld(w: World): void {
   applyWorld(w, w, 0)
 }
 
-
 export function getWorld(id: string): World | undefined {
   return WORLDS.find((w) => w.id === id)
 }
-
 
 export function eyebrow(id: string, titleOverride?: string): string {
   const w = getWorld(id)
@@ -75,7 +65,6 @@ export function eyebrow(id: string, titleOverride?: string): string {
   const title = titleOverride ?? w.title
   return w.n ? `${w.n} — ${title}` : title
 }
-
 
 export function ambient(
   target: gsap.TweenTarget,

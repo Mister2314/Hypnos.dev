@@ -1,10 +1,9 @@
 
 
-
 import { useEffect, useRef, useState } from 'react'
 import { WORLDS, gsap, prefersReducedMotion } from '../lib/scroll'
 import { scrollToId } from '../lib/lenis'
-import { useCopy } from '../lib/i18n'
+import { fmt, useCopy } from '../lib/i18n'
 
 const CHAPTERS = WORLDS.filter((w) => w.n !== '')
 
@@ -30,7 +29,10 @@ export default function ChapterNav() {
     )
     for (const el of targets) io.observe(el)
     return () => io.disconnect()
-  }, [])
+    // v25: `<main key={lang}>` dil dəyişəndə bölmələri YENİDƏN yaradır —
+    // observer köhnə (artıq DOM-dan çıxmış) elementlərə baxırdı və
+    // fəsil göstəricisi donurdu. `copy` asılılığı yenidən qurur.
+  }, [copy])
 
   useEffect(() => {
     const nav = ref.current
@@ -43,7 +45,7 @@ export default function ChapterNav() {
   }, [])
 
   return (
-    <nav className="chapter-nav" ref={ref} aria-label="Chapters">
+    <nav className="chapter-nav" ref={ref} aria-label={copy.a11y.chapters}>
       <ol className="chapter-nav__list">
         {CHAPTERS.map((w) => (
           <li key={w.id} className="chapter-nav__item">
@@ -53,7 +55,7 @@ export default function ChapterNav() {
               data-active={active === w.id ? '1' : '0'}
               onClick={() => scrollToId(w.id)}
               aria-current={active === w.id ? 'true' : undefined}
-              aria-label={`Chapter ${w.n} — ${copy.titles[w.id] ?? w.title}`}
+              aria-label={fmt(copy.a11y.chapter, { n: w.n, title: copy.titles[w.id] ?? w.title })}
             >
               <span className="chapter-nav__label">
                 <span className="chapter-nav__num">{w.n}</span>
