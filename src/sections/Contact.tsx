@@ -104,6 +104,15 @@ export default function Contact() {
       <div className="glass">
         <div className="glass__sheen" aria-hidden="true" />
         <form className="glass__form" onSubmit={submit} noValidate>
+          {/* v24: honeypot — insanlar görmür (CSS kənara qoyur), botlar doldurur */}
+          <input
+            name="website"
+            type="text"
+            className="glass__hp"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+          />
           <label className="glass__field">
             <span>{copy.nameLabel}</span>
             <input name="name" type="text" autoComplete="name" required />

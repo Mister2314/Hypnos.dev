@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:contact": "bun tools/test-contact.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
