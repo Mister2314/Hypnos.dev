@@ -1,14 +1,12 @@
 
 
-
 import { useEffect, useRef, useState } from 'react'
-import { useCopy } from '../lib/i18n'
+import { fmt, useCopy } from '../lib/i18n'
 import { eyebrow, gsap, prefersReducedMotion } from '../lib/scroll'
 
 const DRAG_K = 0.32
 
 const DRAG_MIN = 6
-
 
 function shortest(from: number, to: number): number {
   let d = (((to - from) % 360) + 540) % 360 - 180
@@ -38,15 +36,11 @@ export default function Questions() {
     let lockedUntil = 0
     let idx = 0
 
-
-
     const size = () => {
       const r = Math.max(185, Math.min(stage.clientWidth * 0.48, 430))
       stage.style.setProperty('--ring-r', `${r}px`)
 
       stage.style.setProperty('--ring-step', `${STEP}deg`)
-
-
 
       const chord = 2 * r * Math.sin(Math.PI / N)
       const cardW = Math.max(140, Math.min(340, chord - 18))
@@ -69,15 +63,12 @@ export default function Questions() {
       lockedUntil = performance.now() + ms
     }
 
-
     pickRef.current = (i: number) => {
       idx = i
       setActive(i)
       rot.target = shortest(rot.value, -i * STEP)
       lock(1200)
     }
-
-
 
     stepRef.current = (dir: 1 | -1) => {
       idx = (idx + dir + N) % N
@@ -86,14 +77,11 @@ export default function Questions() {
       lock(1400)
     }
 
-
     if (prefersReducedMotion) {
       stage.dataset.static = '1'
       paint()
       return () => window.removeEventListener('resize', size)
     }
-
-
 
     const onScroll = () => {
       if (performance.now() < lockedUntil) return
@@ -108,14 +96,12 @@ export default function Questions() {
       }
     }
 
-
     const tick = () => {
       const diff = rot.target - rot.value
       if (Math.abs(diff) < 0.02) return
       rot.value += diff * 0.11
       paint()
     }
-
 
     const drag = { on: false, x0: 0, rot0: 0, moved: 0 }
     const onDown = (e: PointerEvent) => {
@@ -145,7 +131,6 @@ export default function Questions() {
       }
       lock(1200)
     }
-
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') {
@@ -191,7 +176,7 @@ export default function Questions() {
           type="button"
           className="ring-arrow ring-arrow--prev"
           onClick={() => stepRef.current(-1)}
-          aria-label="Previous question"
+          aria-label={copy.a11y.prevQuestion}
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M15 4 L7 12 L15 20" />
@@ -203,7 +188,7 @@ export default function Questions() {
           ref={stageRef}
           tabIndex={0}
           role="group"
-          aria-label="Question ring — use left and right arrow keys to turn it"
+          aria-label={copy.a11y.ring}
         >
           <div className="ring" ref={ringRef}>
             {faq.map((item, i) => (
@@ -215,7 +200,8 @@ export default function Questions() {
                 key={i}
                 data-front={active === i ? '1' : '0'}
                 onClick={() => pickRef.current(i)}
-                aria-label={`Question ${i + 1} of ${N}: ${item.q}`}
+                tabIndex={-1}
+                aria-label={fmt(copy.a11y.questionOf, { i: i + 1, total: N, q: item.q })}
               >
                 <span className="q-card__num">{String(i + 1).padStart(2, '0')}</span>
                 <span className="q-card__q">{item.q}</span>
@@ -228,7 +214,7 @@ export default function Questions() {
           type="button"
           className="ring-arrow ring-arrow--next"
           onClick={() => stepRef.current(1)}
-          aria-label="Next question"
+          aria-label={copy.a11y.nextQuestion}
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M9 4 L17 12 L9 20" />
@@ -252,7 +238,8 @@ export default function Questions() {
                 className="questions__dot"
                 data-active={active === i ? '1' : '0'}
                 onClick={() => pickRef.current(i)}
-                aria-label={`Go to question ${i + 1}`}
+                tabIndex={-1}
+                aria-label={fmt(copy.a11y.goToQuestion, { i: i + 1 })}
               />
             ))}
           </div>

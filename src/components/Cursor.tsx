@@ -1,6 +1,5 @@
 
 
-
 import { useEffect, useRef } from 'react'
 import { gsap, prefersReducedMotion } from '../lib/scroll'
 
@@ -33,7 +32,6 @@ export default function Cursor() {
       dx(e.clientX)
       dy(e.clientY)
     }
-
 
     const HOVER = 'a, button, input, textarea, [data-cursor="grow"]'
     const grow = () => gsap.to(ring, { scale: 2.1, duration: 0.35, ease: 'power3.out' })

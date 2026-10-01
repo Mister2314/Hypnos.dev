@@ -1,9 +1,9 @@
 
 
-
 import { useEffect, useRef, useState } from 'react'
 import { prefersReducedMotion } from '../lib/scroll'
 import { isLoaderDone, markLoaderDone, onLoaderProgress, setLoaderFontsReady } from '../lib/loader'
+import { useCopy } from '../lib/i18n'
 
 const MIN_SHOW_MS = 700
 // v9: pərdə videolar BÜTÜN kadrları yüklənənə qədər qalır. Failsafe artıq
@@ -13,6 +13,7 @@ const FAILSAFE_MS = 20000
 export default function Preloader() {
   const ref = useRef<HTMLDivElement>(null)
   const [gone, setGone] = useState(isLoaderDone())
+  const copy = useCopy()
 
   useEffect(() => {
     const root = document.documentElement
@@ -64,7 +65,6 @@ export default function Preloader() {
       setLoaderFontsReady()
     }
 
-
     const failsafe = setTimeout(() => {
       markLoaderDone()
       finish()
@@ -82,7 +82,7 @@ export default function Preloader() {
   if (gone) return null
 
   return (
-    <div className="preloader" ref={ref} role="status" aria-label="Loading">
+    <div className="preloader" ref={ref} role="status" aria-label={copy.a11y.loading}>
       <p className="preloader__name">Khayal</p>
       <div className="preloader__bar" aria-hidden="true">
         <i />

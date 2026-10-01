@@ -14,12 +14,12 @@ export default function TopBar() {
         type="button"
         className="topbar__mark"
         onClick={() => scrollToId('hero')}
-        aria-label="Back to top"
+        aria-label={copy.a11y.backToTop}
       >
         {SITE.name}
       </button>
       <div className="topbar__group">
-        <div className="lang-switch" role="group" aria-label="Language">
+        <div className="lang-switch" role="group" aria-label={copy.a11y.language}>
           {LANGS.map((l) => (
             <button
               key={l}

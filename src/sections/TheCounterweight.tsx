@@ -1,6 +1,5 @@
 
 
-
 import { useEffect, useRef } from 'react'
 import Line from '../components/Line'
 import { ambient, eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
@@ -12,7 +11,6 @@ export default function TheCounterweight() {
   const ref = useRef<HTMLElement>(null)
   const copy = useCopy()
   const canvasRef = useRef<HTMLCanvasElement>(null)
-
 
   useEffect(
     () =>
@@ -36,7 +34,6 @@ export default function TheCounterweight() {
         return
       }
 
-
       gsap.from(q('.cw__quote .rv'), {
         yPercent: 65,
         opacity: 0,
@@ -55,7 +52,6 @@ export default function TheCounterweight() {
         scrollTrigger: { trigger: q('.cw__source')[0], start: 'top 92%' },
       })
 
-
       const tl = gsap.timeline({
         defaults: { ease: 'none', duration: 1 },
         scrollTrigger: {
@@ -66,15 +62,11 @@ export default function TheCounterweight() {
         },
       })
 
-
       tl.fromTo(q('.cw__video'), { opacity: 0.4 }, { opacity: 1, duration: 1 }, 0)
-
-
 
       tl.fromTo(q('.cw__bloom'), { opacity: 0.1, scale: 0.82 }, { opacity: 0.28, duration: 0.4 }, 0)
       tl.to(q('.cw__bloom'), { opacity: 0.85, scale: 1.16, duration: 0.28 }, 0.4)
       tl.to(q('.cw__bloom'), { opacity: 0.45, scale: 1.0, duration: 0.32 }, 0.68)
-
 
       tl.fromTo(
         q('.cw__personal'),
@@ -82,8 +74,6 @@ export default function TheCounterweight() {
         { opacity: 0.85, y: 0, filter: 'blur(0px)', duration: 0.18 },
         0.66,
       )
-
-
 
       ambient(q('.cw__source'), { y: -2 }, 9)
     },

@@ -1,6 +1,5 @@
 
 
-
 import { useRef } from 'react'
 import Line from '../components/Line'
 import { PROJECTS } from '../lib/site'
@@ -29,7 +28,6 @@ export default function Work() {
         ease: 'power3.out',
         scrollTrigger: { trigger: q('.section__line')[0], start: 'top 82%' },
       })
-
 
       gsap.from(q('.work__item'), {
         yPercent: 105,
@@ -91,7 +89,7 @@ export default function Work() {
         })}
       </ul>
 
-            <p className="work__foot">{copy.workFoot}</p>
+      <p className="work__foot">{copy.workFoot}</p>
     </section>
   )
 }

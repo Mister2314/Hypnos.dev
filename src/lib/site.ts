@@ -10,7 +10,6 @@ export const SITE = {
 
 export type Social = { label: string; href: string; primary?: boolean }
 
-
 export function links(): Social[] {
   const out: Social[] = []
   if (SITE.instagram) out.push({ label: 'Instagram', href: SITE.instagram, primary: true })
@@ -21,11 +20,10 @@ export function links(): Social[] {
   return out
 }
 
-
 // v24: HANDS, WORLDS_INTRO və SPEAK/COUNTERWEIGHT/LEAP-in mətn sahələri
 // silindi — məzmun i18n.ts-də yaşayır (3 dil), burada yalnız dil-bağsız
 // source sitatları + linklər qalır. Href/year üçün PROJECTS Work + Signature-da
-// i18n.projects ilə İNDEKS ilə üst-üstə düşür — sirrı dəyişmə.
+// i18n.projects ilə İNDEKS ilə üst-üstə düşür — sırasını dəyişmə.
 export const PROJECTS = [
   {
     title: 'Portfolio',

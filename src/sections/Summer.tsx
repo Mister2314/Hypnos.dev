@@ -1,6 +1,5 @@
 
 
-
 import { useRef } from 'react'
 import Line from '../components/Line'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
@@ -19,7 +18,6 @@ export default function Summer() {
         return
       }
 
-
       gsap.from(q('.section__line .rv'), {
         yPercent: 60,
         opacity: 0,
@@ -37,7 +35,6 @@ export default function Summer() {
         ease: 'power3.out',
         scrollTrigger: { trigger: q('.summer__caption')[0], start: 'top 88%' },
       })
-
 
       gsap.fromTo(
         q('.summer__bloom'),

@@ -1,6 +1,5 @@
 
 
-
 import { useEffect, useRef } from 'react'
 import Line from '../components/Line'
 import { eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
@@ -11,7 +10,6 @@ export default function SapereAude() {
   const ref = useRef<HTMLElement>(null)
   const copy = useCopy()
   const canvasRef = useRef<HTMLCanvasElement>(null)
-
 
   useEffect(
     () =>
@@ -41,12 +39,10 @@ export default function SapereAude() {
         return
       }
 
-
       if (base) {
         const len = base.getTotalLength()
         gsap.set(base, { strokeDasharray: len, strokeDashoffset: len })
       }
-
 
       const tl = gsap.timeline({
         defaults: { ease: 'none', duration: 1 },
@@ -58,9 +54,7 @@ export default function SapereAude() {
         },
       })
 
-
       tl.fromTo(q('.sapere__video'), { opacity: 0.45 }, { opacity: 1, duration: 1 }, 0)
-
 
       tl.from(q('.section__line .rv'), {
         yPercent: 60,
@@ -70,11 +64,9 @@ export default function SapereAude() {
         stagger: 0.012,
       }, 0.04)
 
-
       if (base) {
         tl.to(base, { strokeDashoffset: 0, duration: 0.22, ease: 'power1.inOut' }, 0.08)
       }
-
 
       if (spark) {
         tl.fromTo(
@@ -108,12 +100,10 @@ export default function SapereAude() {
             preserveAspectRatio="none"
             aria-hidden="true"
           >
-            { }
             <path
               className="sapere__rule-base"
               d="M2 8 C 80 2, 160 11, 240 5 S 360 2, 398 7"
             />
-            { }
             <path
               className="sapere__rule-spark"
               d="M2 8 C 80 2, 160 11, 240 5 S 360 2, 398 7"

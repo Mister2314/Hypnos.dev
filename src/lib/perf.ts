@@ -1,21 +1,17 @@
 
 
-
 export const PERF = {
 
   canvasDpr: 1,
 
   narrowBreakpoint: 760,
 
-
   decodeAhead: 20,
 } as const
-
 
 export function isNarrow(): boolean {
   return typeof window !== 'undefined' && window.innerWidth < PERF.narrowBreakpoint
 }
-
 
 // v10: adaptiv tier (web.dev "adaptive loading") — zəif şəbəkə və ya
 // data-qnaq modunda aşağı tier MÖVCUD olanda onu götür, yoxsa kanonik seçim.

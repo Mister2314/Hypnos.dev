@@ -1,6 +1,5 @@
 
 
-
 import { ScrollTrigger, WORLDS, applyWorld, gsap, prefersReducedMotion, setWorld, useGSAP } from '../lib/scroll'
 
 export default function Backdrop() {
@@ -17,7 +16,6 @@ export default function Backdrop() {
     }
     const els = sections as HTMLElement[]
 
-
     let starts: number[] = []
     let vh = window.innerHeight
 
@@ -25,12 +23,8 @@ export default function Backdrop() {
       vh = window.innerHeight
       starts = els.map((el) => el.getBoundingClientRect().top + window.scrollY)
 
-
       document.documentElement.dataset.worldStarts = starts.map((n) => Math.round(n)).join(',')
     }
-
-
-
 
     const indexAt = (y: number): number => {
       let idx = 0
@@ -41,9 +35,6 @@ export default function Backdrop() {
     const update = (y: number) => {
       if (!starts.length) return
       const idx = indexAt(y)
-
-
-
 
       if (prefersReducedMotion) {
         setWorld(WORLDS[idx])
@@ -61,15 +52,8 @@ export default function Backdrop() {
 
     measure()
 
-
-
-
-
-
-
     const onScroll = () => update(window.scrollY)
     window.addEventListener('scroll', onScroll, { passive: true })
-
 
     const remeasure = () => {
       measure()

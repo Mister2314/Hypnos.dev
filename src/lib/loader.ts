@@ -1,6 +1,5 @@
 
 
-
 type Listener = (pct: number) => void
 
 const listeners = new Set<Listener>()
@@ -45,7 +44,6 @@ export function setSequenceFraction(id: number, f: number): void {
   emit()
 }
 
-
 /** reduced-motion-da kadr oynamır — bayt yükləməsini də gözləmə */
 export function markSequenceSkipped(id: number): void {
   setSequenceFraction(id, 1)
@@ -65,7 +63,6 @@ export function setLoaderFontsReady(): void {
   emit()
 }
 
-
 export function markLoaderDone(): void {
   if (done) return
   done = true
@@ -75,7 +72,6 @@ export function markLoaderDone(): void {
 export function isLoaderDone(): boolean {
   return done
 }
-
 
 export function onLoaderProgress(fn: (pct: number) => void): () => void {
   listeners.add(fn)

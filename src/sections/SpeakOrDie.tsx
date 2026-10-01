@@ -1,6 +1,5 @@
 
 
-
 import { useEffect, useRef } from 'react'
 import { ambient, eyebrow, gsap, prefersReducedMotion, useGSAP } from '../lib/scroll'
 import { SPEAK } from '../lib/site'
@@ -12,7 +11,6 @@ export default function SpeakOrDie() {
   const copy = useCopy()
   const sq = copy.speakQ
   const canvasRef = useRef<HTMLCanvasElement>(null)
-
 
   useEffect(
     () =>
@@ -41,7 +39,6 @@ export default function SpeakOrDie() {
         return
       }
 
-
       // v19: "?" də söz qrupunun giriş effektinə daxildir (əvvəl effektsiz
       // dayanırdı — ambient onun opacity-sini üstələyirdi)
       gsap.from(q('.speak__word, .speak__qmark'), {
@@ -62,7 +59,6 @@ export default function SpeakOrDie() {
         scrollTrigger: { trigger: q('.speak__source')[0], start: 'top 92%' },
       })
 
-
       const tl = gsap.timeline({
         defaults: { ease: 'none', duration: 1 },
         scrollTrigger: {
@@ -73,14 +69,9 @@ export default function SpeakOrDie() {
         },
       })
 
-
       tl.fromTo(q('.speak__strike'), { scaleX: 0 }, { scaleX: 1, duration: 0.14 }, 0.06)
 
-
       tl.fromTo(q('.speak__underline'), { scaleX: 0 }, { scaleX: 1, duration: 0.18 }, 0.24)
-
-
-
 
       tl.fromTo(
         q('.speak__admission'),
@@ -89,7 +80,6 @@ export default function SpeakOrDie() {
         0.38,
       )
 
-
       tl.fromTo(
         q('.speak__answer'),
         { opacity: 0, y: 30, filter: 'blur(10px)' },
@@ -97,9 +87,7 @@ export default function SpeakOrDie() {
         0.54,
       )
 
-
       tl.fromTo(q('.speak__reflect'), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.18 }, 0.76)
-
 
       tl.fromTo(
         q('.speak__rim'),
@@ -108,17 +96,7 @@ export default function SpeakOrDie() {
         0,
       )
 
-
       tl.fromTo(q('.speak__video'), { opacity: 0.5 }, { opacity: 1, duration: 1 }, 0)
-
-
-
-
-
-
-
-
-
 
       // v19: ambient yalnız scale float — opacity giriş effektinə qarışmır
       ambient(q('.speak__qmark'), { scale: 1.14 }, 4.5)
