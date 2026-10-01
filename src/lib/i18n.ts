@@ -154,7 +154,7 @@ const EN: Copy = {
   speakReflection: 'I spent years picking the other one. This page is the answer I kept not giving.',
   workLine: 'I would rather show you two real things than ten neat ones.',
   workFoot:
-    'More in progress. The rest of it lives in the chapters above, which is the honest portfolio anyway.',
+    'More in progress. The rest of it lives in the chapters above, which are the honest portfolio anyway.',
   projects: [
     {
       title: 'Portfolio',
@@ -266,7 +266,7 @@ const AZ: Copy = {
   },
   speakAdmission: 'Belə bir sual verməyə uyğun bir insan olacağıma inanmıram.',
   speakAnswer: 'Danışmaq daha yaxşıdır.',
-  speakReflection: 'İllər boyu digərini seçdim. Bu səhifə, vermədiyim cavabdır.',
+  speakReflection: 'İllər boyu digərini seçdim. Bu səhifə vermədiyim cavabdır.',
   workLine: 'On səliqəli şey yerinə sizə iki real şey göstərmək istəyirəm.',
   workFoot:
     'Daha çoxu yoldadır. Qalanı yuxarıdakı fəsillərdə yaşayır — ən səmimi portfolyo onsuz da odur.',
@@ -275,7 +275,7 @@ const AZ: Copy = {
       title: 'Portfolio',
       kind: 'Veb',
       stack: 'React · TypeScript',
-      blurb: 'İkinci portfoliom — əsasən dizayn ideyalarını sınağım yer. Bir növ şablon.',
+      blurb: 'İkinci portfoliom — əsasən dizayn ideyalarını sınadığım yer. Bir növ şablon.',
     },
     {
       title: 'Lunora',
@@ -305,7 +305,7 @@ const AZ: Copy = {
       a: 'Çünki insanın tək səliqəli xülasəsi yalandır. Bunlar məni meydana gətirənlərdir və onları dərəcələməkdən imtina edirəm.',
     },
     {
-      q: 'İş üçün mövcudsan?',
+      q: 'İşə müsaitdinsən?',
       a: 'Remote və yarımştat işlər üçün uyğunam — öyrənə biləcəyim hər şeyə açığam.',
     },
     {
