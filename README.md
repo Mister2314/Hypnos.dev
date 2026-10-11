@@ -47,3 +47,15 @@ tools/                CDP verification + API guard tests
 
 Vercel — builds from source on push. `main` = production; other branches get
 preview URLs. AI workflow + untouchables: `AGENTS.md`.
+
+---
+
+## Screenshots
+
+| Desktop | Mobile |
+| :---: | :---: |
+| <img src="docs/preview.png" alt="Desktop view"> | <img src="docs/preview-mobile.png" alt="Mobile view" width="230"> |
+
+<p align="center">
+  <a href="https://hypnosdev.vercel.app">Live site → https://hypnosdev.vercel.app</a>
+</p>
