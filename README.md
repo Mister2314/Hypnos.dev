@@ -1,4 +1,12 @@
-# Khayal — Hypnos.dev
+<h1 align="center">Khayal — Hypnos.dev</h1>
+
+<p align="center">
+  <a href="https://hypnosdev.vercel.app">
+    <img src="docs/demo.gif" alt="Khayal — Hypnos.dev — animated demo" width="88%">
+  </a>
+</p>
+
+<p align="center"><sub>Live capture of the real build — 2095 KB, loops forever.</sub></p>
 
 Personal site: **11 scenes, many worlds, one head.**
 
@@ -50,6 +58,17 @@ preview URLs. AI workflow + untouchables: `AGENTS.md`.
 
 ---
 
+## Architecture
+
+```mermaid
+flowchart LR
+  W["scroll"] --> L["Lenis<br/>smooth scroll"]
+  L --> G["GSAP ScrollTrigger<br/>timeline per scene"]
+  G --> C["2D canvas<br/>WebP frame sequences"]
+  G --> S["Procedural SVG<br/>rule element"]
+  C --> V["11 scenes<br/>hero → signature"]
+```
+
 ## Screenshots
 
 | Desktop | Mobile |
@@ -57,5 +76,5 @@ preview URLs. AI workflow + untouchables: `AGENTS.md`.
 | <img src="docs/preview.png" alt="Desktop view"> | <img src="docs/preview-mobile.png" alt="Mobile view" width="230"> |
 
 <p align="center">
-  <a href="https://hypnosdev.vercel.app">Live site → https://hypnosdev.vercel.app</a>
+  <a href="https://hypnosdev.vercel.app"><b>Live site →</b></a>
 </p>
