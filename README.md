@@ -75,6 +75,49 @@ flowchart LR
 | :---: | :---: |
 | <img src="docs/preview.png" alt="Desktop view"> | <img src="docs/preview-mobile.png" alt="Mobile view" width="230"> |
 
+## FAQ
+
+<details>
+<summary><b>How is the scroll-driven video made?</b></summary>
+
+Not with a `<video>` element. Each chapter is a sequence of WebP frames drawn onto a 2D canvas, and the scroll position picks which frame is shown. That is why it scrubs smoothly in both directions instead of buffering.
+
+</details>
+
+<details>
+<summary><b>Why Lenis instead of native smooth scrolling?</b></summary>
+
+`scroll-behavior: smooth` hijacks the scrollbar and breaks `position: sticky`. Lenis keeps native scroll — the scrollbar still works, sticky still works — and only interpolates the offset.
+
+</details>
+
+<details>
+<summary><b>Where is the contact form handled?</b></summary>
+
+An `api/contact.ts` function, with a separate guard test (`bun run test:contact`) so a broken endpoint fails in CI rather than in a visitor's inbox.
+
+</details>
+
+<details>
+<summary><b>How is the build verified?</b></summary>
+
+`bun run build` runs `tsc --noEmit` first, so a type error blocks the build. There is also a 28-check script (`tools/verify-v5.mjs`) that must pass before a push.
+
+</details>
+
+<details>
+<summary><b>Why no 3D library?</b></summary>
+
+The frame sequences are 2D canvas. A 3D library would have added weight for an effect that a pre-rendered sequence already delivers.
+
+</details>
+
+## Roadmap
+
+- [ ] Move the frame sequences behind a CDN
+- [ ] Add a reduced-motion path that skips the scrub
+- [ ] Trim the remaining unused assets
+
 <p align="center">
   <a href="https://hypnosdev.vercel.app"><b>Live site →</b></a>
 </p>
