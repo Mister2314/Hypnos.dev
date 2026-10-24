@@ -1,10 +1,16 @@
-# Khayal — Hypnos.dev
+﻿# Khayal — Hypnos.dev
 
 Personal portfolio as an 11-scene scroll story — four scroll-scrubbed "video" chapters, procedural SVG, film-grade motion. No 3D library, no page builder.
 
 **Live demo:** https://hypnosdev.vercel.app
 
-<img src="docs/preview.png" alt="Desktop view" width="380">
+<div align="center">
+
+| Desktop | Mobile |
+|---|---|
+| <img src="docs/shot-desktop.png" alt="Desktop view" width="700"> | <img src="docs/shot-mobile.png" alt="Mobile view" width="290"> |
+
+</div>
 
 ## What it does
 
