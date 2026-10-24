@@ -2323,3 +2323,74 @@ html.has-cursor * {
    tutur (perf-loop: contact girişində 216ms spike). 8px görünməz element
    bunu səhifə açılışında ödəyir — contact-a çatanda pipeline hazırdır. */
 
+/* ---------- v35 — revamp/hypnos: mikro-qarşılıqlı təsir + fokus (elevation-only) ----------
+   Qayda: yalnız transform/opacity — kompozitor. Toxunduqları: pill düymələr (C1),
+   Work sıraları (C2), keçidlərin altından keçən zolaq (C2), :focus-visible (C3).
+   Hərəkət briefi §7: basmada düymə ~0.97 miqyaslanır, hover 0.35–0.6s. */
+
+/* C1 — "haptic chrome": pill düymələrə basma qəbulu */
+.topbar__cta,
+.sound-btn,
+.lang-switch__btn {
+  transition: opacity 0.35s var(--ease-out), border-color 0.35s var(--ease-out),
+    background 0.35s var(--ease-out), transform var(--t-snap) var(--ease-snap);
+}
+
+.topbar__cta:active,
+.sound-btn:active,
+.lang-switch__btn:active {
+  transform: scale(0.97);
+}
+
+.chapter-nav__link:active .chapter-nav__dot {
+  transform: scale(0.8);
+}
+
+/* C2 — Work sıraları nəfəs alır: hairline parlaqlaşır, indeks akventa keçir */
+.work__item::before {
+  transition: opacity 0.4s var(--ease-out);
+}
+
+.work__item:hover::before {
+  opacity: 0.3;
+}
+
+.work__index {
+  transition: color 0.35s var(--ease-out), opacity 0.35s var(--ease-out);
+}
+
+.work__item:hover .work__index {
+  color: var(--accent);
+  opacity: 0.9;
+}
+
+/* C2 — altından keçən zolaq (underline sweep): sosial + imza + iş başlıqları */
+.socials a,
+.signature__work a,
+.work__title a {
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 0.45s var(--ease-out), border-color 0.35s var(--ease-out),
+    color 0.35s var(--ease-out);
+}
+
+.socials a:hover,
+.signature__work a:hover,
+.work__title a:hover {
+  background-size: 100% 1px;
+}
+
+/* C3 — fokus vahid dizayn elementidir: hər kontrola eyni incə halqa.
+   Glass sahələri istisnadır — onların :focus-da artıq border+dırnaq var. */
+:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--accent, #b08d57) 70%, #fffce1 30%);
+  outline-offset: 3px;
+}
+
+.glass__field input:focus-visible,
+.glass__field textarea:focus-visible {
+  outline: none;
+}
+
