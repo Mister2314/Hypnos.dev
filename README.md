@@ -1,4 +1,4 @@
-﻿# Khayal — Hypnos.dev
+# Khayal — Hypnos.dev
 
 Personal portfolio as an 11-scene scroll story — four scroll-scrubbed "video" chapters, procedural SVG, film-grade motion. No 3D library, no page builder.
 
@@ -6,9 +6,20 @@ Personal portfolio as an 11-scene scroll story — four scroll-scrubbed "video" 
 
 <div align="center">
 
+<img src="docs/demo.gif" alt="Khayal — Hypnos.dev — animated demo" width="700">
+
 | Desktop | Mobile |
 |---|---|
 | <img src="docs/shot-desktop.png" alt="Desktop view" width="700"> | <img src="docs/shot-mobile.png" alt="Mobile view" width="290"> |
+
+<details>
+<summary>More screenshots</summary>
+
+| Desktop | Mobile |
+|---|---|
+| <img src="docs/preview.png" alt="Desktop, alternate view" width="700"> | <img src="docs/preview-mobile.png" alt="Mobile, alternate view" width="290"> |
+
+</details>
 
 </div>
 
@@ -18,9 +29,18 @@ Eleven scenes are driven by one scroll writer: Lenis smooth scroll feeds GSAP Sc
 
 ## Tech stack
 
+Vite + React 19 + TypeScript · GSAP + Lenis · 2D-canvas WebP frame sequences.
+
+<details>
+<summary><b>Built with — full detail</b></summary>
+
 Vite + React 19 + TypeScript · GSAP (ScrollTrigger) + Lenis · 2D-canvas WebP frame sequences · Resend for the contact API — JS ~135 KB gzip beyond React + GSAP.
 
+</details>
+
 ## Features
+
+**Highlights:** scroll-scrubbed WebP "videos" · one scroll writer for 11 scenes · trilingual EN/AZ/TR · rate-limited contact API.
 
 - Scroll-scrubbed frame sequences with poster-first loading and decode-ahead (`src/lib/sequence.ts`); frame tiers at 1440/960 down to 1280/854 depending on chapter
 - One scroll writer for 11 scenes (`src/lib/scroll.ts`), fixed performance config (DPR 1, adaptive tier) in `src/lib/perf.ts`
