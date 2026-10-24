@@ -6,14 +6,10 @@
 
   --hairline: #212121;
   --gold: #b08d57;
-  --gold-dim: #6f6759;
 
   --summer-bg: #30312d;
-  --summer-text: #f1f1ea;
   --summer-peach: #ffc2ae;
-  --summer-apricot: #ffa07a;
   --summer-cream: #ffdab9;
-
 
   --font-serif: 'Cormorant Garamond', Georgia, serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -29,9 +25,7 @@
   --t-base: 0.35s;
   --t-settle: 0.9s;
 
-  --amb-slow: 11s;
   --amb-mid: 7s;
-  --amb-fast: 4.5s;
 }
 
 *,
@@ -84,10 +78,6 @@ img {
   animation: amb-drift var(--amb-dur, var(--amb-mid)) var(--ease-out) infinite;
   animation-delay: var(--amb-delay, 0s);
   will-change: transform, opacity;
-}
-
-.amb--two {
-  animation-name: amb-drift-two;
 }
 
 @keyframes amb-drift {
@@ -376,8 +366,6 @@ a {
   margin: 1.4rem 0 0;
 }
 
-
-
 .signature__close {
   font-family: var(--font-serif);
   font-weight: 400;
@@ -441,9 +429,7 @@ a {
   .section--hands {
     padding: 0;
   }
-  .summer__hands {
-    width: 100%;
-  }
+
   .summer__bloom {
     width: 100vw;
     height: 100vw;
@@ -505,6 +491,23 @@ a {
   height: 1px;
   background: rgba(255, 252, 225, 0.14);
   overflow: hidden;
+  position: relative;
+}
+
+/* v29: barın üstündə nəbz kimi süzülən parlaq zolaq — loading hər an canlı hiss olunur */
+.preloader__bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 252, 225, 0.45), transparent);
+  transform: translateX(-100%);
+  animation: preloader-sheen 2.2s ease-in-out infinite;
+}
+
+@keyframes preloader-sheen {
+  to {
+    transform: translateX(100%);
+  }
 }
 
 .preloader__bar i {
@@ -533,9 +536,87 @@ html.is-loading {
   overflow: hidden;
 }
 
+/* ── ScrollHint (v29): preloader-dan sonrakı bir dəfəlik onboarding chip-i.
+   TopBar-ın blur pill dilindədir — videonu örtmür, nəbz edir, ilk scroll-da gedir. */
+.scroll-hint {
+  position: fixed;
+  bottom: max(4.5vh, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 24;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  background: rgba(14, 16, 15, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text, #fffce1);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.scroll-hint__mouse {
+  display: block;
+  width: 14px;
+  height: 22px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  opacity: 0.8;
+  position: relative;
+}
+
+.scroll-hint__mouse i {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  width: 2px;
+  height: 5px;
+  margin-left: -1px;
+  border-radius: 1px;
+  background: currentColor;
+  animation: hint-wheel 1.6s ease-in-out infinite;
+}
+
+@keyframes hint-wheel {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .scroll-hint {
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    gap: 0.55rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-hint__mouse i {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .preloader {
     transition: none;
+  }
+  .preloader__bar::after {
+    animation: none;
+    display: none;
   }
 }
 
@@ -800,30 +881,6 @@ html.has-cursor * {
   opacity: 0.92;
   transform: rotate(-4deg);
   pointer-events: none;
-}
-
-.summer__plate {
-  position: relative;
-  width: min(72vw, 900px);
-  margin-top: 3.4rem;
-  overflow: hidden;
-  border-radius: 2px;
-}
-
-.summer__plate-img {
-  display: block;
-  width: 100%;
-  height: auto;
-  will-change: transform;
-}
-
-.summer__halftone {
-  position: absolute;
-  inset: -2%;
-  background-image: radial-gradient(circle, var(--summer-bg) 40%, transparent 41%);
-  background-size: 7px 7px;
-  pointer-events: none;
-  will-change: opacity, transform;
 }
 
 .section--counterweight {
@@ -1468,32 +1525,6 @@ html.has-cursor * {
   color: var(--summer-peach);
 }
 
-.glass__links {
-  position: relative;
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.2rem;
-  margin: 1.4rem 0 0;
-  padding: 0;
-}
-
-.glass__links a {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 0.3rem;
-  transition: color 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
-}
-
-.glass__links a:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
 .signature__work span {
   font-family: var(--font-mono);
   font-size: 0.78rem;
@@ -1556,9 +1587,7 @@ html.has-cursor * {
     right: 7vw;
     bottom: 4vh;
   }
-  .summer__plate {
-    width: 100%;
-  }
+
   .signature__mark {
     margin-top: 2.4rem;
   }
@@ -1576,9 +1605,7 @@ html.has-cursor * {
     opacity: 1;
     transform: none;
   }
-  .summer__halftone {
-    opacity: 0;
-  }
+
   .questions__a-text {
     animation: none;
   }
@@ -2122,14 +2149,4 @@ html.has-cursor * {
 /* İlk backdrop-filter istifadəsi mobil GPU-da ~200ms pipeline kompilyasiyası
    tutur (perf-loop: contact girişində 216ms spike). 8px görünməz element
    bunu səhifə açılışında ödəyir — contact-a çatanda pipeline hazırdır. */
-.glass-prime {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 8px;
-  height: 8px;
-  pointer-events: none;
-  opacity: 0.011;
-  backdrop-filter: blur(10px) saturate(130%);
-  -webkit-backdrop-filter: blur(10px) saturate(130%);
-}
+
