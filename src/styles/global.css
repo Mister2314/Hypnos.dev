@@ -612,6 +612,36 @@ html.is-loading {
   transform: rotate(225deg);
 }
 
+/* fəsillər pop-unun başındakı "○○○›" — sağdakı nav nöqtələrini təkrarlayır,
+   ki istifadəçi dərhal görsün ki qutu nəyə işarə edir (v33) */
+.hint-pop__glyph {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+}
+
+.hint-pop__glyph i {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.75;
+}
+
+.hint-pop__glyph i:first-child {
+  background: var(--accent, #b08d57);
+  border-color: var(--accent, #b08d57);
+}
+
+.hint-pop__glyph b {
+  margin-left: 1px;
+  font-weight: 400;
+  font-size: 0.9em;
+  color: var(--accent, #b08d57);
+}
+
 @media (max-width: 640px) {
   .hint-pop {
     font-size: 0.55rem;
@@ -1383,12 +1413,13 @@ html.has-cursor * {
   max-width: 24ch;
 }
 
+/* ── LANTERN panel (v33) — glassmorphism-in yerinə.
+   Araşdırma (24 okt 2026): ağ sheen + frosted blur = doyulmuş 2020 trendi;
+   güncəl istiqamət "içindən işıq gələn material"dır (Apple Liquid Glass,
+   light-reactive). Saytın kimliyinə uyğun variant: soyuq şüşə yox, loş
+   qızılı fənər — işıq panelin İÇİNDƏ nəfəs alır, səthdən əks olunmur. */
 .glass {
-  --rim: rgba(255, 255, 255, 0.18);
-  --bev: rgba(255, 255, 255, 0.06);
-  --spec: rgba(255, 255, 255, 0.42);
-  --sat: rgba(255, 255, 255, 0.03);
-  --ins: rgba(255, 255, 255, 0.1);
+  --rim: rgba(176, 141, 87, 0.32);
 
   position: relative;
   overflow: hidden;
@@ -1397,34 +1428,36 @@ html.has-cursor * {
   padding: 2rem;
   border-radius: 22px;
   border: 1px solid var(--rim);
-  background: linear-gradient(150deg, var(--bev), transparent 42%), var(--sat);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  background:
+    radial-gradient(120% 90% at 12% 0%, rgba(176, 141, 87, 0.14), transparent 55%),
+    radial-gradient(90% 70% at 100% 100%, rgba(176, 141, 87, 0.07), transparent 60%),
+    #14130e;
   box-shadow:
-    inset 0 1px 0 var(--ins),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
-    0 30px 80px rgba(0, 0, 0, 0.45);
+    inset 0 1px 0 rgba(255, 240, 200, 0.09),
+    0 1px 0 rgba(255, 240, 200, 0.07),
+    0 34px 90px rgba(0, 0, 0, 0.55),
+    0 0 90px rgba(176, 141, 87, 0.07);
 }
 
+/* içəridə nəfəs alan fənər işığı — yavaş, demək olar ki gözlə seçilmir */
 .glass__sheen {
   position: absolute;
-  inset: -40% -10% auto -10%;
-  height: 70%;
-  transform: rotate(-8deg);
-  background: linear-gradient(100deg, transparent 20%, var(--spec) 48%, transparent 62%);
-  opacity: 0.16;
+  inset: -30%;
   pointer-events: none;
-  transform: rotate(-8deg) translateX(-6%);
-  will-change: transform;
-  animation: sheenDrift 14s var(--ease-out) infinite;
+  background: radial-gradient(45% 38% at 24% 18%, rgba(228, 190, 130, 0.13), transparent 70%);
+  animation: lanternBreath 9s ease-in-out infinite;
+  will-change: opacity, transform;
 }
 
-@keyframes sheenDrift {
-  0%, 100% {
-    transform: rotate(-8deg) translateX(-6%);
+@keyframes lanternBreath {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
   }
   50% {
-    transform: rotate(-8deg) translateX(5%);
+    opacity: 1;
+    transform: scale(1.06);
   }
 }
 
@@ -1585,8 +1618,6 @@ html.has-cursor * {
   flex-direction: column;
   gap: 1.1rem;
   min-width: 0;
-  padding-left: 1.6rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .glass__side-label {

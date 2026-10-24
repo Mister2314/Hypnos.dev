@@ -15,9 +15,8 @@ import { useCopy } from '../lib/i18n'
  * scroll-da fade out.
  */
 const SESSION_KEY = 'khayal-hint-shown'
-/** pərdə qalxanda ScrollTrigger özü ~120px sürüşdürə bilər — bu auto-scroll
- *  istifadəçi hərəkəti deyil, hint-i öldürməməlidir */
-const SCROLL_EPS = 160
+/** gizləmə yalnız real istifadəçi hərəkətində (scroll auto-sürüşmə hesab deyil) */
+const HIDE_EVENTS = ['wheel', 'touchmove', 'keydown'] as const
 
 export default function ScrollHint() {
   const ref = useRef<HTMLDivElement>(null)
@@ -84,16 +83,18 @@ export default function ScrollHint() {
         const arrow = soundPop.querySelector<HTMLElement>('.hint-pop__arrow')
         if (arrow) arrow.style.left = `${Math.max(10, Math.min(cx - left - 5, popW - 20))}px`
       }
-      const cn = document.querySelector('.chapter-nav')?.getBoundingClientRect()
-      if (cn && chPop) {
-        // nav-ın şaquli mərkəzinə görə sağ tərəfdən yapış
+      // nav-ın GÖRÜNƏN nöqtələrinə bağla — label-lar opacity 0 olsa da en tutur,
+      // `.chapter-nav` ölçüsü istifadəçinin gördüyündən enli olur
+      const dots = Array.from(document.querySelectorAll('.chapter-nav__dot')).map((d) => d.getBoundingClientRect())
+      if (dots.length && chPop) {
+        const mid = dots[Math.floor(dots.length / 2)]
         const popH = chPop.offsetHeight
-        let top = cn.top + cn.height / 2 - popH / 2
+        let top = mid.top + mid.height / 2 - popH / 2
         top = Math.max(10, Math.min(top, window.innerHeight - popH - 10))
         chPop.style.top = `${top}px`
-        chPop.style.right = `${window.innerWidth - cn.left + 12}px`
+        chPop.style.right = `${window.innerWidth - mid.left + 10}px`
         const arrow = chPop.querySelector<HTMLElement>('.hint-pop__arrow')
-        if (arrow) arrow.style.top = `${Math.max(8, cn.top + cn.height / 2 - top - 5)}px`
+        if (arrow) arrow.style.top = `${Math.max(8, mid.top + mid.height / 2 - top - 5)}px`
       }
     }
     place()
@@ -113,7 +114,10 @@ export default function ScrollHint() {
     }
 
     let gone = false
-    const shownAtY = window.scrollY
+    // gizləmə YALNIZ istifadəçi hərəkətində: wheel / touchmove / keydown.
+    // Qeyd: 'scroll' hadisəsinə qulaq asmırıq — dil dəyişimində (key={lang}
+    // remount → ScrollTrigger.refresh) səhifə öz-özünə yerdəyişir və scroll
+    // hadisəsi yaradır; bu, hint-i səhvən öldürürdü.
     const hide = () => {
       if (gone) return
       gone = true
@@ -123,26 +127,20 @@ export default function ScrollHint() {
         ease: 'power2.in',
         onComplete: () => setOn(false),
       })
-      for (const ev of ['wheel', 'touchmove'] as const) {
+      for (const ev of HIDE_EVENTS) {
         window.removeEventListener(ev, hide)
       }
-      window.removeEventListener('scroll', onScroll, { capture: true })
       window.removeEventListener('resize', place)
     }
-    const onScroll = () => {
-      if (Math.abs(window.scrollY - shownAtY) > SCROLL_EPS) hide()
-    }
 
-    for (const ev of ['wheel', 'touchmove'] as const) {
+    for (const ev of HIDE_EVENTS) {
       window.addEventListener(ev, hide, { passive: true })
     }
-    window.addEventListener('scroll', onScroll, { capture: true, passive: true })
 
     return () => {
-      for (const ev of ['wheel', 'touchmove'] as const) {
+      for (const ev of HIDE_EVENTS) {
         window.removeEventListener(ev, hide)
       }
-      window.removeEventListener('scroll', onScroll, { capture: true })
       window.removeEventListener('resize', place)
     }
   }, [on])
@@ -158,7 +156,12 @@ export default function ScrollHint() {
       </div>
       <div className="hint-pop hint-pop--chapters" aria-hidden="true">
         <span className="hint-pop__arrow hint-pop__arrow--right" />
-        <span className="hint-pop__dot" />
+        <span className="hint-pop__glyph">
+          <i />
+          <i />
+          <i />
+          <b>›</b>
+        </span>
         {copy.hintChapters}
       </div>
     </div>
