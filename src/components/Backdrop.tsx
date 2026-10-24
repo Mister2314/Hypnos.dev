@@ -45,13 +45,27 @@ export default function Backdrop() {
         return
       }
 
-      if (idx === 0) {
+      // v33: keçid zonası DÜZGÜN hesablanır. Köhnə formul t-dir-i yalnız
+      // world-a DAXİL olanda göstərirdi — amma qarışma zonası world-un
+      // başlanğıcından BİR viewport ƏVVƏL başlayır. Nəticə: rəng zonada
+      // əvvəlki dünyada ilişib qalırdı və sərhəddə TAK keçirdi
+      // (leap→summer: mavi→şaftalı birdən). İndi: y mövcud world-un
+      // ərazisindədirsə və NÖVBƏTİ world-un qarışma zonasına giribsə,
+      // mövcud→növbəti arası interpolasiya edilir.
+      if (idx === 0 && starts[1] === undefined) {
         applyWorld(WORLDS[0], WORLDS[0], 0)
         return
       }
 
-      const t = gsap.utils.clamp(0, 1, (y - (starts[idx] - vh)) / Math.max(1, vh))
-      applyWorld(WORLDS[idx - 1], WORLDS[idx], t)
+      for (let i = idx + 1; i < starts.length; i++) {
+        if (y >= starts[i] - vh) {
+          const t = gsap.utils.clamp(0, 1, (y - (starts[i] - vh)) / Math.max(1, vh))
+          applyWorld(WORLDS[idx], WORLDS[i], t)
+          return
+        }
+      }
+
+      applyWorld(WORLDS[idx], WORLDS[idx], 0)
     }
 
     measure()

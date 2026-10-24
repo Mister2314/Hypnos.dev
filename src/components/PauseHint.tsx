@@ -11,14 +11,15 @@ import { useCopy } from '../lib/i18n'
  * ən böyük şikayəti). Davranış:
  *   • video fəsillərində scroll dayananda → fade IN, scroll davam edəndə → fade OUT
  *   • yenə dayananda yenə gəlir — amma spam yoxdur:
- *       - 1.4s fasiləsiz durmuş olmalıdır (tez-tez toxunuşda toqquşmur)
- *       - əvvəlki göstərişdən bəri ən azı 150px real scroll olmalıdır
- *       - fade out-dan sonra 3s soyuma müddəti
+ *       - 0.8s fasiləsiz durmuş olmalıdır (sahibinin istəyi: TEZ gəlsin ki
+ *         istifadəçi dərhal bilsin sayt işləyir)
+ *       - əvvəlki göstərişdən bəri ən azı 120px real scroll olmalıdır
+ *       - fade out-dan sonra 2.5s soyuma müddəti
  */
 const VIDEO_WORLDS = ['leap', 'speak', 'counterweight', 'sapere']
-const IDLE_MS = 1400
-const MIN_SCROLL_BETWEEN = 150
-const COOLDOWN_MS = 3000
+const IDLE_MS = 800
+const MIN_SCROLL_BETWEEN = 120
+const COOLDOWN_MS = 2500
 
 export default function PauseHint() {
   const ref = useRef<HTMLDivElement>(null)
@@ -78,7 +79,7 @@ export default function PauseHint() {
       shownAtY = window.scrollY
       visible = true
       setOn(true)
-    }, 300)
+    }, 150)
 
     return () => {
       window.clearInterval(timer)

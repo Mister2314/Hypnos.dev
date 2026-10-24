@@ -1464,7 +1464,9 @@ html.has-cursor * {
 .glass__form {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* minmax(0,…): input-un min-content-i sütunu şişirtməsin — əks halda
+     sağ sütun (connections) ilə üst-üstə düşür (v33 bug) */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1rem 1.2rem;
 }
 
@@ -1482,6 +1484,12 @@ html.has-cursor * {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
+  min-width: 0;
+}
+
+.glass__field input,
+.glass__field textarea {
+  min-width: 0;
 }
 
 .glass__field--wide {
