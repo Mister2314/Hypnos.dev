@@ -41,16 +41,6 @@ export default function SpeakOrDie() {
 
       // v19: "?" də söz qrupunun giriş effektinə daxildir (əvvəl effektsiz
       // dayanırdı — ambient onun opacity-sini üstələyirdi)
-      gsap.from(q('.speak__word, .speak__qmark'), {
-        yPercent: 70,
-        opacity: 0,
-        filter: 'blur(12px)',
-        duration: 1,
-        stagger: 0.07,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: q('.speak__question')[0], start: 'top 74%' },
-      })
-
       gsap.from(q('.speak__source'), {
         opacity: 0,
         y: 10,
@@ -68,6 +58,21 @@ export default function SpeakOrDie() {
           scrub: 0.6,
         },
       })
+
+      // v28: sual sözləri də SCRUB-a bağlıdır — əvvəl ayrı trigger idi və
+      // fəsil ekrana gəlməmiş oynayıb bitirdi (sahibin şikayəti: "effektsiz qalıb").
+      tl.from(
+        q('.speak__word, .speak__qmark'),
+        {
+          yPercent: 70,
+          opacity: 0,
+          filter: 'blur(12px)',
+          duration: 0.16,
+          stagger: 0.012,
+          ease: 'power3.out',
+        },
+        0,
+      )
 
       tl.fromTo(q('.speak__strike'), { scaleX: 0 }, { scaleX: 1, duration: 0.14 }, 0.06)
 

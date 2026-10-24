@@ -14,8 +14,25 @@ export type MailIssue =
   | 'noTld'
   | 'dots'
   | 'typo'
+  | 'tempmail'
 
 export type MailCheck = { ok: true } | { ok: false; issue: MailIssue; fix?: string }
+
+/**
+ * Birdəfəlik (tempmail) domenlər — ən çox işlənənlər.
+ * Məqsəd: "salam@tempmail.com" kimi ünvanı qəbul edib səssizcə atmamaq —
+ * istifadəçiyə deyirik ki, əsl ünvan gözləyirik.
+ */
+const DISPOSABLE = [
+  'tempmail.com', 'tempmail.net', 'tempmailo.com', 'temp-mail.org', 'tempail.com',
+  'tempr.email', 'tempinbox.com', 'mytemp.email', '10minutemail.com', '20minutemail.com',
+  'guerrillamail.com', 'guerrillamail.net', 'sharklasers.com', 'grr.la', 'spam4.me',
+  'mailinator.com', 'mailinator.net', 'yopmail.com', 'yopmail.fr', 'throwawaymail.com',
+  'maildrop.cc', 'getnada.com', 'dispostable.com', 'trashmail.com', 'fakeinbox.com',
+  'mailnesia.com', 'discard.email', 'mailcatch.com', 'spamgourmet.com', 'emailondeck.com',
+  'moakt.com', 'burnermail.io', 'inboxkitten.com', 'mohmal.com', 'luxusmail.org',
+  'mail.tm', 'mail.gw', 'tempmail.plus', '1secmail.com', '1secmail.net', '1secmail.org',
+]
 
 /** ən çox rast gəlinən domain typo-ları — düzəliş təklifi üçün */
 const TYPOS: [RegExp, string][] = [
@@ -44,6 +61,10 @@ export function validateEmail(raw: string): MailCheck {
       return { ok: false, issue: 'typo', fix }
     }
   }
+
+  const root = domain.toLowerCase()
+  if (DISPOSABLE.some((d) => root === d || root.endsWith('.' + d)))
+    return { ok: false, issue: 'tempmail' }
 
   // son süzgəc — praktik forma: bir @, local + nöqtəli domain
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return { ok: false, issue: 'noTld' }
