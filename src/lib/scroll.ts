@@ -24,7 +24,7 @@ export const WORLDS: World[] = [
 
   { id: 'leap', n: '01', title: 'The Leap', bg: '#0a0e1e', text: '#fbfbfc', accent: '#00fcfd' },
   { id: 'summer', n: '02', title: 'Summer', bg: '#30312d', text: '#f1f1ea', accent: '#ffc2ae' },
-  { id: 'speak', n: '03', title: 'Speak or die', bg: '#0c1512', text: '#f1f1ea', accent: '#c9c3a4' },
+  { id: 'speak', n: '03', title: 'Speak or die', bg: '#0c1512', text: '#f1f1ea', accent: '#b08d57' },
 
   { id: 'hands', n: '04', title: 'The Hands', bg: '#12100c', text: '#fffce1', accent: '#e0c9a6' },
   { id: 'counterweight', n: '05', title: 'The Counterweight', bg: '#0f0a16', text: '#fffce1', accent: '#cfa9e8' },

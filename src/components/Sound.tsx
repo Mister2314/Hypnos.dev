@@ -19,7 +19,11 @@ export default function Sound() {
   const copy = useCopy()
   const elRef = useRef<HTMLAudioElement | null>(null)
   const fadeRef = useRef<(to: number) => void>(() => {})
+  const ensureSrcRef = useRef<() => void>(() => {})
   const onRef = useRef(true)
+  // v30: autoplay bloklandıqda düymə nəbz edir — istifadəçi bilir ki,
+  // bir dəyməklə musiqi başlayacaq (əks halda "səs niyə yoxdur?" itirilir)
+  const [blocked, setBlocked] = useState(false)
   const [on, setOn] = useState(() => {
     try {
       return localStorage.getItem(KEY) !== 'off'
@@ -30,9 +34,11 @@ export default function Sound() {
   onRef.current = on
 
   useEffect(() => {
-    const el = new Audio(BASE + SITE.track.src)
+    // v28: fayl DƏRHAL yüklənmir — 5.6 MB audio pərdə arxasındaki 36 MB kadrla
+    // eyni zolaqda yarışırdı. `src` yalnız başlamaq lazım olanda qoyulur.
+    const el = new Audio()
     el.loop = true
-    el.preload = 'auto'
+    el.preload = 'none'
     el.volume = 0
     elRef.current = el
 
@@ -52,21 +58,36 @@ export default function Sound() {
       step()
     }
 
+    const ensureSrc = () => {
+      if (el.src) return
+      el.src = BASE + SITE.track.src
+      el.load()
+    }
+    ensureSrcRef.current = ensureSrc
+
     const start = () => {
       if (!onRef.current || armed) return
+      ensureSrc()
       el.play()
-        .then(() => fadeRef.current(TARGET_VOL))
+        .then(() => {
+          setBlocked(false)
+          fadeRef.current(TARGET_VOL)
+        })
         .catch(() => {
-          // autoplay bloklandı — ilk real hərəkəti gözlə (bir dəfə)
+          // autoplay bloklandı — ilk real hərəkəti gözlə (bir dəfə).
+          // pointerdown/keydown/touchend/click — hər platformadan biri tutur
+          setBlocked(true)
           armed = true
           const kick = () => {
             armed = false
-            window.removeEventListener('pointerdown', kick)
-            window.removeEventListener('keydown', kick)
+            for (const ev of ['pointerdown', 'keydown', 'touchend', 'click'] as const) {
+              window.removeEventListener(ev, kick)
+            }
             start()
           }
-          window.addEventListener('pointerdown', kick, { once: true })
-          window.addEventListener('keydown', kick, { once: true })
+          for (const ev of ['pointerdown', 'keydown', 'touchend', 'click'] as const) {
+            window.addEventListener(ev, kick, { once: true })
+          }
         })
     }
 
@@ -98,6 +119,7 @@ export default function Sound() {
     const el = elRef.current
     if (!el) return
     if (next) {
+      ensureSrcRef.current()
       el.play()
         .then(() => fadeRef.current(TARGET_VOL))
         .catch(() => {
@@ -117,6 +139,7 @@ export default function Sound() {
       className="sound-btn"
       onClick={toggle}
       aria-pressed={on}
+      data-blocked={blocked && on ? '1' : '0'}
       aria-label={on ? copy.a11y.soundOff : copy.a11y.soundOn}
       title={SITE.track.title}
     >

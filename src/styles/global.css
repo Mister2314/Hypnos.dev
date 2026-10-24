@@ -536,9 +536,98 @@ html.is-loading {
   overflow: hidden;
 }
 
-/* ── ScrollHint (v29): preloader-dan sonrakı bir dəfəlik onboarding chip-i.
-   TopBar-ın blur pill dilindədir — videonu örtmür, nəbz edir, ilk scroll-da gedir. */
-.scroll-hint {
+/* ── Başlanğıc bələdçisi (v31): iki ox + izah — səs düyməsi və sağ fəsillər.
+   Heç nəyə toxunmur (pointer-events none), ekrana sığır, ilk scroll-da gedir. */
+.hint-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 24;
+  pointer-events: none;
+}
+
+.hint-pop {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: min(78vw, 340px);
+  padding: 0.55rem 0.95rem;
+  border-radius: 12px;
+  background: rgba(14, 16, 15, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(176, 141, 87, 0.35);
+  color: var(--text, #fffce1);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  white-space: normal;
+  will-change: transform, opacity;
+}
+
+.hint-pop__dot {
+  display: block;
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent, #b08d57);
+  box-shadow: 0 0 12px rgba(176, 141, 87, 0.7);
+  animation: hint-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes hint-pulse {
+  0%,
+  100% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+}
+
+.hint-pop__arrow {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: rgba(14, 16, 15, 0.6);
+  border: inherit;
+  border-width: 0 0 1px 1px;
+  transform: rotate(45deg);
+}
+
+/* səs pop-u: left/top JS ilə düymənin real koordinatına oturur (v32)
+   fəsillər pop-u: sağ tərəfdən nav-ın soluna yapışır, ox nav-ın mərkəzinə baxır */
+.hint-pop--sound .hint-pop__arrow {
+  top: -6px;
+  transform: rotate(135deg);
+}
+
+.hint-pop--chapters .hint-pop__arrow {
+  right: -6px;
+  transform: rotate(225deg);
+}
+
+@media (max-width: 640px) {
+  .hint-pop {
+    font-size: 0.55rem;
+    letter-spacing: 0.09em;
+    max-width: min(62vw, 260px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hint-pop__dot {
+    animation: none;
+  }
+}
+
+/* ── "Sayt donmur" toast (v31): video fəsillərində duranda bir dəfə görünür */
+.pause-hint {
   position: fixed;
   bottom: max(4.5vh, env(safe-area-inset-bottom));
   left: 50%;
@@ -546,61 +635,47 @@ html.is-loading {
   z-index: 24;
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  padding: 0.55rem 1.1rem;
+  gap: 0.6rem;
+  max-width: min(86vw, 420px);
+  padding: 0.6rem 1.1rem;
   border-radius: 999px;
-  background: rgba(14, 16, 15, 0.55);
+  background: rgba(14, 16, 15, 0.6);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(176, 141, 87, 0.3);
   color: var(--text, #fffce1);
   font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.16em;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  white-space: nowrap;
+  line-height: 1.5;
+  white-space: normal;
+  text-align: center;
   pointer-events: none;
   will-change: transform, opacity;
 }
 
-.scroll-hint__mouse {
+.pause-hint__pulse {
   display: block;
-  width: 14px;
-  height: 22px;
-  border: 1px solid currentColor;
-  border-radius: 8px;
-  opacity: 0.8;
-  position: relative;
-}
-
-.scroll-hint__mouse i {
-  position: absolute;
-  top: 4px;
-  left: 50%;
-  width: 2px;
-  height: 5px;
-  margin-left: -1px;
-  border-radius: 1px;
-  background: currentColor;
-  animation: hint-wheel 1.6s ease-in-out infinite;
-}
-
-@keyframes hint-wheel {
-  0%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.4;
-  }
-  50% {
-    transform: translateY(6px);
-    opacity: 1;
-  }
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent, #b08d57);
+  box-shadow: 0 0 12px rgba(176, 141, 87, 0.7);
+  animation: hint-pulse 1.8s ease-in-out infinite;
 }
 
 @media (max-width: 640px) {
-  .scroll-hint {
-    font-size: 0.58rem;
-    letter-spacing: 0.12em;
-    gap: 0.55rem;
+  .pause-hint {
+    font-size: 0.55rem;
+    letter-spacing: 0.09em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pause-hint__pulse {
+    animation: none;
   }
 }
 
@@ -684,6 +759,31 @@ html.is-loading {
 
 .sound-btn[aria-pressed='false'] {
   opacity: 0.55;
+}
+
+/* v30: autoplay bloklandıqda — istifadəçiyə "bir dəyməklə səs açılar" deyir */
+.sound-btn[data-blocked='1'] {
+  border-color: rgba(176, 141, 87, 0.55);
+}
+
+.sound-btn[data-blocked='1'] svg {
+  animation: sound-invite 2.4s ease-in-out infinite;
+}
+
+@keyframes sound-invite {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sound-btn[data-blocked='1'] svg {
+    animation: none;
+  }
 }
 
 .topbar__mark,
@@ -1363,28 +1463,61 @@ html.has-cursor * {
   opacity: 0.55;
 }
 
+.glass__field span::before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  vertical-align: middle;
+  margin-right: 0;
+  transition: width var(--t-base) var(--ease-out), margin-right var(--t-base) var(--ease-out);
+}
+
+/* v30: sahəyə girəndə etiket canlanır — qızılı xətt açılır, yazı vurğulanır */
+.glass__field:focus-within span::before {
+  width: 16px;
+  margin-right: 8px;
+}
+
+.glass__field:focus-within span {
+  color: var(--accent);
+  opacity: 0.95;
+}
+
 .glass__field input,
 .glass__field textarea {
   font: inherit;
   color: inherit;
+  caret-color: var(--accent);
   padding: 0.7rem 0.85rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.03);
   outline: none;
   resize: vertical;
-  transition: border-color var(--t-snap) var(--ease-snap), background-color var(--t-snap) var(--ease-snap),
-    box-shadow var(--t-snap) var(--ease-snap);
+  transition:
+    border-color var(--t-snap) var(--ease-snap),
+    background-color var(--t-snap) var(--ease-snap),
+    box-shadow var(--t-snap) var(--ease-snap),
+    transform var(--t-base) var(--ease-out);
+}
+
+.glass__field input:hover:not(:focus),
+.glass__field textarea:hover:not(:focus) {
+  border-color: rgba(255, 252, 225, 0.26);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .glass__field input:focus,
 .glass__field textarea:focus {
   border-color: var(--accent);
   background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-1px);
   box-shadow:
     inset 0 1px 0 rgba(255, 252, 225, 0.12),
-    0 0 0 1px rgba(176, 141, 87, 0.16),
-    0 6px 24px rgba(176, 141, 87, 0.07);
+    0 0 0 1px rgba(176, 141, 87, 0.22),
+    0 10px 32px rgba(176, 141, 87, 0.1);
 }
 
 .glass__submit {
@@ -1411,6 +1544,7 @@ html.has-cursor * {
   background: var(--accent);
   color: #14150f;
   transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 34px rgba(176, 141, 87, 0.28);
 }
 
 .glass__submit:active {
@@ -1806,7 +1940,7 @@ html.has-cursor * {
   bottom: -0.05em;
   height: 3px;
   background: var(--accent);
-  box-shadow: 0 0 24px rgba(201, 195, 164, 0.6);
+  box-shadow: 0 0 24px rgba(176, 141, 87, 0.55);
 }
 
 .speak__qmark {

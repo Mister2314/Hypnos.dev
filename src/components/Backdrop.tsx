@@ -6,22 +6,26 @@ export default function Backdrop() {
   useGSAP(() => {
     setWorld(WORLDS[0])
 
-    const sections = WORLDS.map((w) =>
-      document.querySelector<HTMLElement>(`[data-world="${w.id}"]`),
-    )
-    const missing = WORLDS.filter((_, i) => !sections[i]).map((w) => w.id)
+    const els = WORLDS.map((w) => document.querySelector<HTMLElement>(`[data-world="${w.id}"]`))
+    const missing = WORLDS.filter((_, i) => !els[i]).map((w) => w.id)
     if (missing.length) {
       console.warn('[Backdrop] missing sections:', missing)
       return
     }
-    const els = sections as HTMLElement[]
 
     let starts: number[] = []
     let vh = window.innerHeight
 
+    // v30: elementlər hər ölçmədə YENİDƏN soruşulur — dil dəyişimi main-i
+    // remount edir, köhnə DOM referansları ölü elementlərə çevrilir və
+    // getBoundingClientRect() = 0 qayıdardı → bütün starts=0 → dünya
+    // sonda qalan (signature, qızılı) rəngə ilişib qalardı. İndi mümkün deyil.
     const measure = () => {
       vh = window.innerHeight
-      starts = els.map((el) => el.getBoundingClientRect().top + window.scrollY)
+      for (let i = 0; i < WORLDS.length; i++) {
+        els[i] = document.querySelector<HTMLElement>(`[data-world="${WORLDS[i].id}"]`)
+      }
+      starts = els.map((el) => (el ? el.getBoundingClientRect().top + window.scrollY : 0))
 
       document.documentElement.dataset.worldStarts = starts.map((n) => Math.round(n)).join(',')
     }
