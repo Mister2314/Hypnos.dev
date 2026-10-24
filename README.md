@@ -20,22 +20,21 @@ Vite + React 19 + TypeScript · GSAP (ScrollTrigger) + Lenis · 2D-canvas WebP f
 - One scroll writer for 11 scenes (`src/lib/scroll.ts`), fixed performance config (DPR 1, adaptive tier) in `src/lib/perf.ts`
 - Trilingual copy (EN / AZ / TR) in `src/lib/i18n.ts`
 - Contact form as a Vercel function (`api/contact.ts`) with honeypot, length caps and IP rate limit, plus a guard test that fails CI if the endpoint breaks
-- Build gate: `tsc --noEmit` blocks the build; a 28-check verification script (`tools/verify-v5.mjs`) must pass before every push
+- Build gate: `tsc --noEmit` blocks the build; a 34-check verification script (`tools/verify-v5.mjs`) must pass before every push
 
 ## Run locally
 
 ```bash
-bun install
-bun run dev
+npm install
+npm run dev
 ```
 
 Build and verify (before every push):
 
 ```bash
-bun run build                                     # tsc --noEmit + vite build
-bun run preview -- --port 5174 --strictPort &
-node tools/verify-v5.mjs http://localhost:5174/   # 28 checks → must be PASS
-bun run test:contact                              # contact API guard tests
+npm run build                                     # tsc --noEmit + vite build
+npx vite preview --port 5174 --strictPort
+node tools/verify-v5.mjs http://localhost:5174/   # 34 checks → must be PASS
 ```
 
 ## What I learned
