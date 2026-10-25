@@ -14,6 +14,8 @@ import Backdrop from './components/Backdrop'
 import ChapterNav from './components/ChapterNav'
 import Cursor from './components/Cursor'
 import Preloader from './components/Preloader'
+import ScrollHint from './components/ScrollHint'
+import PauseHint from './components/PauseHint'
 import Progress from './components/Progress'
 import TopBar from './components/TopBar'
 import Hero from './sections/Hero'
@@ -38,6 +40,8 @@ export default function App() {
   return (
     <>
       <Preloader />
+      <ScrollHint />
+      <PauseHint />
       <TopBar />
       <Progress />
       <ChapterNav />

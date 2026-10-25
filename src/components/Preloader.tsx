@@ -1,7 +1,7 @@
 
 
 import { useEffect, useRef, useState } from 'react'
-import { prefersReducedMotion } from '../lib/scroll'
+import { ScrollTrigger, prefersReducedMotion } from '../lib/scroll'
 import { isLoaderDone, markLoaderDone, onLoaderProgress, setLoaderFontsReady } from '../lib/loader'
 import { useCopy } from '../lib/i18n'
 
@@ -30,6 +30,11 @@ export default function Preloader() {
         ref.current?.classList.add('is-done')
         root.classList.remove('is-loading')
         setTimeout(() => setGone(true), prefersReducedMotion ? 200 : 900)
+        // v28: pərdə qalxanda ölçülər sabitləşir. Refresh olmasa gecikmiş layout
+        // dəyişimi triggerləri köhnə mövqedə saxlayır → scrub animasiyaları səhv
+        // progressdə ilişib qalır (real şikayət: speak mətninin rəngi/effekti).
+        requestAnimationFrame(() => ScrollTrigger.refresh())
+        window.setTimeout(() => ScrollTrigger.refresh(), 700)
       }, wait)
     }
 
@@ -37,9 +42,19 @@ export default function Preloader() {
     let shown = 0
     let raf = 0
 
-    // rAF lerp — sayaç sıçramır, real yükləməni yumşaq izləyir
+    // v29 — "heç vaxt durmayan, yalan deməyən" sayaç:
+    //  • real progress 92%-də saxlanılır (bitməmiş yükləmə 100% demiir)
+    //  • nəbizən (creep) yavaş-özü irəliləyir — bar ekranda HEÇ VAXT donmur,
+    //    amma heç vaxt real yükləmədən irəlidə də getmir
+    //  • real yükləmə bitəndə (pct=1) pərdə TAM O ANDA qalxır — ikisi eyni anda
+    const CREEP_MS = 16000
+    const CAP_UNTIL_DONE = 0.92
+
     const render = () => {
-      shown += (target - shown) * 0.09
+      const elapsed = performance.now() - startedAt
+      const creep = Math.min(CAP_UNTIL_DONE, elapsed / CREEP_MS)
+      const displayTarget = target >= 1 ? 1 : Math.max(Math.min(target, CAP_UNTIL_DONE), creep)
+      shown += (displayTarget - shown) * 0.09
       if (target >= 1 && shown > 0.992) shown = 1
       const el = ref.current
       const bar = el?.querySelector<HTMLElement>('.preloader__bar i')

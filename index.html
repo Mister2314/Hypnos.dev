@@ -31,6 +31,14 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <!-- M8: pərdənin arxasında görünəcək ilk kadr (leap posteri) — şəbəkə prioriteti ən yüksək -->
     <link rel="preload" as="image" href="/leap/poster-1920.webp" fetchpriority="high" />
+    <!-- v29: pərdə fonts.ready-i gözləyir — hero-da real işləyən font subsetlərini
+         öndər çəkirik ki pərdə tez qalxsın və font-swap layout-sürüşməsi olmasın
+         (CLS kökü: perf trace 24 okt 2026). crossorigin font fetch-i üçün mütləqdir. -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/CormorantGaramond-Italic-4.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/CormorantGaramond-Regular-4.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/Inter-Regular-6.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/JetBrainsMono-Regular-5.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/Italianno-Regular-2.woff2" crossorigin />
   </head>
   <body>
     <div id="root"></div>

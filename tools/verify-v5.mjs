@@ -93,7 +93,13 @@ async function evalJs(expr) {
     returnByValue: true,
     awaitPromise: true,
   })
-  if (r.exceptionDetails) throw new Error(r.exceptionDetails.text)
+  if (r.exceptionDetails) {
+    const d = r.exceptionDetails
+    const where = d.lineNumber != null ? ` @${d.lineNumber}:${d.columnNumber}` : ''
+    throw new Error(
+      `${d.text}${where} ${d.exception?.description ?? ''}${d.exception?.value != null ? ' :: ' + JSON.stringify(d.exception.value) : ''}`.slice(0, 800),
+    )
+  }
   return r.result.value
 }
 

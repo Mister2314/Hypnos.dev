@@ -83,6 +83,11 @@ export type Copy = {
   heroTitle: [string, string, string]
   heroSub: string
   heroCue: string
+  /** v31: başlanğıc bələdçisi — səs düyməsi + sağ fəsillər (ox + izah) */
+  hintSound: string
+  hintChapters: string
+  /** v31: video fəsillərində duranda — "sayt donmur" bildirişi */
+  hintNotStuck: string
   summerLine: string
   summerCaptionFilm: string
   summerCaptionRest: string
@@ -164,6 +169,9 @@ const EN: Copy = {
   heroTitle: ['Hi,', "I'm", 'Khayal.'],
   heroSub: 'I keep more worlds than one head should hold. Scroll — I’ll show you a few.',
   heroCue: 'scroll — all the way down',
+  hintSound: 'music is playing — click here to stop it',
+  hintChapters: 'chapters — click one to jump straight there',
+  hintNotStuck: 'don’t worry — the site isn’t stuck. The film keeps playing as you scroll',
   summerLine: 'I was born in August. That probably explains everything.',
   summerCaptionFilm: 'Call Me By Your Name',
   summerCaptionRest: ' — the summer that never really ended.',
@@ -261,6 +269,7 @@ const EN: Copy = {
     noTld: 'A domain without a dot is just a word.',
     dots: 'Those dots aren’t where dots go.',
     typo: '«{d}»? Pretty sure you meant «{fix}».',
+    tempmail: 'A temp mail? I actually want to know you — write a real address.',
   },
   sideLabel: 'Other ways in',
   signatureClose: 'That’s all from me — if you ever want to talk, you know where to find me.',
@@ -303,6 +312,9 @@ const AZ: Copy = {
   heroTitle: ['Salam,', 'mən', 'Xəyalam.'],
   heroSub: 'Bir başın daşıya bildiyindən çox dünya saxlayıram. Sürüşdür — sənə bir neçəsini göstərəcəyəm.',
   heroCue: 'sonadək sürüşdür',
+  hintSound: 'musiqi açıqdır — dayandırmaq üçün bura bas',
+  hintChapters: 'fəsillər — birinə bas, birbaşa oraya atla',
+  hintNotStuck: 'narahat olma — sayt donmur. Film sürüşdürdükcə davam edir',
   summerLine: 'Avqustda doğulmuşam. Bu, bəlkə də hər şeyi izah edir.',
   summerCaptionFilm: 'Call Me By Your Name',
   summerCaptionRest: ' — heç bitməyən yay.',
@@ -400,6 +412,7 @@ const AZ: Copy = {
     noTld: 'Nöqtəsiz domain sadəcə sözdür.',
     dots: 'Bu nöqtələr öz yerində deyil.',
     typo: '«{d}»? Əminəm ki «{fix}» istəyirdin.',
+    tempmail: 'Tempmail? Mən səninlə əsl tanış olmaq istəyirəm — adi ünvan yaz.',
   },
   sideLabel: 'Başqa yollarla',
   signatureClose: 'Məndən bu qədər — danışmaq istəsən, harada olduğumu bilirsən.',
@@ -442,6 +455,9 @@ const TR: Copy = {
   heroTitle: ['Merhaba,', 'ben', 'Khayal.'],
   heroSub: 'Bir kafanın taşıyabileceğinden çok dünya taşıyorum. Kaydır — sana birkaçını göstereceğim.',
   heroCue: 'sonuna kadar kaydır',
+  hintSound: 'müzik çalıyor — durdurmak için buraya tıkla',
+  hintChapters: 'bölümler — birine tıkla, doğrudan oraya git',
+  hintNotStuck: 'endişelenme — site donmadı. Film kaydırdıkça devam eder',
   summerLine: 'Ağustos ayında doğdum. Bu, her şeyi açıklıyor galiba.',
   summerCaptionFilm: 'Call Me By Your Name',
   summerCaptionRest: ' — hiç bitmeyen yaz.',
@@ -539,6 +555,7 @@ const TR: Copy = {
     noTld: 'Noktasız domain sadece bir kelime.',
     dots: 'Bu noktalar kendi yerinde değil.',
     typo: '«{d}»? Eminim «{fix}» demek istedin.',
+    tempmail: 'Temp mail mi? Seninle gerçekten tanışmak istiyorum — normal bir adres yaz.',
   },
   sideLabel: 'Diğer yollarla',
   signatureClose: 'Benden bu kadar — konuşmak istersen nerede olduğumu biliyorsun.',

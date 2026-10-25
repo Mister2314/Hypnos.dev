@@ -6,14 +6,10 @@
 
   --hairline: #212121;
   --gold: #b08d57;
-  --gold-dim: #6f6759;
 
   --summer-bg: #30312d;
-  --summer-text: #f1f1ea;
   --summer-peach: #ffc2ae;
-  --summer-apricot: #ffa07a;
   --summer-cream: #ffdab9;
-
 
   --font-serif: 'Cormorant Garamond', Georgia, serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -29,9 +25,7 @@
   --t-base: 0.35s;
   --t-settle: 0.9s;
 
-  --amb-slow: 11s;
   --amb-mid: 7s;
-  --amb-fast: 4.5s;
 }
 
 *,
@@ -84,10 +78,6 @@ img {
   animation: amb-drift var(--amb-dur, var(--amb-mid)) var(--ease-out) infinite;
   animation-delay: var(--amb-delay, 0s);
   will-change: transform, opacity;
-}
-
-.amb--two {
-  animation-name: amb-drift-two;
 }
 
 @keyframes amb-drift {
@@ -376,8 +366,6 @@ a {
   margin: 1.4rem 0 0;
 }
 
-
-
 .signature__close {
   font-family: var(--font-serif);
   font-weight: 400;
@@ -441,9 +429,7 @@ a {
   .section--hands {
     padding: 0;
   }
-  .summer__hands {
-    width: 100%;
-  }
+
   .summer__bloom {
     width: 100vw;
     height: 100vw;
@@ -505,6 +491,23 @@ a {
   height: 1px;
   background: rgba(255, 252, 225, 0.14);
   overflow: hidden;
+  position: relative;
+}
+
+/* v29: barın üstündə nəbz kimi süzülən parlaq zolaq — loading hər an canlı hiss olunur */
+.preloader__bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 252, 225, 0.45), transparent);
+  transform: translateX(-100%);
+  animation: preloader-sheen 2.2s ease-in-out infinite;
+}
+
+@keyframes preloader-sheen {
+  to {
+    transform: translateX(100%);
+  }
 }
 
 .preloader__bar i {
@@ -533,9 +536,192 @@ html.is-loading {
   overflow: hidden;
 }
 
+/* ── Başlanğıc bələdçisi (v31): iki ox + izah — səs düyməsi və sağ fəsillər.
+   Heç nəyə toxunmur (pointer-events none), ekrana sığır, ilk scroll-da gedir. */
+.hint-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 24;
+  pointer-events: none;
+}
+
+.hint-pop {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: min(78vw, 340px);
+  padding: 0.55rem 0.95rem;
+  border-radius: 12px;
+  background: rgba(14, 16, 15, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(176, 141, 87, 0.35);
+  color: var(--text, #fffce1);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  white-space: normal;
+  will-change: transform, opacity;
+}
+
+.hint-pop__dot {
+  display: block;
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent, #b08d57);
+  box-shadow: 0 0 12px rgba(176, 141, 87, 0.7);
+  animation: hint-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes hint-pulse {
+  0%,
+  100% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+}
+
+.hint-pop__arrow {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: rgba(14, 16, 15, 0.6);
+  border: inherit;
+  border-width: 0 0 1px 1px;
+  transform: rotate(45deg);
+}
+
+/* səs pop-u: left/top JS ilə düymənin real koordinatına oturur (v32)
+   fəsillər pop-u: sağ tərəfdən nav-ın soluna yapışır, ox nav-ın mərkəzinə baxır */
+.hint-pop--sound .hint-pop__arrow {
+  top: -6px;
+  transform: rotate(135deg);
+}
+
+.hint-pop--chapters .hint-pop__arrow {
+  right: -6px;
+  transform: rotate(225deg);
+}
+
+/* fəsillər pop-unun başındakı "○○○›" — sağdakı nav nöqtələrini təkrarlayır,
+   ki istifadəçi dərhal görsün ki qutu nəyə işarə edir (v33) */
+.hint-pop__glyph {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+}
+
+.hint-pop__glyph i {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.75;
+}
+
+.hint-pop__glyph i:first-child {
+  background: var(--accent, #b08d57);
+  border-color: var(--accent, #b08d57);
+}
+
+.hint-pop__glyph b {
+  margin-left: 1px;
+  font-weight: 400;
+  font-size: 0.9em;
+  color: var(--accent, #b08d57);
+}
+
+@media (max-width: 640px) {
+  .hint-pop {
+    font-size: 0.55rem;
+    letter-spacing: 0.09em;
+    max-width: min(62vw, 260px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hint-pop__dot {
+    animation: none;
+  }
+}
+
+/* ── "Sayt donmur" toast (v31): video fəsillərində duranda bir dəfə görünür */
+.pause-hint {
+  position: fixed;
+  bottom: max(4.5vh, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 24;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: min(86vw, 420px);
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  background: rgba(14, 16, 15, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(176, 141, 87, 0.3);
+  color: var(--text, #fffce1);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  white-space: normal;
+  text-align: center;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.pause-hint__pulse {
+  display: block;
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent, #b08d57);
+  box-shadow: 0 0 12px rgba(176, 141, 87, 0.7);
+  animation: hint-pulse 1.8s ease-in-out infinite;
+}
+
+@media (max-width: 640px) {
+  .pause-hint {
+    font-size: 0.55rem;
+    letter-spacing: 0.09em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pause-hint__pulse {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-hint__mouse i {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .preloader {
     transition: none;
+  }
+  .preloader__bar::after {
+    animation: none;
+    display: none;
   }
 }
 
@@ -603,6 +789,31 @@ html.is-loading {
 
 .sound-btn[aria-pressed='false'] {
   opacity: 0.55;
+}
+
+/* v30: autoplay bloklandıqda — istifadəçiyə "bir dəyməklə səs açılar" deyir */
+.sound-btn[data-blocked='1'] {
+  border-color: rgba(176, 141, 87, 0.55);
+}
+
+.sound-btn[data-blocked='1'] svg {
+  animation: sound-invite 2.4s ease-in-out infinite;
+}
+
+@keyframes sound-invite {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sound-btn[data-blocked='1'] svg {
+    animation: none;
+  }
 }
 
 .topbar__mark,
@@ -800,30 +1011,6 @@ html.has-cursor * {
   opacity: 0.92;
   transform: rotate(-4deg);
   pointer-events: none;
-}
-
-.summer__plate {
-  position: relative;
-  width: min(72vw, 900px);
-  margin-top: 3.4rem;
-  overflow: hidden;
-  border-radius: 2px;
-}
-
-.summer__plate-img {
-  display: block;
-  width: 100%;
-  height: auto;
-  will-change: transform;
-}
-
-.summer__halftone {
-  position: absolute;
-  inset: -2%;
-  background-image: radial-gradient(circle, var(--summer-bg) 40%, transparent 41%);
-  background-size: 7px 7px;
-  pointer-events: none;
-  will-change: opacity, transform;
 }
 
 .section--counterweight {
@@ -1226,12 +1413,13 @@ html.has-cursor * {
   max-width: 24ch;
 }
 
+/* ── LANTERN panel (v33) — glassmorphism-in yerinə.
+   Araşdırma (24 okt 2026): ağ sheen + frosted blur = doyulmuş 2020 trendi;
+   güncəl istiqamət "içindən işıq gələn material"dır (Apple Liquid Glass,
+   light-reactive). Saytın kimliyinə uyğun variant: soyuq şüşə yox, loş
+   qızılı fənər — işıq panelin İÇİNDƏ nəfəs alır, səthdən əks olunmur. */
 .glass {
-  --rim: rgba(255, 255, 255, 0.18);
-  --bev: rgba(255, 255, 255, 0.06);
-  --spec: rgba(255, 255, 255, 0.42);
-  --sat: rgba(255, 255, 255, 0.03);
-  --ins: rgba(255, 255, 255, 0.1);
+  --rim: rgba(176, 141, 87, 0.32);
 
   position: relative;
   overflow: hidden;
@@ -1240,41 +1428,45 @@ html.has-cursor * {
   padding: 2rem;
   border-radius: 22px;
   border: 1px solid var(--rim);
-  background: linear-gradient(150deg, var(--bev), transparent 42%), var(--sat);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  background:
+    radial-gradient(120% 90% at 12% 0%, rgba(176, 141, 87, 0.14), transparent 55%),
+    radial-gradient(90% 70% at 100% 100%, rgba(176, 141, 87, 0.07), transparent 60%),
+    #14130e;
   box-shadow:
-    inset 0 1px 0 var(--ins),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
-    0 30px 80px rgba(0, 0, 0, 0.45);
+    inset 0 1px 0 rgba(255, 240, 200, 0.09),
+    0 1px 0 rgba(255, 240, 200, 0.07),
+    0 34px 90px rgba(0, 0, 0, 0.55),
+    0 0 90px rgba(176, 141, 87, 0.07);
 }
 
+/* içəridə nəfəs alan fənər işığı — yavaş, demək olar ki gözlə seçilmir */
 .glass__sheen {
   position: absolute;
-  inset: -40% -10% auto -10%;
-  height: 70%;
-  transform: rotate(-8deg);
-  background: linear-gradient(100deg, transparent 20%, var(--spec) 48%, transparent 62%);
-  opacity: 0.16;
+  inset: -30%;
   pointer-events: none;
-  transform: rotate(-8deg) translateX(-6%);
-  will-change: transform;
-  animation: sheenDrift 14s var(--ease-out) infinite;
+  background: radial-gradient(45% 38% at 24% 18%, rgba(228, 190, 130, 0.13), transparent 70%);
+  animation: lanternBreath 9s ease-in-out infinite;
+  will-change: opacity, transform;
 }
 
-@keyframes sheenDrift {
-  0%, 100% {
-    transform: rotate(-8deg) translateX(-6%);
+@keyframes lanternBreath {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
   }
   50% {
-    transform: rotate(-8deg) translateX(5%);
+    opacity: 1;
+    transform: scale(1.06);
   }
 }
 
 .glass__form {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* minmax(0,…): input-un min-content-i sütunu şişirtməsin — əks halda
+     sağ sütun (connections) ilə üst-üstə düşür (v33 bug) */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1rem 1.2rem;
 }
 
@@ -1292,6 +1484,12 @@ html.has-cursor * {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
+  min-width: 0;
+}
+
+.glass__field input,
+.glass__field textarea {
+  min-width: 0;
 }
 
 .glass__field--wide {
@@ -1306,28 +1504,61 @@ html.has-cursor * {
   opacity: 0.55;
 }
 
+.glass__field span::before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  vertical-align: middle;
+  margin-right: 0;
+  transition: width var(--t-base) var(--ease-out), margin-right var(--t-base) var(--ease-out);
+}
+
+/* v30: sahəyə girəndə etiket canlanır — qızılı xətt açılır, yazı vurğulanır */
+.glass__field:focus-within span::before {
+  width: 16px;
+  margin-right: 8px;
+}
+
+.glass__field:focus-within span {
+  color: var(--accent);
+  opacity: 0.95;
+}
+
 .glass__field input,
 .glass__field textarea {
   font: inherit;
   color: inherit;
+  caret-color: var(--accent);
   padding: 0.7rem 0.85rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.03);
   outline: none;
   resize: vertical;
-  transition: border-color var(--t-snap) var(--ease-snap), background-color var(--t-snap) var(--ease-snap),
-    box-shadow var(--t-snap) var(--ease-snap);
+  transition:
+    border-color var(--t-snap) var(--ease-snap),
+    background-color var(--t-snap) var(--ease-snap),
+    box-shadow var(--t-snap) var(--ease-snap),
+    transform var(--t-base) var(--ease-out);
+}
+
+.glass__field input:hover:not(:focus),
+.glass__field textarea:hover:not(:focus) {
+  border-color: rgba(255, 252, 225, 0.26);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .glass__field input:focus,
 .glass__field textarea:focus {
   border-color: var(--accent);
   background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-1px);
   box-shadow:
     inset 0 1px 0 rgba(255, 252, 225, 0.12),
-    0 0 0 1px rgba(176, 141, 87, 0.16),
-    0 6px 24px rgba(176, 141, 87, 0.07);
+    0 0 0 1px rgba(176, 141, 87, 0.22),
+    0 10px 32px rgba(176, 141, 87, 0.1);
 }
 
 .glass__submit {
@@ -1354,6 +1585,7 @@ html.has-cursor * {
   background: var(--accent);
   color: #14150f;
   transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 34px rgba(176, 141, 87, 0.28);
 }
 
 .glass__submit:active {
@@ -1394,8 +1626,6 @@ html.has-cursor * {
   flex-direction: column;
   gap: 1.1rem;
   min-width: 0;
-  padding-left: 1.6rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .glass__side-label {
@@ -1468,32 +1698,6 @@ html.has-cursor * {
   color: var(--summer-peach);
 }
 
-.glass__links {
-  position: relative;
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.2rem;
-  margin: 1.4rem 0 0;
-  padding: 0;
-}
-
-.glass__links a {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 0.3rem;
-  transition: color 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
-}
-
-.glass__links a:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
 .signature__work span {
   font-family: var(--font-mono);
   font-size: 0.78rem;
@@ -1556,9 +1760,7 @@ html.has-cursor * {
     right: 7vw;
     bottom: 4vh;
   }
-  .summer__plate {
-    width: 100%;
-  }
+
   .signature__mark {
     margin-top: 2.4rem;
   }
@@ -1576,9 +1778,7 @@ html.has-cursor * {
     opacity: 1;
     transform: none;
   }
-  .summer__halftone {
-    opacity: 0;
-  }
+
   .questions__a-text {
     animation: none;
   }
@@ -1779,7 +1979,7 @@ html.has-cursor * {
   bottom: -0.05em;
   height: 3px;
   background: var(--accent);
-  box-shadow: 0 0 24px rgba(201, 195, 164, 0.6);
+  box-shadow: 0 0 24px rgba(176, 141, 87, 0.55);
 }
 
 .speak__qmark {
@@ -2122,14 +2322,75 @@ html.has-cursor * {
 /* İlk backdrop-filter istifadəsi mobil GPU-da ~200ms pipeline kompilyasiyası
    tutur (perf-loop: contact girişində 216ms spike). 8px görünməz element
    bunu səhifə açılışında ödəyir — contact-a çatanda pipeline hazırdır. */
-.glass-prime {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 8px;
-  height: 8px;
-  pointer-events: none;
-  opacity: 0.011;
-  backdrop-filter: blur(10px) saturate(130%);
-  -webkit-backdrop-filter: blur(10px) saturate(130%);
+
+/* ---------- v35 — revamp/hypnos: mikro-qarşılıqlı təsir + fokus (elevation-only) ----------
+   Qayda: yalnız transform/opacity — kompozitor. Toxunduqları: pill düymələr (C1),
+   Work sıraları (C2), keçidlərin altından keçən zolaq (C2), :focus-visible (C3).
+   Hərəkət briefi §7: basmada düymə ~0.97 miqyaslanır, hover 0.35–0.6s. */
+
+/* C1 — "haptic chrome": pill düymələrə basma qəbulu */
+.topbar__cta,
+.sound-btn,
+.lang-switch__btn {
+  transition: opacity 0.35s var(--ease-out), border-color 0.35s var(--ease-out),
+    background 0.35s var(--ease-out), transform var(--t-snap) var(--ease-snap);
 }
+
+.topbar__cta:active,
+.sound-btn:active,
+.lang-switch__btn:active {
+  transform: scale(0.97);
+}
+
+.chapter-nav__link:active .chapter-nav__dot {
+  transform: scale(0.8);
+}
+
+/* C2 — Work sıraları nəfəs alır: hairline parlaqlaşır, indeks akventa keçir */
+.work__item::before {
+  transition: opacity 0.4s var(--ease-out);
+}
+
+.work__item:hover::before {
+  opacity: 0.3;
+}
+
+.work__index {
+  transition: color 0.35s var(--ease-out), opacity 0.35s var(--ease-out);
+}
+
+.work__item:hover .work__index {
+  color: var(--accent);
+  opacity: 0.9;
+}
+
+/* C2 — altından keçən zolaq (underline sweep): sosial + imza + iş başlıqları */
+.socials a,
+.signature__work a,
+.work__title a {
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 0.45s var(--ease-out), border-color 0.35s var(--ease-out),
+    color 0.35s var(--ease-out);
+}
+
+.socials a:hover,
+.signature__work a:hover,
+.work__title a:hover {
+  background-size: 100% 1px;
+}
+
+/* C3 — fokus vahid dizayn elementidir: hər kontrola eyni incə halqa.
+   Glass sahələri istisnadır — onların :focus-da artıq border+dırnaq var. */
+:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--accent, #b08d57) 70%, #fffce1 30%);
+  outline-offset: 3px;
+}
+
+.glass__field input:focus-visible,
+.glass__field textarea:focus-visible {
+  outline: none;
+}
+

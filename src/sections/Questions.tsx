@@ -14,6 +14,23 @@ function shortest(from: number, to: number): number {
   return from + d
 }
 
+/** v30: fırlanma bucağından ÖN PLANDAKI kartı tap — indeks heç vaxt scroll
+ *  riyaziyyatından çıxarılmır, həmişə halqanın real bucağından hesablanır.
+ *  Əvvəl scroll p*N düsturu seçilmiş kartla dəyişirdi: "aktiv görünür, önə gəlmir". */
+function frontIndex(rot: number, n: number, step: number): number {
+  let best = 0
+  let bestD = 1e9
+  for (let i = 0; i < n; i++) {
+    const a = (((rot + i * step) % 360) + 540) % 360 - 180
+    const d = Math.abs(a)
+    if (d < bestD) {
+      bestD = d
+      best = i
+    }
+  }
+  return best
+}
+
 export default function Questions() {
   const copy = useCopy()
   const faq = copy.faq
@@ -89,11 +106,8 @@ export default function Questions() {
       const vh = window.innerHeight
       const p = gsap.utils.clamp(0, 1, (vh - rect.top) / (vh + rect.height))
       rot.target = -p * 360
-      const i = ((Math.round(p * N) % N) + N) % N
-      if (i !== idx) {
-        idx = i
-        setActive(i)
-      }
+      const i = frontIndex(rot.target, N, STEP)
+      if (i !== idx) idx = i
     }
 
     const tick = () => {
@@ -101,6 +115,12 @@ export default function Questions() {
       if (Math.abs(diff) < 0.02) return
       rot.value += diff * 0.11
       paint()
+      // fırlanma zamanı ön plandakı kart dəyişirsə — aktiv odur (rəng + cavab)
+      const f = frontIndex(rot.value, N, STEP)
+      if (f !== idx) {
+        idx = f
+        setActive(f)
+      }
     }
 
     const drag = { on: false, x0: 0, rot0: 0, moved: 0 }
@@ -125,7 +145,7 @@ export default function Questions() {
 
         const nearest = Math.round(rot.target / STEP) * STEP
         rot.target = nearest
-        const i = ((-Math.round(nearest / STEP) % N) + N) % N
+        const i = frontIndex(nearest, N, STEP)
         idx = i
         setActive(i)
       }
